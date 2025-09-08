@@ -53,7 +53,7 @@ Acreditamos que a tecnologia é um dos principais ingredientes para o sucesso no
 ## 📫 Entre em contato
 
 Gostou da nossa solução? Entre em contato conosco para mais informações!
-E-mail: adm.vetor256o@gmail.com 
+E-mail: isaias@vetor256.com 
 Site: [www.vetor256.com.br](https://isaiaslourenco.github.io/vetor256/)
 
 <a href="https://github.com/IsaiasLourenco/delivery" target="_blank"> 💻 Repositório </a> <br>
@@ -61,7 +61,7 @@ Site: [www.vetor256.com.br](https://isaiaslourenco.github.io/vetor256/)
 
 <img src="./img/logotipo-do-github.png" alt="GitHub"> [GitHub](https://github.com/IsaiasLourenco)<br> <img src="./img/logotipo-do-linkedin.png" alt="LinkedIn"> [Linkedin](https://www.linkedin.com/in/isaias-lourenco/)
 
-<img src="./assets/imagens/about-us/restaurante.gif" alt="Delivering">https://isaiaslourenco.github.io/delivery/
+<img src="./img/delivery.gif" alt="Delivering">https://github.com/IsaiasLourenco/delivery
 
 ## 🚀 Inicialização
 
