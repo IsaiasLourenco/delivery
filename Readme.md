@@ -67,5 +67,5 @@ Site: [www.vetor256.com.br](https://isaiaslourenco.github.io/vetor256/)
 
 Não é necessário executar nenhum npm para iniciar. Basta clonar o repositório com:
 ```bash
-git clone https://github.com/seurepositorio/restaurante.git
+git clone https://github.com/IsaiasLourenco/delivery
 
