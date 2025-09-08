@@ -1,0 +1,353 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+        Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.main-container {
+    padding: 5px;
+    padding-bottom: 60px;
+}
+
+.cards {
+    margin-top: 70px;
+    justify-content: center;
+}
+
+.card {
+    margin: 10px;
+    padding: 20px;
+    height: 120px;
+    border-radius: 10px;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
+    transition: all 0.2s;
+    width: 100%;
+}
+
+
+.card:hover {
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.4);
+    transform: scale(1.01);
+}
+
+
+.card-title {
+    grid-row: 2/4;
+    font-weight: 300;
+    text-align: center;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.link-card,
+.link-card:hover,
+.link-card:focus,
+.link-card:visited {
+    text-decoration: none;
+    color: black;
+}
+
+/* CARD BACKGROUNDS */
+.azul {
+    background: radial-gradient(#1fe4f5, #3fbafe);
+}
+
+.rosa {
+    background: radial-gradient(#fbc1cc, #fa99b2);
+}
+
+.azul-escuro {
+    background: radial-gradient(#76b2fe, #b69efe);
+}
+
+.verde {
+    background: radial-gradient(#60efbc, #58d5c9);
+}
+
+.roxo {
+    background: radial-gradient(#f588d8, #c0a3e5);
+}
+
+.vermelho {
+    background: radial-gradient(#f58888, #e32424);
+}
+
+.carrinho {
+    font-size: 22px;
+    list-style: none;
+}
+
+.pilula {
+    font-size: 10px;
+    color: white;
+    margin-top: 0.5px;
+    margin-left: 0.5px;
+    list-style: none;
+}
+
+.overlay {
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    visibility: hidden;
+    opacity: 0;
+    background: #fcfbeb;
+    width: 300px;
+    height: auto;
+}
+
+.overlay:target {
+    visibility: visible;
+    opacity: 1;
+}
+
+.popup {
+    margin: 5px auto;
+    padding: 10px;
+
+}
+
+.popup .close {
+    position: absolute;
+    top: 0;
+    right: 5px;
+    transition: all 200ms;
+    font-size: 25px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+}
+
+.popup .close:hover {
+    color: #c23232;
+}
+
+.rodape {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
+    background: #ededed;
+    text-align: center;
+    font-size: 13px;
+    color: #363636;
+    z-index: 10;
+}
+
+.link-neutro,
+.link-neutro:hover,
+.link-neutro:focus,
+.link-neutro:visited {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.margin-itens {
+    margin-left: 15px;
+}
+
+.sombra-nav {
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.20);
+}
+
+.mg-t-1 {
+    margin-top: 10px;
+}
+
+.mg-t-2 {
+    margin-top: 20px;
+}
+
+.mg-t-3 {
+    margin-top: 30px;
+}
+
+.mg-t-4 {
+    margin-top: 40px;
+}
+
+.mg-t-5 {
+    margin-top: 50px;
+}
+
+.mg-t-6 {
+    margin-top: 60px;
+}
+
+.mg-b-1 {
+    margin-bottom: 10px;
+}
+
+.mg-b-2 {
+    margin-bottom: 20px;
+}
+
+.mg-b-3 {
+    margin-bottom: 30px;
+}
+
+.mg-b-4 {
+    margin-bottom: 40px;
+}
+
+.mg-b-5 {
+    margin-bottom: 50px;
+}
+
+.mg-b-6 {
+    margin-bottom: 60px;
+}
+
+.mg-r-1 {
+    margin-right: 10px;
+}
+
+.mg-r-2 {
+    margin-right: 20px;
+}
+
+.mg-r-3 {
+    margin-right: 30px;
+}
+
+.mg-r-4 {
+    margin-right: 40px;
+}
+
+.mg-r-5 {
+    margin-right: 50px;
+}
+
+.mg-r-6 {
+    margin-right: 60px;
+}
+
+.mg-l-1 {
+    margin-left: 10px;
+}
+
+.mg-l-2 {
+    margin-left: 20px;
+}
+
+.mg-l-3 {
+    margin-left: 30px;
+}
+
+.mg-l-4 {
+    margin-left: 40px;
+}
+
+.mg-l-5 {
+    margin-left: 50px;
+}
+
+.mg-l-6 {
+    margin-left: 60px;
+}
+
+.badge-pill {
+    border-radius: 50rem;
+}
+
+.valor-item {
+    font-size: 12px;
+    color: #025709;
+}
+
+.valor-menos {
+    font-size: 12px;
+    color: red;
+}
+
+.sem-bold {
+    font-weight: normal;
+}
+
+.total {
+    text-align: right;
+    margin-right: 20px;
+    margin-top: 20px;
+    font-size: 15px;
+}
+
+.descricao-item {
+    font-size: 13px;
+    margin-top: 10px;
+    margin: 0px 15px;
+    font-weight: normal;
+}
+
+.remover-ing {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f2f0f0;
+}
+
+.qtd {
+    padding: 10px;
+    margin-top: 10px;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
+    font-size: 15px;
+}
+
+.area-qtd {
+    position: absolute;
+    right: 15px;
+    font-size: 20px;
+}
+
+.txt-area-obs {
+    padding: 10px;
+    margin-top: 10px;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
+    font-size: 15px;
+    border: none;
+}
+
+.obs {
+    padding: 10px;
+    margin-top: 65px;
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    font-size: 15px;
+}
+
+@media (max-width: 768px) {
+    .card {
+        padding: 5px;
+        min-height: 70px;
+        margin: 0px 0px 20px 0px;
+    }
+
+    .card-title {
+        font-size: 18px;
+    }
+
+    .cards {
+        margin-left: 0px;
+        margin-right: 0px;
+        justify-content: space-evenly;
+    }
+
+    .rodape {
+        font-size: 10px;
+    }
+
+}
+
+@media (min-width: 768px) {
+    .cards {
+        margin-left: 100px;
+        margin-right: 100px;
+    }
+
+}
