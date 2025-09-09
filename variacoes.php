@@ -47,6 +47,9 @@
         </a>
     </ol>
 
+    <div>
+        <img class="imagem-produto" src="img/produtos/calabresa.jpg" alt="Pizza Calabresa">
+    </div>
 
 </div>
 

@@ -79,7 +79,7 @@
     </div>
 
     <div class="total">
-        <p>Total - <strong>R$ 25,00</strong></p>
+        <p>Total <strong>R$ 25,00</strong></p>
     </div>
 
     <div class="mg-t-2">
