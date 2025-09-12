@@ -1,11 +1,13 @@
-<?php require_once("header.php"); ?>
+<?php 
+require_once("header.php");
+?>
 <div class="main-container">
     <!-- Imagem e texto -->
     <nav class="navbar navbar-light bg-light fixed-top sombra-nav">
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php">
                 <img src="img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="Logo Delivery">
-                Delivery Interativo
+                <?php echo $nome_sistema; ?>
             </a>
             <?php require_once("icone-popup-carrinho.php"); ?>
         </div>

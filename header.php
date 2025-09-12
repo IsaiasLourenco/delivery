@@ -1,3 +1,4 @@
+<?php require_once ('./sistema/conexao.php');?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -10,7 +11,7 @@
     <!-- FAVICON -->
     <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
     <!-- TITLE -->
-    <title>Delivery Interativo</title>
+    <title><?php echo $nome_sistema; ?></title>
     <!-- BOOTSTRAP   -->
     <link rel="stylesheet"
         href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"

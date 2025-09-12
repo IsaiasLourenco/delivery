@@ -1,0 +1,13 @@
+CREATE DATABASE delivery;
+
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    email VARCHAR(80) NOT NULL UNIQUE,
+    senha VARCHAR(100) NOT NULL,
+    nivel VARCHAR(50) NOT NULL,
+    ativo VARCHAR(3) NOT NULL
+);
+
+ALTER TABLE usuarios 
+ADD COLUMN data_cad DATE AFTER ativo;
