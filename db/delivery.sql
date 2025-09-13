@@ -11,3 +11,21 @@ CREATE TABLE usuarios (
 
 ALTER TABLE usuarios 
 ADD COLUMN data_cad DATE AFTER ativo;
+
+ALTER TABLE usuarios 
+ADD COLUMN cpf VARCHAR(14) NOT NULL AFTER email;
+
+ALTER TABLE usuarios 
+ADD COLUMN foto VARCHAR(100) AFTER ativo;
+
+ALTER TABLE usuarios 
+ADD COLUMN telefone VARCHAR(20) AFTER cpf;
+
+ALTER TABLE usuarios 
+ADD COLUMN cep VARCHAR(40) AFTER telefone,
+ADD COLUMN rua VARCHAR(40) AFTER cep,
+ADD COLUMN numero VARCHAR(5) AFTER rua,
+ADD COLUMN bairro VARCHAR(40) AFTER numero,
+ADD COLUMN cidade VARCHAR(40) AFTER bairro,
+ADD COLUMN estado VARCHAR(2) AFTER cidade;
+

@@ -9,10 +9,19 @@ $total = count($res);
 if ($total == 0) {
     $pdo->query("INSERT INTO usuarios SET   nome = 'Isaias Lourenço', 
                                             email = '$email_sistema', 
+                                            cpf = '247.074.358-31', 
+                                            telefone = '$telefone_sistema', 
+                                            cep = '13843-184', 
+                                            rua = 'Mocóca', 
+                                            numero = '880', 
+                                            bairro = 'Loteamento Parque Itacolomy', 
+                                            cidade = 'Mogi Guaçu', 
+                                            estado = 'SP', 
                                             senha ='$senha', 
                                             senha_crip = '$senha_crip', 
                                             nivel = 'Administrador', 
-                                            ativo = 'Sim', 
+                                            ativo = 'Sim',
+                                            foto = 'sem-foto.jpg', 
                                             data_cad = curDate()");
 }
 ?>
@@ -52,18 +61,16 @@ if ($total == 0) {
                             <img src="../img/logo.png" alt="Logotipo do sistema" class="img-logo">
                         </div>
                         <form action="autenticar.php" method="POST">
-                            <div class="forms-inputs mb-4"> <span>Email</span>
+                            <div class="forms-inputs mb-4"> <span>Email ou CPF</span>
                                 <input class="form-control"
-                                    autocomplete="off"
-                                    type="email" v-model="email"
+                                    type="text"
                                     name="email"
                                     required
                                     autofocus>
                             </div>
                             <div class="forms-inputs mb-4"> <span>Senha</span>
                                 <input class="form-control"
-                                    autocomplete="off"
-                                    type="password" v-model="password"
+                                    type="password"
                                     name="senha"
                                     required>
                             </div>
