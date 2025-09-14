@@ -3,7 +3,11 @@ session_start();
 require_once('conexao.php');
 $email = $_POST['email'];
 $senha = $_POST['senha'];
-$query = $pdo->query("SELECT * FROM usuarios WHERE (email = '$email' OR cpf = '$email') AND  senha = '$senha'");
+$senha_crip = md5($senha);
+$query = $pdo->prepare("SELECT * FROM usuarios WHERE (email = :email OR cpf = :email) AND  senha_crip = :senha");
+$query->bindValue(":email", "$email");
+$query->bindValue(":senha", "$senha_crip");
+$query->execute();
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total = count($res);
 if ($total > 0) {

@@ -23,11 +23,4 @@ try{
     echo 'Não conectado ao banco de dados! <br>' . $e;
 }
 
-$nome_sistema = 'Delivery Interativo';
-$email_sistema = 'isaiaslourenco2020@gmail.com';
-$telefone_sistema = '(19)99674-5466';
-$telefone_url = '55'.preg_replace('/[()-]+/', '', $telefone_sistema);
-$endereco_sistema = 'Rua Mococa, 880 - Itacolomy - Mogi Guaçu SP';
-$dev = 'Vetor256.';
-$site_dev = 'vetor256.com';
 ?>

@@ -22,6 +22,35 @@ $ativo_usuario = $res[0]['ativo'];
 $foto_usuario = $res[0]['foto'];
 $data_cad_usuario = $res[0]['data_cad'];
 
+$query_sistema = $pdo->query("SELECT * FROM config");
+$res_sistema = $query_sistema->fetchAll(PDO::FETCH_ASSOC);
+$id_sistema = $res_sistema[0]['id'];
+$nome_sistema = $res_sistema[0]['nome_sistema'];
+$email_sistema = $res_sistema[0]['email_sistema'];
+$telefone_sistema = $res_sistema[0]['telefone_sistema'];
+$telefone_fixo = $res_sistema[0]['telefone_fixo'];
+$cnpj_sistema = $res_sistema[0]['cnpj_sistema'];
+$cep_sistema = $res_sistema[0]['cep_sistema'];
+$rua_sistema = $res_sistema[0]['rua_sistema'];
+$numero_sistema = $res_sistema[0]['numero_sistema'];
+$bairro_sistema = $res_sistema[0]['bairro_sistema'];
+$cidade_sistema = $res_sistema[0]['cidade_sistema'];
+$estado_sistema = $res_sistema[0]['estado_sistema'];
+$instagram = $res_sistema[0]['instagram_sistema'];
+$tipo_rel = $res_sistema[0]['tipo_relatorio'];
+$cards = $res_sistema[0]['cards'];
+$pedidos = $res_sistema[0]['pedidos'];
+$dev = $res_sistema[0]['desenvolvedor'];
+$site_dev = $res_sistema[0]['site_dev'];
+$previsao_entrega = $res_sistema[0]['previsao_entrega'];
+$aberto = $res_sistema[0]['estabelecimento_aberto'];
+$abertura = $res_sistema[0]['abertura'];
+$fechamento = $res_sistema[0]['fechamento'];
+$txt_fechamento = $res_sistema[0]['texto_fechamento'];
+$logo_sistema = $res_sistema[0]['logotipo'];
+$icone_sistema = $res_sistema[0]['icone'];
+$logo_rel = $res_sistema[0]['logo_rel'];
+
 if (@$_GET['pagina'] != "") {
     $pagina = @$_GET['pagina'];
 } else {
@@ -37,7 +66,9 @@ if (@$_GET['pagina'] != "") {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <!-- FAVICON -->
-    <link rel="shortcut icon" href="../../img/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo $url_base; ?>../../img/<?php echo $icone_sistema; ?>" type="image/x-icon">
+    <!-- FAVICON -->
+    <link rel="shortcut icon" href="../../img/<?php echo $icone_sistema;?>" type="image/x-icon">
     <script type="application/x-javascript">
         addEventListener("load", function() {
             setTimeout(hideURLbar, 0);
@@ -140,7 +171,7 @@ if (@$_GET['pagina'] != "") {
                     <div class="navbar-header">
                         <h1>
                             <a class="navbar-brand" href="index.php">
-                                <img src="../../img/logo.png" alt="Logo do sistema" class="logo"> Delivery
+                                <img src="../../img/<?php echo $logo_sistema?>" alt="Logo do sistema" class="logo"> Delivery
                                 <span class="dashboard_text"><?php echo $nome_sistema; ?></span>
                             </a>
                         </h1>
@@ -317,25 +348,166 @@ if (@$_GET['pagina'] != "") {
 
 <!-- Modal Config-->
 <div class="modal fade" id="modalConfig" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h4 class="modal-title" id="exampleModalLabel">Editar Configurações</h4>
+                <button id="btn-fechar-perfil" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+            <form id="form-config">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="nome_sistema">Nome do Sistema</label>
+                            <input type="text" class="form-control" id="nome_sistema" name="nome_sistema" value="<?php echo $nome_sistema ?>" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email_sistema">E-mail do Sistema</label>
+                            <input type="email" class="form-control" id="email_sistema" name="email_sistema" value="<?php echo $email_sistema ?>" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="telefone_sistema">Telefone do Sistema</label>
+                            <input type="text" class="form-control" id="telefone_sistema" name="telefone_sistema" value="<?php echo $telefone_sistema ?>" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="cnpj_sistema">CNPJ</label>
+                            <input type="text" class="form-control" id="cnpj_sistema" name="cnpj_sistema" value="<?php echo $cnpj_sistema ?>" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="telefone_fixo">Telefone Fixo</label>
+                            <input type="text" class="form-control" id="telefone_fixo" name="telefone_fixo" value="<?php echo $telefone_fixo ?>" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="cep-sistema">CEP</label>
+                            <input type="text" class="form-control" id="cep-sistema" name="cep-sistema" value="<?php echo $cep_sistema ?>" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label for="rua-sistema">Rua</label>
+                            <input type="text" class="form-control" id="rua-sistema" name="rua-sistema" value="<?php echo $rua_sistema ?>" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="numero-sistema">Número</label>
+                            <input type="text" class="form-control" id="numero-sistema" name="numero-sistema" value="<?php echo $numero_sistema ?>" required>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="bairro-sistema">Bairro</label>
+                            <input type="text" class="form-control" id="bairro-sistema" name="bairro-sistema" value="<?php echo $bairro_sistema ?>" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label for="cidade">Cidade</label>
+                            <input type="text" class="form-control" id="cidade-perfil" name="cidade" value="<?php echo $cidade_sistema ?>" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="estado-sistema">Estado</label>
+                            <input type="text" class="form-control" id="estado-sistema" name="estado-sistema" value="<?php echo $estado_sistema ?>" readonly>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="instagram">Instagram</label>
+                            <input type="text" class="form-control" id="instagram" name="instagram" value="<?php echo $instagram ?>">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="tipoRel">Tipo Relatório</label>
+                            <select class="form-control" name="tipoRel">
+                                <option value="PDF" <?php if ($tipo_rel == 'PDF') { ?> selected <?php } ?>>PDF</option>
+                                <option value="HTML" <?php if ($tipo_rel == 'HTML') { ?> selected <?php } ?>>HTML</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="cards">Cards</label>
+                            <select class="form-control" name="cards">
+                                <option value="Cores" <?php if ($cards == 'Cores') { ?> selected <?php } ?>>Cores</option>
+                                <option value="Foto" <?php if ($cards == 'Foto') { ?> selected <?php } ?>>Foto</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="pedidos">Pedidos Whatsapp</label>
+                            <select class="form-control" name="pedidos">
+                                <option value="Sim" <?php if ($pedidos == 'Sim') { ?> selected <?php } ?>>Sim</option>
+                                <option value="Não" <?php if ($pedidos == 'Não') { ?> selected <?php } ?>>Não</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="dev">Desenvolvedor</label>
+                            <input type="text" class="form-control" id="dev" name="dev" value="<?php echo $dev ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="site">Site</label>
+                            <input type="text" class="form-control" id="site" name="site" value="<?php echo $site_dev ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="previsao">Previsão Entrega</label>
+                            <input type="text" class="form-control" id="previsao" name="previsao" value="<?php echo $previsao_entrega ?>" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="aberto">Estabelecimento</label>
+                            <select class="form-control" name="aberto">
+                                <option value="aberto" <?php if ($aberto == 'aberto') { ?> selected <?php } ?>>Aberto</option>
+                                <option value="fechado" <?php if ($aberto == 'fechado') { ?> selected <?php } ?>>Fechado</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="abertura">Horário Abertura</label>
+                            <input type="text" class="form-control" id="abertura" name="abertura" value="<?php echo $abertura ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="fechamento">Horário Fechamento</label>
+                            <input type="text" class="form-control" id="fechamento" name="fechamento" value="<?php echo $fechamento ?>">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="txt_fechamento">Texto Fechamento</label>
+                            <input type="text" class="form-control" id="txt_fechamento" name="txt_fechamento" value="<?php echo $txt_fechamento ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="logotipo">Logotipo(*.png)</label>
+                            <input type="file" class="form-control" id="logotipo" name="logotipo" onchange="carregarImgLogotipo()">
+                        </div>
+                        <div class="col-md-2">
+                            <img src="../../img/<?php echo $logo_sistema; ?>" alt="Logotipo" style="width: 80px;" id="target-logo">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="icone">Ícone(*.png)</label>
+                            <input type="file" class="form-control" id="icone" name="icone" onchange="carregarImgIcone()">
+                        </div>
+                        <div class="col-md-2">
+                            <img src="../../img/<?php echo $icone_sistema; ?>" alt="Icone" style="width: 80px;" id="target-ico">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="logo_rel">Logotipo Relatório(*.jpg)</label>
+                            <input type="file" class="form-control" id="logo_rel" name="logo_rel" onchange="carregarImgLogoRel()">
+                        </div>
+                        <div class="col-md-2">
+                            <img src="../../img/<?php echo $logo_rel; ?>" alt="Logotipo do Relatório" style="width: 80px;" id="target-logo-rel">
+                        </div>
+                        <input type="hidden" name="id" value="<?php echo $id_sistema ?>">
+                    </div>
+                    <div id="msg-perfil" class="centro"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-<!-- Fim Modal Config-->
+<!-- Fim Modal Config -->
 
 <!-- Modal Perfil-->
 <div class="modal fade" id="modalPerfil" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -423,7 +595,7 @@ if (@$_GET['pagina'] != "") {
                         <div class="col-md-6">
                             <img src="./images/perfil/<?php echo $foto_usuario ?>" alt="Foto do usuário" style="width: 80px;" id="target-usu">
                         </div>
-                        <input type="hidden" name="id-usuario" value="<?php echo $id_usuario?>">
+                        <input type="hidden" name="id-usuario" value="<?php echo $id_usuario ?>">
                     </div>
                     <div id="msg-perfil" class="centro"></div>
                 </div>
@@ -434,7 +606,7 @@ if (@$_GET['pagina'] != "") {
         </div>
     </div>
 </div>
-<!-- Modal Perfil-->
+<!-- Fim Modal Perfil-->
 
 <!-- BUSCA CEP -->
 <script type="text/javascript" src="../../js/buscaCepModal.js"></script>
@@ -459,6 +631,60 @@ if (@$_GET['pagina'] != "") {
     }
 </script>
 <!-- FIM SCRIPT TROCA FOTO -->
+
+<!-- SCRIPT TROCA LOGO -->
+<script type="text/javascript">
+    function carregarImgLogotipo() {
+        var target = document.getElementById('target-logo');
+        var file = document.querySelector("#logotipo").files[0];
+        var reader = new FileReader();
+        reader.onloadend = function() {
+            target.src = reader.result;
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            target.src = "";
+        }
+    }
+</script>
+<!-- FIM SCRIPT TROCA LOGO -->
+
+<!-- SCRIPT TROCA ÍCONE -->
+<script type="text/javascript">
+    function carregarImgIcone() {
+        var target = document.getElementById('target-ico');
+        var file = document.querySelector("#icone").files[0];
+        var reader = new FileReader();
+        reader.onloadend = function() {
+            target.src = reader.result;
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            target.src = "";
+        }
+    }
+</script>
+<!-- FIM SCRIPT TROCA ÍCONE -->
+
+<!-- SCRIPT TROCA LOGO REL -->
+<script type="text/javascript">
+    function carregarImgLogoRel() {
+        var target = document.getElementById('target-logo-rel');
+        var file = document.querySelector("#logo_rel").files[0];
+        var reader = new FileReader();
+        reader.onloadend = function() {
+            target.src = reader.result;
+        };
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            target.src = "";
+        }
+    }
+</script>
+<!-- FIM SCRIPT TROCA LOGO REL -->
 
 <!-- AJAX SALVA EDITA USUARIO -->
 <script type="text/javascript">
@@ -487,3 +713,31 @@ if (@$_GET['pagina'] != "") {
     });
 </script>
 <!-- FIM AJAX SALVA EDITA USUARIO -->
+
+<!-- AJAX SALVA EDITA CONFIGURAÇÕES -->
+<script type="text/javascript">
+    $("#form-config").submit(function() {
+        event.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            url: "editar-config.php",
+            type: 'POST',
+            data: formData,
+            success: function(mensagem) {
+                $('#msg-config').text('');
+                $('#msg-config').removeClass('text-danger text-success')
+                if (mensagem.trim() == "Editado com Sucesso") {
+                    $('#btn-fechar-config').click();
+                    location.reload();
+                } else {
+                    $('#msg-config').addClass('text-danger')
+                    $('#msg-config').text(mensagem)
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+        });
+    });
+</script>
+<!-- FIM AJAX SALVA EDITA CONFIGURAÇÕES -->

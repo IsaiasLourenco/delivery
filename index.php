@@ -6,7 +6,7 @@ require_once("header.php");
     <nav class="navbar navbar-light bg-light fixed-top sombra-nav">
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php">
-                <img src="img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="Logo Delivery">
+                <img src="img/<?php echo $logo_sistema ;?>" width="30" height="30" class="d-inline-block align-top" alt="Logo Delivery">
                 <?php echo $nome_sistema; ?>
             </a>
             <?php require_once("icone-popup-carrinho.php"); ?>
