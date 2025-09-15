@@ -34,6 +34,50 @@
     font-size: 12px;
 }
 
+#modalCo    nfig .modal-body .centro {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+}
+
+.input-group .input-group-text {
+  display: flex;
+  align-items: center;
+}
+
+.pdg-15 {
+    padding: 15px;
+}
+
+.tabela-menor {
+    font-size: 0.7rem;
+}
+
+.texto-menor {
+    font-size: 0.7rem;
+}
+
+.centro {
+    text-align: center;
+}
+
+.listar-foto {
+    width: 30px;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.mg-l--23 {
+    margin-left: -230px;
+}
+
+.d-il-b {
+    display: inline-block;
+    list-style: none;
+}
+
 @media (max-width: 768px) {
     .invisible-in-mob {
         display: none;
@@ -55,5 +99,9 @@
         color: black;
         font-weight: bold;
         cursor: pointer;
+    }
+
+    .esc {
+        display: none;
     }
 }

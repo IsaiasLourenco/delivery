@@ -66,8 +66,6 @@ if (@$_GET['pagina'] != "") {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <!-- FAVICON -->
-    <link rel="shortcut icon" href="<?php echo $url_base; ?>../../img/<?php echo $icone_sistema; ?>" type="image/x-icon">
-    <!-- FAVICON -->
     <link rel="shortcut icon" href="../../img/<?php echo $icone_sistema;?>" type="image/x-icon">
     <script type="application/x-javascript">
         addEventListener("load", function() {
@@ -171,7 +169,7 @@ if (@$_GET['pagina'] != "") {
                     <div class="navbar-header">
                         <h1>
                             <a class="navbar-brand" href="index.php">
-                                <img src="../../img/<?php echo $logo_sistema?>" alt="Logo do sistema" class="logo"> Delivery
+                                <img src="../../img/<?php echo $logo_sistema; ?>" alt="Logo do sistema" class="logo"> Delivery
                                 <span class="dashboard_text"><?php echo $nome_sistema; ?></span>
                             </a>
                         </h1>
@@ -220,7 +218,7 @@ if (@$_GET['pagina'] != "") {
                                     </div>
                                 </li>
                                 <li><a href="#">
-                                        <div class="user_img"><img src="images/1.jpg" alt=""></div>
+                                        <div class="user_img"><img src="images/" alt=""></div>
                                         <div class="notification_desc">
                                             <p>Lorem ipsum dolor amet</p>
                                             <p><span>1 hour ago</span></p>
@@ -228,7 +226,7 @@ if (@$_GET['pagina'] != "") {
                                         <div class="clearfix"></div>
                                     </a></li>
                                 <li class="odd"><a href="#">
-                                        <div class="user_img"><img src="images/4.jpg" alt=""></div>
+                                        <div class="user_img"><img src="images/" alt=""></div>
                                         <div class="notification_desc">
                                             <p>Lorem ipsum dolor amet </p>
                                             <p><span>1 hour ago</span></p>
@@ -236,7 +234,7 @@ if (@$_GET['pagina'] != "") {
                                         <div class="clearfix"></div>
                                     </a></li>
                                 <li><a href="#">
-                                        <div class="user_img"><img src="images/3.jpg" alt=""></div>
+                                        <div class="user_img"><img src="images/" alt=""></div>
                                         <div class="notification_desc">
                                             <p>Lorem ipsum dolor amet </p>
                                             <p><span>1 hour ago</span></p>
@@ -244,7 +242,7 @@ if (@$_GET['pagina'] != "") {
                                         <div class="clearfix"></div>
                                     </a></li>
                                 <li><a href="#">
-                                        <div class="user_img"><img src="images/2.jpg" alt=""></div>
+                                        <div class="user_img"><img src="images/" alt=""></div>
                                         <div class="notification_desc">
                                             <p>Lorem ipsum dolor amet </p>
                                             <p><span>1 hour ago</span></p>
@@ -352,7 +350,7 @@ if (@$_GET['pagina'] != "") {
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="exampleModalLabel">Editar Configurações</h4>
-                <button id="btn-fechar-perfil" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button id="btn-fechar-config" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -403,7 +401,7 @@ if (@$_GET['pagina'] != "") {
                     <div class="row">
                         <div class="col-md-5">
                             <label for="cidade">Cidade</label>
-                            <input type="text" class="form-control" id="cidade-perfil" name="cidade" value="<?php echo $cidade_sistema ?>" readonly>
+                            <input type="text" class="form-control" id="cidade-sistema" name="cidade-sistema" value="<?php echo $cidade_sistema ?>" readonly>
                         </div>
                         <div class="col-md-2">
                             <label for="estado-sistema">Estado</label>
@@ -447,8 +445,11 @@ if (@$_GET['pagina'] != "") {
                             <input type="text" class="form-control" id="site" name="site" value="<?php echo $site_dev ?>">
                         </div>
                         <div class="col-md-4">
-                            <label for="previsao">Previsão Entrega</label>
-                            <input type="text" class="form-control" id="previsao" name="previsao" value="<?php echo $previsao_entrega ?>" required>
+                            <label for="previsao" class="form-label">Previsão de Entrega (minutos)</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="previsao" name="previsao" value="<?php echo $previsao_entrega ?>" required min="1">
+                                <span class="input-group-text">min</span>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -461,11 +462,11 @@ if (@$_GET['pagina'] != "") {
                         </div>
                         <div class="col-md-4">
                             <label for="abertura">Horário Abertura</label>
-                            <input type="text" class="form-control" id="abertura" name="abertura" value="<?php echo $abertura ?>">
+                            <input type="time" class="form-control" id="abertura" name="abertura" value="<?php echo $abertura ?>">
                         </div>
                         <div class="col-md-4">
                             <label for="fechamento">Horário Fechamento</label>
-                            <input type="text" class="form-control" id="fechamento" name="fechamento" value="<?php echo $fechamento ?>">
+                            <input type="time" class="form-control" id="fechamento" name="fechamento" value="<?php echo $fechamento ?>">
                         </div>
                     </div>
                     <div class="row">
@@ -498,7 +499,7 @@ if (@$_GET['pagina'] != "") {
                         </div>
                         <input type="hidden" name="id" value="<?php echo $id_sistema ?>">
                     </div>
-                    <div id="msg-perfil" class="centro"></div>
+                    <div id="msg-config" class="centro"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Salvar</button>

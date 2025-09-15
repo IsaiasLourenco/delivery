@@ -24,6 +24,12 @@ if ($total == 0) {
                                             foto = 'sem-foto.jpg', 
                                             data_cad = curDate()");
 }
+
+$query_config = $pdo->query("SELECT * FROM config");
+$res_config = $query_config->fetchAll(PDO::FETCH_ASSOC);
+$nome_sistema = $res_config[0]['nome_sistema'];
+$logo_sistema = $res_config[0]['logotipo'];
+$icone_sistema = $res_config[0]['icone'];
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -33,7 +39,7 @@ if ($total == 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $nome_sistema; ?></title>
     <!-- FAVICON -->
-    <link rel="shortcut icon" href="../img/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../img/<?php echo $icone_sistema;?>" type="image/x-icon">
     <!-- BOOTSTRAP   -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
         rel="stylesheet"
@@ -58,7 +64,7 @@ if ($total == 0) {
                 <div class="card px-5 py-5" id="form1">
                     <div v-if="!submitted">
                         <div class="img-logo">
-                            <img src="../img/logo.png" alt="Logotipo do sistema" class="img-logo">
+                            <img src="../img/<?php echo $logo_sistema;?>" alt="Logotipo do sistema" class="img-logo">
                         </div>
                         <form action="autenticar.php" method="POST">
                             <div class="forms-inputs mb-4"> <span>Email ou CPF</span>
