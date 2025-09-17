@@ -22,6 +22,10 @@ $ativo_usuario = $res[0]['ativo'];
 $foto_usuario = $res[0]['foto'];
 $data_cad_usuario = $res[0]['data_cad'];
 
+$queryNivel = $pdo->query("SELECT * FROM cargos WHERE id = '$nivel_usuario'");
+$resNivel = $queryNivel->fetchAll(PDO::FETCH_ASSOC);
+$nomeNivel = $resNivel[0]['nome'];
+
 $query_sistema = $pdo->query("SELECT * FROM config");
 $res_sistema = $query_sistema->fetchAll(PDO::FETCH_ASSOC);
 $id_sistema = $res_sistema[0]['id'];
@@ -66,7 +70,7 @@ if (@$_GET['pagina'] != "") {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <!-- FAVICON -->
-    <link rel="shortcut icon" href="../../img/<?php echo $icone_sistema;?>" type="image/x-icon">
+    <link rel="shortcut icon" href="../../img/<?php echo $icone_sistema; ?>" type="image/x-icon">
     <script type="application/x-javascript">
         addEventListener("load", function() {
             setTimeout(hideURLbar, 0);
@@ -158,6 +162,9 @@ if (@$_GET['pagina'] != "") {
     </script>
     <!-- //pie-chart --><!-- index page sales reviews visitors pie chart -->
 
+    <!-- Datatables -->
+    <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css">
+    <script type="text/javascript" src="DataTables/datatables.min.js"></script>
 </head>
 
 <body class="cbp-spmenu-push">
@@ -189,8 +196,29 @@ if (@$_GET['pagina'] != "") {
                                     <i class="fa fa-angle-left pull-right"></i>
                                 </a>
                                 <ul class="treeview-menu">
-                                    <li><a href="#"><i class="fa fa-angle-right"></i> Funcionários</a></li>
+                                    <li><a href="index.php?pagina=funcionarios"><i class="fa fa-angle-right"></i> Funcionários</a></li>
                                     <li><a href="index.php?pagina=usuarios"><i class="fa fa-angle-right"></i> Usuários</a></li>
+                                </ul>
+                            </li>
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-plus"></i>
+                                    <span>Cadastros</span>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="index.php?pagina=cargos"><i class="fa fa-angle-right"></i> Cargos</a></li>
+                                </ul>
+                            </li>
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-cutlery"></i>
+                                    <span>Produtos</span>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="index.php?pagina=categorias"><i class="fa fa-angle-right"></i> Produtos</a></li>
+                                    <li><a href="index.php?pagina=categorias"><i class="fa fa-angle-right"></i> Categorias</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -270,7 +298,7 @@ if (@$_GET['pagina'] != "") {
                                     <span class="prfil-img"><img src="images/perfil/<?php echo $foto_usuario; ?>" alt="Foto do usuário" class="img-perfil-custom"> </span>
                                     <div class="user-name invisible-in-mob">
                                         <p><?php echo $nome_usuario; ?></p>
-                                        <span><?php echo $nivel_usuario; ?></span>
+                                        <span><?php echo $nomeNivel; ?></span>
                                     </div>
                                     <i class="fa fa-angle-down lnr"></i>
                                     <i class="fa fa-angle-up lnr"></i>
@@ -579,13 +607,37 @@ if (@$_GET['pagina'] != "") {
                             <label for="conf-senha">Confirmar Senha</label>
                             <input type="password" class="form-control" id="conf-senha-perfil" name="conf-senha">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-5">
                             <label for="nivel">Nível</label>
-                            <input type="text" class="form-control" id="nivel-perfil" name="nivel" value="<?php echo $nivel_usuario ?>" required>
+                            <?php if ($nomeNivel == 'Administrador') { ?>
+                                <select class="form-control" name="nivel" id="nivel">
+                                    <?php
+                                    $query = $pdo->query("SELECT * FROM cargos ORDER BY nome asc");
+                                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+                                    $total_reg = @count($res);
+
+                                    if ($total_reg > 0) {
+                                        for ($i = 0; $i < $total_reg; $i++) {
+                                            echo '<option value="' . $res[$i]['id'] . '">' . $res[$i]['nome'] . '</option>';
+                                        }
+                                    } else {
+                                        echo '<option value="0">Cadastre um Cargo</option>';
+                                    }
+                                    ?>
+                                </select>
+                            <?php } else { ?>
+                                <input type="text" class="form-control" id="nivel-perfil"
+                                    name="nivel" value="<?= $nomeNivel ?>" readonly>
+                            <?php } ?>
                         </div>
-                        <div class="col-md-2">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
                             <label for="ativo">Ativo</label>
-                            <input type="text" class="form-control" id="ativo-perfil" name="ativo" value="<?php echo $ativo_usuario ?>" required>
+                            <select class="form-control" name="ativo" id="ativo">
+                                <option value="Sim" selected>Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row">
@@ -598,8 +650,8 @@ if (@$_GET['pagina'] != "") {
                         </div>
                         <input type="hidden" name="id-usuario" value="<?php echo $id_usuario ?>">
                     </div>
-                    <div id="msg-perfil" class="centro"></div>
                 </div>
+                <div id="msg-perfil" class="centro"></div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>

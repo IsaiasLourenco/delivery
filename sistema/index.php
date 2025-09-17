@@ -2,8 +2,18 @@
 require_once('conexao.php');
 $senha = '0808';
 $senha_crip = md5('$senha');
+//CRIAR UM CARGO ADMIN
+$queryAdmin = $pdo->query("SELECT * FROM cargos WHERE nome = 'Administrador'");
+$resAdmin = $queryAdmin->fetchAll(PDO::FETCH_ASSOC);
+$totalAdmin = count($resAdmin);
+if ($totalAdmin == 0) {
+    $pdo->query("INSERT INTO cargos SET nome = 'Administrador'");
+} else {
+    $id_nivel = $resAdmin[0]['id'];
+}
+
 //CRIAR UM USUÁRIO ADM
-$query = $pdo->query("SELECT * FROM usuarios WHERE nivel = 'Administrador' ");
+$query = $pdo->query("SELECT * FROM usuarios WHERE nivel = '$id_nivel' ");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total = count($res);
 if ($total == 0) {

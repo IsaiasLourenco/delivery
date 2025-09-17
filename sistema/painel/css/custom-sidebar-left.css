@@ -61,6 +61,10 @@
     text-align: center;
 }
 
+.wd-100 {
+    width: 100%;
+}
+
 .listar-foto {
     width: 30px;
 }
@@ -71,6 +75,14 @@
 
 .mg-l--23 {
     margin-left: -230px;
+}
+
+.mg-t--20 {
+    margin-top: -20px;
+}
+
+.br-btt {
+    border-bottom: 1px solid #cac7c7;
 }
 
 .d-il-b {
