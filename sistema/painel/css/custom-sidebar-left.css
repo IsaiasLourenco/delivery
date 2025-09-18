@@ -90,6 +90,10 @@
     list-style: none;
 }
 
+.text-verde {
+    color: #077811;
+}
+
 @media (max-width: 768px) {
     .invisible-in-mob {
         display: none;

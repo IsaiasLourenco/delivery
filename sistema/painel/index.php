@@ -217,7 +217,7 @@ if (@$_GET['pagina'] != "") {
                                     <i class="fa fa-angle-left pull-right"></i>
                                 </a>
                                 <ul class="treeview-menu">
-                                    <li><a href="index.php?pagina=categorias"><i class="fa fa-angle-right"></i> Produtos</a></li>
+                                    <li><a href="index.php?pagina=produtos"><i class="fa fa-angle-right"></i> Produtos</a></li>
                                     <li><a href="index.php?pagina=categorias"><i class="fa fa-angle-right"></i> Categorias</a></li>
                                 </ul>
                             </li>

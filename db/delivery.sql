@@ -91,3 +91,19 @@ CREATE TABLE categorias (
 
 ALTER TABLE categorias 
 ADD COLUMN ativo VARCHAR(3) AFTER cor;
+
+CREATE TABLE produtos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    descricao VARCHAR(80) NOT NULL,
+    categoria INT NOT NULL,
+    valor_compra DECIMAL (10,2) NOT NULL,
+    valor_venda DECIMAL (10,2) NOT NULL,
+    estoque INT NOT NULL,
+    foto VARCHAR(100),
+    nivel_estoque INT NOT NULL,
+    ativo VARCHAR(3) NOT NULL
+);
+
+ALTER TABLE produtos 
+ADD COLUMN tem_estoque VARCHAR(3) AFTER ativo;

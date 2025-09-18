@@ -16,6 +16,16 @@ if (count($res) > 0 AND $id != $res[0]['id']) {
     exit;
 }
 
+//validar troca da foto
+$query = $pdo->query("SELECT * FROM $tabela where id = '$id'");
+$res = $query->fetchAll(PDO::FETCH_ASSOC);
+$total_reg = count($res);
+if ($total_reg > 0) {
+    $foto = $res[0]['foto'];
+} else {
+    $foto = 'sem-foto.jpg';
+}
+
 //SCRIPT PARA SUBIR FOTO NO SERVIDOR
 $nome_img = date('d-m-Y H:i:s') . '-' . @$_FILES['foto']['name'];
 $nome_img = preg_replace('/[ :]+/', '-', $nome_img);
