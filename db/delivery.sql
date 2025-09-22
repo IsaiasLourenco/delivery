@@ -107,3 +107,35 @@ CREATE TABLE produtos (
 
 ALTER TABLE produtos 
 ADD COLUMN tem_estoque VARCHAR(3) AFTER ativo;
+
+CREATE TABLE saidas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    produto INT NOT NULL,
+    quantidade INT NOT NULL,
+    motivo VARCHAR(50),
+    usuario INT NOT NULL,
+    data_saida DATE NOT NULL
+);
+
+CREATE TABLE entradas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    produto INT NOT NULL,
+    quantidade INT NOT NULL,
+    motivo VARCHAR(50),
+    usuario INT NOT NULL,
+    data_entrada DATE NOT NULL
+);
+
+CREATE TABLE variacoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    produto INT NOT NULL,
+    sigla VARCHAR(5),
+    descricao varchar(35),
+    valor DECIMAL(10,2)
+);
+
+ALTER TABLE variacoes
+ADD COLUMN nome VARCHAR(30) AFTER sigla;
+
+ALTER TABLE variacoes
+ADD COLUMN ativo VARCHAR(3) AFTER valor;

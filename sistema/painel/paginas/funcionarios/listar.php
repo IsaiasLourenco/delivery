@@ -7,6 +7,7 @@ $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total = count($res);
 if ($total > 0) {
     echo <<<HTML
+    <h4 class="centro">Funcionários</h4>
     <table class="table table-hover table-sm table-responsive tabela-menor" id="tabela">
         <thead>
             <tr>

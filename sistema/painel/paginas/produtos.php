@@ -233,6 +233,71 @@ $pag = 'produtos';
 </div>
 <!-- Fim Modal Entrada-->
 
+<!-- Modal Variações-->
+<div class="modal fade" id="modalVariacoes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span id="titulo_nome_var"></span></h4>
+                <button id="btn-fechar-var" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -20px">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-var">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="sigla">Sigla</label>
+                                <input maxlength="5" type="text" class="form-control" id="sigla" name="sigla">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="nome">Nome</label>
+                                <input maxlength="35" type="text" class="form-control" id="nome_var" name="nome" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="valor">Valor</label>
+                                <input type="text" class="form-control" id="valor_var" name="valor" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="descricao">Descrição</label>
+                                <input maxlength="50" type="text" class="form-control" id="descricao_var" name="descricao">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="descricao">Ativo</label>
+                                <select class="form-control" name="ativo" id="ativo_var">
+                                    <option value="Sim" selected>Sim</option>
+                                    <option value="Não">Não</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mg-t-20">
+                            <button type="submit" class="btn btn-primary centro">Salvar</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="id_var" name="id">
+                    <input type="hidden" id="id_variacao" name="id_var">
+                </form>
+                <br>
+                <div id="mensagem-var" class="centro texto-menor"></div>
+                <hr>
+                <div id="listar-var"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fim Modal Variações-->
+
 <!-- Variável Página -->
 <script type="text/javascript">
     var pag = "<?= $pag ?>"
@@ -304,6 +369,10 @@ $pag = 'produtos';
     document.getElementById("valor_venda-produto").addEventListener("input", function() {
         formatarMoedaInput(this);
     });
+
+    document.getElementById("valor_var").addEventListener("input", function() {
+        formatarMoedaInput(this);
+    });
 </script>
 <!-- Fim Função para formatar o valor para moeda brasileira -->
 
@@ -362,3 +431,107 @@ $pag = 'produtos';
     });
 </script>
 <!-- Fim Entrada de produtos -->
+
+<!-- Inserir e Editar Variações de produtos -->
+<script type="text/javascript">
+    $("#form-var").submit(function() {
+        event.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            url: 'paginas/' + pag + "/variacoes.php",
+            type: 'POST',
+            data: formData,
+            success: function(mensagem) {
+                $('#mensagem-var').text('');
+                $('#mensagem-var').removeClass('text-danger text-success')
+                if (mensagem.trim() == "Salvo com Sucesso") {
+                    listarVariacoes($('#id_var').val());
+                    limparCamposVar();
+                } else {
+                    $('#mensagem-var').addClass('text-danger')
+                    $('#mensagem-var').text(mensagem)
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+        });
+    });
+</script>
+<!-- Fim Inserir e Editar Variações de produtos -->
+
+<!-- Listar Variações de produtos -->
+<script type="text/javascript">
+    function limparCamposVar() {
+        $('#nome_var').val('');
+        $('#valor_var').val('');
+        $('#sigla').val('');
+        $('#descricao_var').val('');
+        $('#id_variacao').val('');
+    }
+    function listarVariacoes(id) {
+        $.ajax({
+            url: 'paginas/' + pag + "/listar-variacoes.php",
+            method: 'POST',
+            data: {
+                id: id
+            },
+            dataType: "html",
+            success: function(result) {
+                $("#listar-var").html(result);
+                $("#mensagem-ecluir-var").text('');
+            }
+        });
+    }
+</script>
+<!-- Fim Listar Variações de produtos -->
+
+<!-- Excluir Variações de produtos -->
+<script type="text/javascript">
+    function excluirVar(id) {
+        $.ajax({
+            url: 'paginas/' + pag + "/excluir-variacoes.php",
+            method: 'POST',
+            data: {
+                id
+            },
+            dataType: "text",
+            success: function(mensagem) {
+                if (mensagem.trim() == "Excluído com Sucesso") {
+                    listarVariacoes($('#id_var').val());
+                    limparCamposVar();
+                } else {
+                    $('#mensagem-excluir-var').addClass('text-danger')
+                    $('#mensagem-excluir-var').text(mensagem)
+                }
+            },
+        });
+    }
+</script>
+<!-- Fim Excluir Variações de produtos -->
+
+<!-- Ativar Variações de produtos -->
+<script type="text/javascript">
+    function ativarVar(id, acao) {
+        $.ajax({
+            url: 'paginas/' + pag + "/mudar-status-variacoes.php",
+            method: 'POST',
+            data: {
+                id,
+                acao
+            },
+            dataType: 'text',
+
+            success: function(mensagem) {
+                if (mensagem.trim() == "Alterado com sucesso") {
+                    listarVariacoes($('#id_var').val());
+                    limparCamposVar();
+                } else {
+                    $('#mensagem-excluir-var').addClass('text-danger')
+                    $('#mensagem-excluir-var').text(mensagem)
+                }
+            },
+        });
+    }
+</script>
+<!-- Fim Ativar Variações de produtos -->

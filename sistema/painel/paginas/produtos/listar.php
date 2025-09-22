@@ -7,6 +7,7 @@ $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total = count($res);
 if ($total > 0) {
     echo <<<HTML
+    <h4 class="centro">Produtos</h4>
     <table class="table table-hover table-sm table-responsive tabela-menor" id="tabela">
         <thead>
             <tr>
@@ -59,7 +60,7 @@ HTML;
         $valor_compra_formatado = "R$ " . number_format($valor_compra, 2, ',', '.');
         $valor_venda_formatado = "R$ " . number_format($valor_venda, 2, ',', '.');
 
-        if ($nivel_estoque >= $estoque AND $tem_estoque == 'Sim' ) {
+        if ($nivel_estoque >= $estoque and $tem_estoque == 'Sim') {
             $alerta_estoque = 'text-danger';
         } else {
             $alerta_estoque = '';
@@ -67,7 +68,7 @@ HTML;
 
         $descricaoF = mb_strimwidth($descricao, 0, 15, "...");
 
-        echo <<<HTML
+echo <<<HTML
 <tr class="{$classe_linha} {$alerta_estoque}">
     <td class="centro">{$nome}</td>
     <td class="esc centro">{$nomeCategoria}</td>
@@ -80,8 +81,8 @@ HTML;
                             '{$nome}', 
                             '{$descricao}',
                             '{$categoria}', 
-                            '{$valor_compra}',
-                            '{$valor_venda}',
+                            '{$valor_compra_formatado}',
+                            '{$valor_venda_formatado}',
                             '{$estoque}',
                             '{$nivel_estoque}',
                             '{$ativo}',
@@ -122,12 +123,16 @@ HTML;
                             '{$estoque}')", title="Entrada de produto">
             <i class="fa fa-sign-in text-verde pointer"></i>
         </a>
+        <a onclick="variacoes('{$id}',
+                              '{$nome}')", title="Variações do produto">
+            <i class="fa fa-list text-primary    pointer"></i>
+        </a>
     </td>
 </tr>
 HTML;
     }
 
-    echo <<<HTML
+echo <<<HTML
         </tbody>
             <div class="centro texto-menor" id="mensagem-excluir"></div>
     </table>    
@@ -196,7 +201,7 @@ HTML;
         $('#id_saida').val(id);
         $('#nome_saida').text(nome);
         $('#estoque_saida').val(estoque);
-        
+
         $('#modalSaida').modal('show');
     }
 </script>
@@ -208,8 +213,20 @@ HTML;
         $('#id_entrada').val(id);
         $('#nome_entrada').text(nome);
         $('#estoque_entrada').val(estoque);
-        
+
         $('#modalEntrada').modal('show');
     }
 </script>
 <!-- Fim Entrada de produtos -->
+
+<!-- Variações de produtos -->
+<script type="text/javascript">
+    function variacoes(id, nome) {
+        $('#id_var').val(id);
+        $('#titulo_nome_var').text(nome);
+        listarVariacoes(id);
+        $('#modalVariacoes').modal('show');
+        limparCamposVar()
+    }
+</script>
+<!-- Fim Variações de produtos -->
