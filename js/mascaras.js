@@ -8,6 +8,10 @@ $(document).ready(function() {
     $('#telefone-perfil').mask('(00) 00000-0000');
     $('#cpf-perfil').mask('000.000.000-00');
     
+    $('#cep-cli').mask('00000-000');
+    $('#telefone-cli').mask('(00) 00000-0000');
+    $('#cpf-cli').mask('000.000.000-00');
+    
     $('#cep-funcionario').mask('00000-000');
     $('#telefone-funcionario').mask('(00) 00000-0000');
     $('#cpf-funcionario').mask('000.000.000-00');

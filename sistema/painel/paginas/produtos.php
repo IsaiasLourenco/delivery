@@ -234,12 +234,12 @@ $pag = 'produtos';
 <!-- Fim Modal Entrada-->
 
 <!-- Modal Variações-->
-<div class="modal fade" id="modalVariacoes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalVariacoes" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"><span id="titulo_nome_var"></span></h4>
-                <button id="btn-fechar-var" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -20px">
+                <button id="btn-fechar-var" type="button" class="close mg-t-20" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -281,8 +281,9 @@ $pag = 'produtos';
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3 mg-t-20">
-                            <button type="submit" class="btn btn-primary centro">Salvar</button>
+                        <div class="col-md-4 d-flex align-items-end justify-content-between mg-t-20 ">
+                            <button type="submit" class="btn btn-primary" id="btn-salvar-var">Salvar</button>
+                            <button type="button" class="btn btn-danger" id="btn-novo-var" onclick="novoVar()">Novo</button>
                         </div>
                     </div>
                     <input type="hidden" id="id_var" name="id">
@@ -296,7 +297,107 @@ $pag = 'produtos';
         </div>
     </div>
 </div>
-<!-- Fim Modal Variações-->
+<!-- Fim Modal Variações -->
+
+<!-- Modal Ingredientes -->
+<div class="modal fade" id="modalIngredientes" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span id="titulo_nome_ing"></span></h4>
+                <button id="btn-fechar-ing" type="button" class="close mg-t-20" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-ing">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="nome">Nome</label>
+                                <input maxlength="50" type="text" class="form-control" id="nome_ing" name="nome" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="ativo">Ativo</label>
+                                <select class="form-control" name="ativo" id="ativo_ing">
+                                    <option value="Sim" selected>Sim</option>
+                                    <option value="Não">Não</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end justify-content-between mg-t-20 ">
+                            <button type="submit" class="btn btn-primary" id="btn-salvar-ing">Salvar</button>
+                            <button type="button" class="btn btn-danger" id="btn-novo-ing" onclick="novoIng()">Novo</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="id_ing" name="id"> <!--produto-->
+                    <input type="hidden" id="id_ingrediente" name="id_ing">
+                </form>
+                <br>
+                <div id="mensagem-ing" class="centro texto-menor"></div>
+                <hr>
+                <div id="listar-ing"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fim Modal Ingredientes -->
+
+<!-- Modal Adicionais -->
+<div class="modal fade" id="modalAdicionais" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span id="titulo_nome_ad"></span></h4>
+                <button id="btn-fechar-ad" type="button" class="close mg-t-20" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-ad">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="nome">Nome</label>
+                                <input maxlength="50" type="text" class="form-control" id="nome_ad" name="nome" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="valor">Valor</label>
+                                <input maxlength="50" type="text" class="form-control" id="valor_ad" name="valor" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ativo">Ativo</label>
+                                <select class="form-control" name="ativo" id="ativo_ad">
+                                    <option value="Sim" selected>Sim</option>
+                                    <option value="Não">Não</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-end justify-content-between mg-t-20 ">
+                            <button type="submit" class="btn btn-primary" id="btn-salvar-ad">Salvar</button>
+                            <button type="button" class="btn btn-danger" id="btn-novo-ad" onclick="novoAd()">Novo</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="id_ad" name="id"> <!--produto-->
+                    <input type="hidden" id="id_adicional" name="id_ad">
+                </form>
+                <br>
+                <div id="mensagem-ad" class="centro texto-menor"></div>
+                <hr>
+                <div id="listar-ad"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fim Modal Adicionais -->
 
 <!-- Variável Página -->
 <script type="text/javascript">
@@ -371,6 +472,10 @@ $pag = 'produtos';
     });
 
     document.getElementById("valor_var").addEventListener("input", function() {
+        formatarMoedaInput(this);
+    });
+
+    document.getElementById("valor_ad").addEventListener("input", function() {
         formatarMoedaInput(this);
     });
 </script>
@@ -457,6 +562,10 @@ $pag = 'produtos';
             processData: false,
         });
     });
+
+    function novoVar() {
+        limparCamposVar();
+    }
 </script>
 <!-- Fim Inserir e Editar Variações de produtos -->
 
@@ -468,7 +577,10 @@ $pag = 'produtos';
         $('#sigla').val('');
         $('#descricao_var').val('');
         $('#id_variacao').val('');
+        $('#btn-salvar-var').text('Salvar');
+        $('#btn-novo-var').hide();
     }
+
     function listarVariacoes(id) {
         $.ajax({
             url: 'paginas/' + pag + "/listar-variacoes.php",
@@ -535,3 +647,220 @@ $pag = 'produtos';
     }
 </script>
 <!-- Fim Ativar Variações de produtos -->
+
+<!-- Inserir e Editar Ingredientes de produtos -->
+<script type="text/javascript">
+    $("#form-ing").submit(function() {
+        event.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            url: 'paginas/' + pag + "/ingredientes.php",
+            type: 'POST',
+            data: formData,
+            success: function(mensagem) {
+                $('#mensagem-ing').text('');
+                $('#mensagem-ing').removeClass('text-danger text-success')
+                if (mensagem.trim() == "Salvo com Sucesso") {
+                    listarIngredientes($('#id_ing').val());
+                    limparCamposIng();
+                } else {
+                    $('#mensagem-ing').addClass('text-danger')
+                    $('#mensagem-ing').text(mensagem)
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+        });
+    });
+
+    function novoIng() {
+        limparCamposIng();
+    }
+</script>
+<!-- Fim Inserir e Editar Ingredientes de produtos -->
+
+<!-- Listar Ingredientes de produtos -->
+<script type="text/javascript">
+    function limparCamposIng() {
+        $('#nome_ing').val('');
+        $('#id_ingrediente').val('');
+        $('#btn-salvar-ing').text('Salvar');
+        $('#btn-novo-ing').hide();
+    }
+
+    function listarIngredientes(id) {
+        $.ajax({
+            url: 'paginas/' + pag + "/listar-ingredientes.php",
+            method: 'POST',
+            data: {
+                id: id
+            },
+            dataType: "html",
+            success: function(result) {
+                $("#listar-ing").html(result);
+                $("#mensagem-ecluir-ing").text('');
+            }
+        });
+    }
+</script>
+<!-- Fim Listar Ingredientes de produtos -->
+
+<!-- Excluir Ingredientes de produtos -->
+<script type="text/javascript">
+    function excluirIng(id) {
+        $.ajax({
+            url: 'paginas/' + pag + "/excluir-ingredientes.php",
+            method: 'POST',
+            data: {
+                id
+            },
+            dataType: "text",
+            success: function(mensagem) {
+                if (mensagem.trim() == "Excluído com Sucesso") {
+                    listarIngredientes($('#id_ing').val());
+                    limparCamposIng();
+                } else {
+                    $('#mensagem-excluir-ing').addClass('text-danger')
+                    $('#mensagem-excluir-ing').text(mensagem)
+                }
+            },
+        });
+    }
+</script>
+<!-- Fim Excluir Ingredientes de produtos -->
+
+<!-- Ativar Ingredientes de produtos -->
+<script type="text/javascript">
+    function ativarIng(id, acao) {
+        $.ajax({
+            url: 'paginas/' + pag + "/mudar-status-ingredientes.php",
+            method: 'POST',
+            data: {
+                id,
+                acao
+            },
+            dataType: 'text',
+
+            success: function(mensagem) {
+                if (mensagem.trim() == "Alterado com sucesso") {
+                    listarIngredientes($('#id_ing').val());
+                    limparCamposIng();
+                } else {
+                    $('#mensagem-excluir-ing').addClass('text-danger')
+                    $('#mensagem-excluir-ing').text(mensagem)
+                }
+            },
+        });
+    }
+</script>
+<!-- Fim Ativar Ingredientes de produtos -->
+
+<!-- Inserir e Editar Adicionais de produtos -->
+<script type="text/javascript">
+    $("#form-ad").submit(function() {
+        event.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            url: 'paginas/' + pag + "/adicionais.php",
+            type: 'POST',
+            data: formData,
+            success: function(mensagem) {
+                $('#mensagem-ad').text('');
+                $('#mensagem-ad').removeClass('text-danger text-success')
+                if (mensagem.trim() == "Salvo com Sucesso") {
+                    listarAdicionais($('#id_ad').val());
+                    limparCamposAd();
+                } else {
+                    $('#mensagem-ad').addClass('text-danger')
+                    $('#mensagem-ad').text(mensagem)
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+        });
+    });
+
+    function novoAd() {
+        limparCamposAd();
+    }
+</script>
+<!-- Fim Inserir e Editar Adicionais de produtos -->
+
+<!-- Listar Adicionais de produtos -->
+<script type="text/javascript">
+    function limparCamposAd() {
+        $('#nome_ad').val('');
+        $('#valor_ad').val('');
+        $('#id_adicional').val('');
+        $('#btn-salvar-ad').text('Salvar');
+        $('#btn-novo-ad').hide();
+    }
+
+    function listarAdicionais(id) {
+        $.ajax({
+            url: 'paginas/' + pag + "/listar-adicionais.php",
+            method: 'POST',
+            data: {
+                id: id
+            },
+            dataType: "html",
+            success: function(result) {
+                $("#listar-ad").html(result);
+                $("#mensagem-ecluir-ad").text('');
+            }
+        });
+    }
+</script>
+<!-- Fim Listar Adicionais de produtos -->
+
+<!-- Excluir Adicionais de produtos -->
+<script type="text/javascript">
+    function excluirAd(id) {
+        $.ajax({
+            url: 'paginas/' + pag + "/excluir-adicionais.php",
+            method: 'POST',
+            data: {
+                id
+            },
+            dataType: "text",
+            success: function(mensagem) {
+                if (mensagem.trim() == "Excluído com Sucesso") {
+                    listarAdicionais($('#id_ad').val());
+                    limparCamposAd();
+                } else {
+                    $('#mensagem-excluir-ad').addClass('text-danger')
+                    $('#mensagem-excluir-ad').text(mensagem)
+                }
+            },
+        });
+    }
+</script>
+<!-- Fim Excluir Adicionais de produtos -->
+
+<!-- Ativar Adicionais de produtos -->
+<script type="text/javascript">
+    function ativarAd(id, acao) {
+        $.ajax({
+            url: 'paginas/' + pag + "/mudar-status-adicionais.php",
+            method: 'POST',
+            data: {
+                id,
+                acao
+            },
+            dataType: 'text',
+
+            success: function(mensagem) {
+                if (mensagem.trim() == "Alterado com sucesso") {
+                    listarAdicionais($('#id_ad').val());
+                    limparCamposAd();
+                } else {
+                    $('#mensagem-excluir-ad').addClass('text-danger')
+                    $('#mensagem-excluir-ad').text(mensagem)
+                }
+            },
+        });
+    }
+</script>
+<!-- Fim Ativar Adicionais de produtos -->

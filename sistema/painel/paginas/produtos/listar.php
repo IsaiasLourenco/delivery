@@ -125,7 +125,15 @@ echo <<<HTML
         </a>
         <a onclick="variacoes('{$id}',
                               '{$nome}')", title="Variações do produto">
-            <i class="fa fa-list text-primary    pointer"></i>
+            <i class="fa fa-list text-primary pointer"></i>
+        </a>
+        <a onclick="ingredientes('{$id}',
+                                 '{$nome}')", title="Ingredientes do produto">
+            <i class="fa fa-cutlery text-cinza pointer"></i>
+        </a>
+        <a onclick="adicionais('{$id}',
+                               '{$nome}')", title="Adicionais do produto">
+            <i class="fa fa-plus text-verde pointer"></i>
         </a>
     </td>
 </tr>
@@ -230,3 +238,28 @@ HTML;
     }
 </script>
 <!-- Fim Variações de produtos -->
+
+<!-- Ingredientes de produtos -->
+<script type="text/javascript">
+    function ingredientes(id, nome) {
+        $('#id_ing').val(id);
+        $('#titulo_nome_ing').text(nome);
+        listarIngredientes(id);
+        $('#modalIngredientes').modal('show');
+        limparCamposIng()
+    }
+</script>
+<!-- Fim Ingredientes de produtos -->
+
+<!-- Adicionais de produtos -->
+<script type="text/javascript">
+    function adicionais(id, nome, valor) {
+        $('#id_ad').val(id);
+        $('#titulo_nome_ad').text(nome);
+        $('#valor_ad').text(valor);
+        listarAdicionais(id);
+        $('#modalAdicionais').modal('show');
+        limparCamposAd()
+    }
+</script>
+<!-- Fim Adicionais de produtos -->

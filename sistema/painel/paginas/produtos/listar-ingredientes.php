@@ -1,19 +1,18 @@
 <?php
 require_once("../../../conexao.php");
-$tabela = 'variacoes';
+$tabela = 'ingredientes';
 $id_produto = $_POST['id'];
 $query = $pdo->query("SELECT * FROM $tabela WHERE produto = '$id_produto' ORDER BY id DESC");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total = count($res);
 if ($total > 0) {
     echo <<<HTML
-    <h4 class="centro">Variações do Produto</h4>
-    <table class="table table-hover table-sm table-responsive tabela-menor" id="tabela-var">
+    <h4 class="centro">Ingredientes do Produto</h4>
+    <table class="table table-hover table-sm table-responsive tabela-menor" id="tabela-ing">
         <thead>
             <tr>
-                <th class="esc centro">Sigla</th>
                 <th class="centro">Nome</th>
-                <th class="esc centro">Valor</th>
+                <th class="esc centro">Ativo</th>
                 <th class="centro">Ações</th>
             </tr>
         </thead>
@@ -23,11 +22,9 @@ HTML;
     for ($i = 0; $i < $total; $i++) {
         foreach ($res[$i] as $key => $value) {
         }
-        $idVar = $res[$i]['id'];
+        $idIng = $res[$i]['id'];
+        $produto = $res[$i]['produto'];
         $nome = $res[$i]['nome'];
-        $sigla = $res[$i]['sigla'];
-        $descricao = $res[$i]['descricao'];
-        $valor = $res[$i]['valor'];
         $ativo = $res[$i]['ativo'];
 
         if ($ativo == 'Sim') {
@@ -42,22 +39,14 @@ HTML;
             $classe_linha = 'text-muted';
         }
 
-        // Formatar valores
-        $valor_formatado = "R$ " . number_format($valor, 2, ',', '.');
-
-        $descricaoF = mb_strimwidth($descricao, 0, 35, "...");
-
         echo <<<HTML
 <tr class="{$classe_linha}">
-    <td class="esc centro">{$sigla}</td>
-    <td class="centro">{$descricaoF}</td>
-    <td class="esc centro">{$valor_formatado}</td>
+    <td class="esc centro">{$nome}</td>
+    <td class="centro">{$ativo}</td>
     <td class="centro">
-        <a onclick="editarVar( '{$idVar}',
+        <a onclick="editarIng( '{$idIng}',
+                                '{$produto}', 
                                 '{$nome}', 
-                                '{$sigla}', 
-                                '{$descricao}',
-                                '{$valor_formatado}',
                                 '{$ativo}')", title="Editar Registro">
             <i class="fa fa-edit text-primary pointer"></i>
         </a>
@@ -66,13 +55,13 @@ HTML;
             <ul class="dropdown-menu mg-l--23">
                 <li>
                     <div class="notification_desc2">
-                        <p>Confirmar Exclusão?<a href="#" onclick="excluirVar('{$idVar}')"><span class="text-danger"> Sim</span></a></p>
+                        <p>Confirmar Exclusão?<a href="#" onclick="excluirIng('{$idIng}')"><span class="text-danger"> Sim</span></a></p>
                     </div>
                 </li>
             </ul>
         </li>
-        <a onclick="ativarVar('{$idVar}', 
-                            '{$acao}')", title="{$titulo_link}">
+        <a onclick="ativarIng('{$idIng}', 
+                              '{$acao}')", title="{$titulo_link}">
             <i class="fa {$icone} text-verde pointer"></i>
         </a>
     </td>
@@ -82,17 +71,17 @@ HTML;
 
     echo <<<HTML
         </tbody>
-            <div class="centro texto-menor" id="mensagem-excluir-var"></div>
+            <div class="centro texto-menor" id="mensagem-excluir-ing"></div>
     </table>    
 HTML;
 } else {
-    echo "<p class='centro texto-menor'>Não possui variações cadastradas!</p>";
+    echo "<p class='centro texto-menor'>Não possui ingredientes cadastrados!</p>";
 }
 ?>
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#tabela-var').DataTable({
+        $('#tabela-ing').DataTable({
             "ordering": false,
             "stateSave": true,
         });
@@ -101,13 +90,12 @@ HTML;
 </script>
 
 <script type="text/javascript">
-    function editarVar(idVar, nome, sigla, descricao, valor, ativo) {
-        $('#id_variacao').val(idVar); // ID da variação
-        $('#nome_var').val(nome);
-        $('#sigla').val(sigla);
-        $('#descricao_var').val(descricao);
-        $('#valor_var').val(valor);
-        $('#btn-salvar-var').text('Editar');
-        $('#btn-novo-var').show();
+    function editarIng(idIng, produto, nome, ativo) {
+        $('#id_ingrediente').val(idIng); // ID do ingrediente
+        $('#id_ing').val(produto); // ID do produto
+        $('#nome_ing').val(nome);
+        $('#ativo_ing').val(ativo);
+        $('#btn-salvar-ing').text('Editar');
+        $('#btn-novo-ing').show();
     }
 </script>

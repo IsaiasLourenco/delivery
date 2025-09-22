@@ -139,3 +139,33 @@ ADD COLUMN nome VARCHAR(30) AFTER sigla;
 
 ALTER TABLE variacoes
 ADD COLUMN ativo VARCHAR(3) AFTER valor;
+
+CREATE TABLE ingredientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    produto INT NOT NULL,
+    nome VARCHAR(50),
+    ativo VARCHAR(3)
+);
+
+CREATE TABLE adicionais (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    produto INT NOT NULL,
+    nome VARCHAR(50),
+    valor DECIMAL(10,2),
+    ativo VARCHAR(3)
+);
+
+CREATE TABLE cliente (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    email VARCHAR(80) NOT NULL UNIQUE,
+    cpf VARCHAR(14) NOT NULL UNIQUE;
+    telefone VARCHAR(15) NOT NULL,
+    cep VARCHAR(10),
+    rua VARCHAR(40),
+    numero VARCHAR(5),
+    bairro VARCHAR(40),
+    cidade VARCHAR(40),
+    estado VARCHAR(2),
+    data_cad DATE
+);

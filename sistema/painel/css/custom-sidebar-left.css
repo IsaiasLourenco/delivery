@@ -81,12 +81,20 @@
     margin-top: -20px;
 }
 
+.mg-t--40 {
+    margin-top: -40px;
+}
+
 .mg-t-20 {
     margin-top: 20px;
 }
 
 .br-btt {
     border-bottom: 1px solid #cac7c7;
+}
+
+#btn-novo-ad {
+    display: none;
 }
 
 .d-il-b {
@@ -96,6 +104,10 @@
 
 .text-verde {
     color: #077811;
+}
+
+.text-cinza {
+    color: #575757;
 }
 
 @media (max-width: 768px) {

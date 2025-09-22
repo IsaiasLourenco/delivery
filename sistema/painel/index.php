@@ -198,6 +198,7 @@ if (@$_GET['pagina'] != "") {
                                 <ul class="treeview-menu">
                                     <li><a href="index.php?pagina=funcionarios"><i class="fa fa-angle-right"></i> Funcionários</a></li>
                                     <li><a href="index.php?pagina=usuarios"><i class="fa fa-angle-right"></i> Usuários</a></li>
+                                    <li><a href="index.php?pagina=clientes"><i class="fa fa-angle-right"></i> Clientes</a></li>
                                 </ul>
                             </li>
                             <li class="treeview">
@@ -222,7 +223,7 @@ if (@$_GET['pagina'] != "") {
                                     <li><a href="index.php?pagina=estoque"><i class="fa fa-angle-right"></i> Estoque Baixo</a></li>
                                     <li><a href="index.php?pagina=entradas"><i class="fa fa-angle-right"></i> Entradas</a></li>
                                     <li><a href="index.php?pagina=saidas"><i class="fa fa-angle-right"></i> Saídas</a></li>
-                                    <li><a href="index.php?pagina=variacoes"><i class="fa fa-angle-right"></i> Variações</a></li>
+                                    
                                 </ul>
                             </li>
                         </ul>
