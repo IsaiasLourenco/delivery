@@ -32,12 +32,17 @@ HTML;
         $cep = $res[$i]['cep'];
         $rua = $res[$i]['rua'];
         $numero = $res[$i]['numero'];
-        $bairro = $res[$i]['bairro'];
+        $id_bairro = $res[$i]['bairro_id'];
         $cidade = $res[$i]['cidade'];
         $estado = $res[$i]['estado'];
         $data_cad = $res[$i]['data_cad'];
 
         $dataF = implode('/', array_reverse(explode('-', $data_cad)));
+
+        //Nome do bairro
+        $queryBairro = $pdo->query("SELECT * FROM bairros WHERE id = '$id_bairro'");
+        $resBairro = $queryBairro->fetchAll(PDO::FETCH_ASSOC);
+        $nome_bairro = $resBairro[0]['nome'];
 
         echo <<<HTML
 <tr>
@@ -54,7 +59,7 @@ HTML;
                             '{$cep}',
                             '{$rua}',
                             '{$numero}',
-                            '{$bairro}',
+                            '{$nome_bairro}',
                             '{$cidade}',
                             '{$estado}',
                             '{$senha}')", title="Editar Registro">
@@ -76,7 +81,7 @@ HTML;
                             '{$cep}',
                             '{$rua}',
                             '{$numero}',
-                            '{$bairro}',
+                            '{$nome_bairro}',
                             '{$cidade}',
                             '{$estado}',
                             '{$dataF}')", title="Mostrar mais Dados">

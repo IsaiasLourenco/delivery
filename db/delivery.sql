@@ -169,3 +169,26 @@ CREATE TABLE cliente (
     estado VARCHAR(2),
     data_cad DATE
 );
+
+CREATE TABLE bairros (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    valor DECIMAL(10,2) NOT NULL
+);
+
+ALTER TABLE cliente ADD COLUMN bairro_id INT AFTER nome;
+
+CREATE TABLE fornecedores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    email VARCHAR(80) NOT NULL UNIQUE,
+    cnpj VARCHAR(18) NOT NULL UNIQUE;
+    telefone VARCHAR(15) NOT NULL,
+    cep VARCHAR(10),
+    rua VARCHAR(40),
+    numero VARCHAR(5),
+    bairro VARCHAR(40),
+    cidade VARCHAR(40),
+    estado VARCHAR(2),
+    data_cad DATE
+);

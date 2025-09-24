@@ -13,6 +13,18 @@ $bairro = $_POST['bairro'];
 $cidade = $_POST['cidade'];
 $estado = $_POST['estado'];
 
+//Verifica se já existe o bairro na tabela bairros
+$queryBairro = $pdo->query("SELECT * FROM bairros WHERE nome = '$bairro'");
+$resBairro = $queryBairro->fetchAll(PDO::FETCH_ASSOC);
+if (count($resBairro) > 0) {
+    $id_bairro = $resBairro[0]['id'];
+} else {
+    $queryBairro = $pdo->prepare("INSERT INTO bairros SET nome = :bairro");
+    $queryBairro->bindValue(":bairro", $bairro);
+    $queryBairro->execute();
+    $id_bairro = $pdo->lastInsertId();
+}
+
 //VALIDAR EMAIL
 $query = $pdo->query("SELECT * FROM $tabela WHERE email = '$email'");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -38,7 +50,7 @@ if ($id == "" || $id == null) {
                                                     cep = :cep,
                                                     rua = :rua,
                                                     numero = :numero,
-                                                    bairro = :bairro,
+                                                    bairro_id = '$id_bairro',
                                                     cidade = :cidade,
                                                     estado = :estado,
                                                     data_cad = CURDATE()");
@@ -50,7 +62,7 @@ if ($id == "" || $id == null) {
                                                cep = :cep,
                                                rua = :rua,
                                                numero = :numero,
-                                               bairro = :bairro,
+                                               bairro_id = '$id_bairro',
                                                cidade = :cidade,
                                                estado = :estado
                                                WHERE id = '$id'");
@@ -62,9 +74,7 @@ $query->bindValue(":telefone", "$telefone");
 $query->bindValue(":cep", "$cep");
 $query->bindValue(":rua", "$rua");
 $query->bindValue(":numero", "$numero");
-$query->bindValue(":bairro", "$bairro");
 $query->bindValue(":cidade", "$cidade");
 $query->bindValue(":estado", "$estado");
 $query->execute();
 echo 'Salvo com Sucesso';
-?>

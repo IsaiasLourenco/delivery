@@ -29,7 +29,7 @@ $pag = 'produtos';
                         </div>
                         <div class="col-md-6">
                             <label for="categoria">Categoria</label>
-                            <select class="form-control" name="categoria" id="categoria-produto">
+                            <select class="form-control sel2" name="categoria" id="categoria-produto">
                                 <?php
                                 $query = $pdo->query("SELECT * FROM categorias ORDER BY nome asc");
                                 $res = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -864,3 +864,13 @@ $pag = 'produtos';
     }
 </script>
 <!-- Fim Ativar Adicionais de produtos -->
+
+<!-- SELECT2 -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.sel2').select2({
+            dropdownParent: $('#modalForm')
+        });
+    });
+</script>
+<!-- SELECT2 -->

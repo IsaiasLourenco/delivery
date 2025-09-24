@@ -165,6 +165,30 @@ if (@$_GET['pagina'] != "") {
     <!-- Datatables -->
     <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css">
     <script type="text/javascript" src="DataTables/datatables.min.js"></script>
+
+    <!-- SELECT2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <style type="text/css">
+        .select2-container--default .select2-selection--single {
+            height: 38px !important;
+            padding: 6px 12px !important;
+            border: 1px solid #ced4da !important;
+            border-radius: 4px !important;
+        }
+
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .select2-selection__rendered {
+            line-height: 24px !important;
+        }
+
+        .select2-selection__arrow {
+            height: 38px !important;
+        }
+    </style>
 </head>
 
 <body class="cbp-spmenu-push">
@@ -199,6 +223,7 @@ if (@$_GET['pagina'] != "") {
                                     <li><a href="index.php?pagina=funcionarios"><i class="fa fa-angle-right"></i> Funcionários</a></li>
                                     <li><a href="index.php?pagina=usuarios"><i class="fa fa-angle-right"></i> Usuários</a></li>
                                     <li><a href="index.php?pagina=clientes"><i class="fa fa-angle-right"></i> Clientes</a></li>
+                                    <li><a href="index.php?pagina=fornecedores"><i class="fa fa-angle-right"></i> Fornecedores</a></li>
                                 </ul>
                             </li>
                             <li class="treeview">
@@ -209,6 +234,7 @@ if (@$_GET['pagina'] != "") {
                                 </a>
                                 <ul class="treeview-menu">
                                     <li><a href="index.php?pagina=cargos"><i class="fa fa-angle-right"></i> Cargos</a></li>
+                                    <li><a href="index.php?pagina=bairros"><i class="fa fa-angle-right"></i> Bairros</a></li>
                                 </ul>
                             </li>
                             <li class="treeview">
@@ -223,7 +249,16 @@ if (@$_GET['pagina'] != "") {
                                     <li><a href="index.php?pagina=estoque"><i class="fa fa-angle-right"></i> Estoque Baixo</a></li>
                                     <li><a href="index.php?pagina=entradas"><i class="fa fa-angle-right"></i> Entradas</a></li>
                                     <li><a href="index.php?pagina=saidas"><i class="fa fa-angle-right"></i> Saídas</a></li>
-                                    
+                                </ul>
+                            </li>
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-file-pdf-o"></i>
+                                    <span>Relatórios</span>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="rel/produtos_class.php" target="_blank"><i class="fa fa-angle-right"></i> Produtos</a></li>
                                 </ul>
                             </li>
                         </ul>

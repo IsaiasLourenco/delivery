@@ -16,7 +16,7 @@ $pag = 'usuarios';
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"><span id="titulo_inserir"></span></h4>
-                <button id="btn-fechar" type="button" class="close mg-t--20" data-dismiss="modal" aria-label="Close">
+                <button id="btn-fechar" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -20px">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
