@@ -12,6 +12,8 @@ $numero = $_POST['numero'];
 $bairro = $_POST['bairro'];
 $cidade = $_POST['cidade'];
 $estado = $_POST['estado'];
+$tipo_chave = $_POST['tipo_chave'];
+$chave_pix = $_POST['chave_pix'];
 
 //Verifica se já existe o bairro na tabela bairros
 $queryBairro = $pdo->query("SELECT * FROM bairros WHERE nome = '$bairro'");
@@ -53,6 +55,8 @@ if ($id == "" || $id == null) {
                                                     bairro_id = '$id_bairro',
                                                     cidade = :cidade,
                                                     estado = :estado,
+                                                    tipo_chave = :tipo_chave,
+                                                    chave_pix = :chave_pix,
                                                     data_cad = CURDATE()");
 } else {
     $query = $pdo->prepare("UPDATE $tabela SET nome = :nome, 
@@ -64,7 +68,9 @@ if ($id == "" || $id == null) {
                                                numero = :numero,
                                                bairro_id = '$id_bairro',
                                                cidade = :cidade,
-                                               estado = :estado
+                                               estado = :estado,
+                                               tipo_chave = :tipo_chave,
+                                               chave_pix = :chave_pix
                                                WHERE id = '$id'");
 }
 $query->bindValue(":nome", "$nome");
@@ -76,5 +82,7 @@ $query->bindValue(":rua", "$rua");
 $query->bindValue(":numero", "$numero");
 $query->bindValue(":cidade", "$cidade");
 $query->bindValue(":estado", "$estado");
+$query->bindValue(":tipo_chave", "$tipo_chave");
+$query->bindValue(":chave_pix", "$chave_pix");
 $query->execute();
 echo 'Salvo com Sucesso';

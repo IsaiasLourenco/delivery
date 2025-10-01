@@ -34,15 +34,15 @@
     font-size: 12px;
 }
 
-#modalCo    nfig .modal-body .centro {
+#modalCo nfig .modal-body .centro {
     text-align: center;
     margin-top: 20px;
     font-size: 12px;
 }
 
 .input-group .input-group-text {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .pdg-15 {
@@ -61,6 +61,10 @@
     text-align: center;
 }
 
+.direita {
+    text-align: right;
+}
+
 .wd-100 {
     width: 100%;
 }
@@ -73,11 +77,19 @@
     cursor: pointer;
 }
 
-.mg-l--23 {
+.mg-l--230 {
     margin-left: -230px;
 }
 
-.mg-t--20 {
+.mg-l--200 {
+    margin-left: -200px;
+}
+
+.mg-l--150 {
+    margin-left: -150px;
+}
+
+button.close.mg-t--20 {
     margin-top: -20px;
 }
 
@@ -89,8 +101,44 @@
     margin-top: 20px;
 }
 
+.mg-t-5 {
+    margin-top: 5px;
+}
+
+.mg-t-10 {
+    margin-top: 10px;
+}
+
+.mg-r-10 {
+    margin-right: 10px;
+}
+
+.mg-r-20 {
+    margin-right: 20px;
+}
+
+.mg-r-30 {
+    margin-right: 30px;
+}
+
+.mg-b-5 {
+    margin-bottom: 5px;
+}
+
+.pddg-15 {
+    padding: 15px;
+}
+
+.esquerda {
+    float: left;
+}
+
 .br-btt {
     border-bottom: 1px solid #cac7c7;
+}
+
+.ocultar {
+    display: none;
 }
 
 #btn-novo-ad {
@@ -103,7 +151,7 @@
 }
 
 .text-verde {
-    color: #077811;
+    color: #0cb31a;
 }
 
 .text-cinza {

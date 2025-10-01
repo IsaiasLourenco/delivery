@@ -81,6 +81,10 @@ if (@$_GET['pagina'] != "") {
         }
     </script>
 
+    <!-- js-->
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/modernizr.custom.js"></script>
+
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
     <!-- Bootstrap icons     -->
@@ -99,10 +103,6 @@ if (@$_GET['pagina'] != "") {
 
     <!-- side bar left customizada por Isaias -->
     <link rel="stylesheet" href="css/custom-sidebar-left.css">
-
-    <!-- js-->
-    <script src="js/jquery-1.11.1.min.js"></script>
-    <script src="js/modernizr.custom.js"></script>
 
     <!--webfonts-->
     <link href="//fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
@@ -246,9 +246,22 @@ if (@$_GET['pagina'] != "") {
                                 <ul class="treeview-menu">
                                     <li><a href="index.php?pagina=produtos"><i class="fa fa-angle-right"></i> Produtos</a></li>
                                     <li><a href="index.php?pagina=categorias"><i class="fa fa-angle-right"></i> Categorias</a></li>
+                                    <li><a href="index.php?pagina=cotacao"><i class="fa fa-angle-right"></i> Cotação</a></li>
                                     <li><a href="index.php?pagina=estoque"><i class="fa fa-angle-right"></i> Estoque Baixo</a></li>
                                     <li><a href="index.php?pagina=entradas"><i class="fa fa-angle-right"></i> Entradas</a></li>
                                     <li><a href="index.php?pagina=saidas"><i class="fa fa-angle-right"></i> Saídas</a></li>
+                                </ul>
+                            </li>
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-dollar"></i>
+                                    <span>Financeiro</span>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="index.php?pagina=pagar"><i class="fa fa-angle-right"></i> Contas à Pagar</a></li>
+                                    <li><a href="index.php?pagina=receber"><i class="fa fa-angle-right"></i> Contas à Receber</a></li>
+                                    <li><a href="index.php?pagina=compras"><i class="fa fa-angle-right"></i> Compras</a></li>
                                 </ul>
                             </li>
                             <li class="treeview">
@@ -418,7 +431,7 @@ if (@$_GET['pagina'] != "") {
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="exampleModalLabel">Editar Configurações</h4>
-                <button id="btn-fechar-config" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button id="btn-fechar-config" type="button" class="close mg-t--20" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -584,7 +597,7 @@ if (@$_GET['pagina'] != "") {
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="exampleModalLabel">Alterar Dados</h4>
-                <button id="btn-fechar-perfil" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button id="btn-fechar-perfil" type="button" class="close mg-t--20" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>

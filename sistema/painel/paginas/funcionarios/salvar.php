@@ -14,6 +14,8 @@ $cidade = $_POST['cidade'];
 $estado = $_POST['estado'];
 $nivel = $_POST['nivel'];
 $ativo = $_POST['ativo'];
+$tipo_chave = $_POST['tipo_chave'];
+$chave_pix = $_POST['chave_pix'];
 
 //VALIDAR EMAIL
 $query = $pdo->query("SELECT * FROM $tabela WHERE email = '$email'");
@@ -82,7 +84,9 @@ if ($id == "" || $id == null) {
                                                     nivel = :nivel,
                                                     ativo = :ativo,
                                                     foto = '$foto',
-                                                    data_cad = CURDATE()");
+                                                    data_cad = CURDATE(),
+                                                    tipo_chave = :tipo_chave,
+                                                    chave_pix = :chave_pix");
 } else {
     $query = $pdo->prepare("UPDATE $tabela SET nome = :nome, 
                                                     email = :email, 
@@ -96,7 +100,9 @@ if ($id == "" || $id == null) {
                                                     estado = :estado,
                                                     nivel = :nivel,
                                                     ativo = :ativo,
-                                                    foto = '$foto'
+                                                    foto = '$foto',
+                                                    tipo_chave = :tipo_chave,
+                                                    chave_pix = :chave_pix
                                                     WHERE id = '$id'");
 }
 $query->bindValue(":nome", "$nome");
@@ -111,6 +117,8 @@ $query->bindValue(":cidade", "$cidade");
 $query->bindValue(":estado", "$estado");
 $query->bindValue(":nivel", "$nivel");
 $query->bindValue(":ativo", "$ativo");
+$query->bindValue(":tipo_chave", "$tipo_chave");
+$query->bindValue(":chave_pix", "$chave_pix");
 $query->execute();
 echo 'Salvo com Sucesso';
 ?>

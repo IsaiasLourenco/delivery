@@ -16,7 +16,7 @@ $pag = 'fornecedores';
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"><span id="titulo_inserir"></span></h4>
-                <button id="btn-fechar" type="button" class="close" data-dismiss="modal" aria-label="Close"  style="margin-top: -20px">
+                <button id="btn-fechar" type="button" class="close mg-t--20" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -40,6 +40,16 @@ $pag = 'fornecedores';
                         <div class="col-md-6">
                             <label for="telefone">Telefone</label>
                             <input type="text" class="form-control" id="telefone-for" name="telefone">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="produto">Produto</label>
+                                <select class="form-control" name="produto" id="produto">
+
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -70,6 +80,28 @@ $pag = 'fornecedores';
                             <input type="text" class="form-control" id="estado-for" name="estado" readonly>
                         </div>
                         <input type="hidden" name="id" id="id">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="tipo_chave">Tipo Chave PIX</label>
+                                <select class="form-control" name="tipo_chave" id="tipo_chave">
+                                    <option value="">Selecionar Chave</option>
+                                    <option value="CPF">CPF</option>
+                                    <option value="Telefone">Telefone</option>
+                                    <option value="Email">Email</option>
+                                    <option value="Codigo">Codigo</option>
+                                    <option value="CNPJ">CNPJ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="chave_pix">Chave PIX</label>
+                                <input type="text" class="form-control" id="chave_pix" name="chave_pix" placeholder="Chave PIX">
+                            </div>
+                        </div>
+                    </div>
                     <div id="mensagem" class="centro"></div>
                 </div>
                 <div class="modal-footer">
@@ -135,6 +167,16 @@ $pag = 'fornecedores';
                 </div>
                 <div class="row br-btt">
                     <div class="col-md-6">
+                        <span><b>Tipo Chave: </b></span>
+                        <span id="tipo_chave-for"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <span><b>Chave PIX: </b></span>
+                        <span id="chave_pix-for"></span>
+                    </div>
+                </div>
+                <div class="row br-btt">
+                    <div class="col-md-6">
                         <span><strong>Cadastro: </strong></span>
                         <span id="data_dados-for"></span>
                     </div>
@@ -179,3 +221,36 @@ $pag = 'fornecedores';
     });
 </script>
 <!-- FIM AJAX SALVA EDITA CLIENTE -->
+
+<!-- Produto que cada fornecedor pode oferecer -->
+<script>
+	$(document).ready(function() {
+		$('#fornecedor').change(function() {
+			let idFornecedor = $(this).val();
+
+			if (idFornecedor != "0" && idFornecedor != "") {
+				$('#bloco-produto').fadeIn();
+
+				// Carregar produtos via AJAX
+				$.ajax({
+					url: 'paginas/' + pag + "/buscar-produto.php",
+					type: 'POST',
+					data: {
+						fornecedor: idFornecedor
+					},
+					success: function(data) {
+						$('#produto').html(data);
+						$('#produto').select2('destroy').select2({
+							dropdownParent: $('#modalForm')
+						});
+					}
+				});
+			} else {
+				$('#bloco-produto').fadeOut();
+				$('#produto').html('<option value="">Selecione um Produto</option>');
+				$('#quantidade').val('');
+			}
+		});
+	});
+</script>
+<!-- Produto que cada fornecedor pode oferecer -->

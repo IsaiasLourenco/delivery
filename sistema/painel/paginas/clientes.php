@@ -16,7 +16,7 @@ $pag = 'clientes';
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"><span id="titulo_inserir"></span></h4>
-                <button id="btn-fechar" type="button" class="close" data-dismiss="modal" aria-label="Close"  style="margin-top: -20px">
+                <button id="btn-fechar" type="button" class="close mg-t--20" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -70,11 +70,32 @@ $pag = 'clientes';
                             <input type="text" class="form-control" id="estado-cli" name="estado" readonly>
                         </div>
                         <input type="hidden" name="id" id="id">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="tipo_chave">Tipo Chave PIX</label>
+                                <select class="form-control" name="tipo_chave" id="tipo_chave">
+                                    <option value="">Selecionar Chave</option>
+                                    <option value="CPF">CPF</option>
+                                    <option value="Telefone">Telefone</option>
+                                    <option value="Email">Email</option>
+                                    <option value="Codigo">Codigo</option>
+                                    <option value="CNPJ">CNPJ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="chave_pix">Chave PIX</label>
+                                <input type="text" class="form-control" id="chave_pix" name="chave_pix" placeholder="Chave PIX">
+                            </div>
+                        </div>
+                    </div>
                     <div id="mensagem" class="centro"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
             </form>
         </div>
     </div>
@@ -131,6 +152,16 @@ $pag = 'clientes';
                     <div class="col-md-4">
                         <span><b>Estado: </b></span>
                         <span id="estado_dados-cli"></span>
+                    </div>
+                </div>
+                <div class="row br-btt">
+                    <div class="col-md-6">
+                        <span><b>Tipo Chave: </b></span>
+                        <span id="tipo_chave-for"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <span><b>Chave PIX: </b></span>
+                        <span id="chave_pix-for"></span>
                     </div>
                 </div>
                 <div class="row br-btt">

@@ -29,6 +29,10 @@ ADD COLUMN bairro VARCHAR(40) AFTER numero,
 ADD COLUMN cidade VARCHAR(40) AFTER bairro,
 ADD COLUMN estado VARCHAR(2) AFTER cidade;
 
+ALTER TABLE usuarios 
+ADD COLUMN tipo_chave VARCHAR(35) AFTER data_cad;
+ADD COLUMN chave_pix VARCHAR(100) AFTER tipo_chave;
+
 CREATE TABLE config (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome_sistema VARCHAR(50) NOT NULL,
@@ -80,6 +84,10 @@ CREATE TABLE funcionarios (
     foto VARCHAR(100),
     data_cad DATE
 );
+
+ALTER TABLE funcionarios
+ADD COLUMN tipo_chave VARCHAR(35) AFTER data_cad,
+ADD COLUMN chave_pix VARCHAR(100) AFTER tipo_chave;
 
 CREATE TABLE categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -159,7 +167,7 @@ CREATE TABLE cliente (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
     email VARCHAR(80) NOT NULL UNIQUE,
-    cpf VARCHAR(14) NOT NULL UNIQUE;
+    cpf VARCHAR(14) NOT NULL UNIQUE,
     telefone VARCHAR(15) NOT NULL,
     cep VARCHAR(10),
     rua VARCHAR(40),
@@ -169,6 +177,10 @@ CREATE TABLE cliente (
     estado VARCHAR(2),
     data_cad DATE
 );
+
+ALTER TABLE cliente
+ADD COLUMN tipo_chave VARCHAR(35) AFTER data_cad,
+ADD COLUMN chave_pix VARCHAR(100) AFTER tipo_chave;
 
 CREATE TABLE bairros (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -182,7 +194,7 @@ CREATE TABLE fornecedores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
     email VARCHAR(80) NOT NULL UNIQUE,
-    cnpj VARCHAR(18) NOT NULL UNIQUE;
+    cnpj VARCHAR(18) NOT NULL UNIQUE,
     telefone VARCHAR(15) NOT NULL,
     cep VARCHAR(10),
     rua VARCHAR(40),
@@ -192,3 +204,65 @@ CREATE TABLE fornecedores (
     estado VARCHAR(2),
     data_cad DATE
 );
+
+ALTER TABLE fornecedores
+ADD COLUMN tipo_chave VARCHAR(35) AFTER data_cad,
+ADD COLUMN chave_pix VARCHAR(100) AFTER tipo_chave;
+ADD COLUMN produto INT AFTER CNPJ;
+
+
+CREATE TABLE pagar (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    descricao VARCHAR(50) NOT NULL,
+    tipo VARCHAR(35) NOT NULL,
+    valor DECIMAL(10,2) NOT NULL,
+    data_lancamento DATE NOT NULL,
+    data_vencimento DATE NOT NULL,
+    data_pagamento DATE NOT NULL,
+    usuario_baixa INT,
+    foto VARCHAR(100),
+    pessoa INT,
+    pago VARCHAR(5),
+    produto INT,
+    quantidade INT,
+    funcionario INT
+);
+
+ALTER TABLE pagar ADD COLUMN usuario_lancou INT AFTER data_pagamento;
+ALTER TABLE pagar ADD COLUMN cliente INT AFTER funcionario;
+
+ALTER TABLE pagar
+ADD COLUMN tipo_chave VARCHAR(35) AFTER cliente,
+ADD COLUMN chave_pix VARCHAR(100) AFTER tipo_chave;
+
+CREATE TABLE receber (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    descricao VARCHAR(50) NOT NULL,
+    tipo VARCHAR(35) NOT NULL,
+    valor DECIMAL(10,2) NOT NULL,
+    data_lancamento DATE NOT NULL,
+    data_vencimento DATE NOT NULL,
+    data_pagamento DATE NOT NULL,
+    usuario_baixa INT,
+    foto VARCHAR(100),
+    pessoa INT,
+    pago VARCHAR(5),
+    produto INT,
+    quantidade INT
+);
+
+ALTER TABLE receber
+ADD COLUMN fornecedor INT AFTER quantidade;
+
+CREATE TABLE fornecedores_produtos (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  fornecedor_id INT NOT NULL,
+  produto_id INT NOT NULL,
+  valor_compra DECIMAL(10,2) DEFAULT 0.00,
+  prazo_entrega VARCHAR(50) DEFAULT NULL,
+  principal TINYINT(1) DEFAULT 0,
+  observacoes TEXT DEFAULT NULL,
+  data_cad DATE DEFAULT CURRENT_DATE,
+  FOREIGN KEY (fornecedor_id) REFERENCES fornecedores(id),
+  FOREIGN KEY (produto_id) REFERENCES produtos(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

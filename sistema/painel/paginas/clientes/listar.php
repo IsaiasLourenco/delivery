@@ -36,6 +36,8 @@ HTML;
         $cidade = $res[$i]['cidade'];
         $estado = $res[$i]['estado'];
         $data_cad = $res[$i]['data_cad'];
+        $tipo_chave = $res[$i]['tipo_chave'];
+        $chave_pix = $res[$i]['chave_pix'];
 
         $dataF = implode('/', array_reverse(explode('-', $data_cad)));
 
@@ -62,12 +64,14 @@ HTML;
                             '{$nome_bairro}',
                             '{$cidade}',
                             '{$estado}',
-                            '{$senha}')", title="Editar Registro">
+                            '{$senha}',
+                            '{$tipo_chave}',
+                            '{$chave_pix}')", title="Editar Registro">
             <i class="fa fa-edit text-primary pointer"></i>
         </a>
         <li class="dropdown head-dpdn2 d-il-b">
             <a title="Excluir Registro" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-trash text-danger pointer"></i></a>
-            <ul class="dropdown-menu mg-l--23">
+            <ul class="dropdown-menu mg-l--230">
                 <li>
                     <div class="notification_desc2">
                         <p>Confirmar Exclusão?<a href="#" onclick="excluir('{$id}')"><span class="text-danger"> Sim</span></a></p>
@@ -84,7 +88,9 @@ HTML;
                             '{$nome_bairro}',
                             '{$cidade}',
                             '{$estado}',
-                            '{$dataF}')", title="Mostrar mais Dados">
+                            '{$dataF}',
+                            '{$tipo_chave}',
+                            '{$chave_pix}')", title="Mostrar mais Dados">
             <i class="fa fa-info-circle text-secondary pointer"></i>
         </a>
     </td>
@@ -113,7 +119,7 @@ HTML;
 </script>
 
 <script type="text/javascript">
-    function editar(id, nome, email, cpf, telefone, cep, rua, numero, bairro, cidade, estado) {
+    function editar(id, nome, email, cpf, telefone, cep, rua, numero, bairro, cidade, estado, tipo_chave, chave_pix) {
         $('#id').val(id);
         $('#nome-cli').val(nome);
         $('#email-cli').val(email);
@@ -125,6 +131,8 @@ HTML;
         $('#bairro-cli').val(bairro);
         $('#cidade-cli').val(cidade);
         $('#estado-cli').val(estado);
+        $('#tipo_chave').val(tipo_chave);
+        $('#chave_pix').val(chave_pix);
 
         $('#titulo_inserir').text('Editar Registro');
         $('#modalForm').modal('show');
@@ -142,9 +150,11 @@ HTML;
         $('#bairro-cli').val('');
         $('#cidade-cli').val('');
         $('#estado-cli').val('');
+        $('#tipo_chave').val('');
+        $('#chave_pix').val('');
     }
 
-    function mostrar(nome, cpf, telefone, cep, rua, numero, bairro, cidade, estado, dataF) {
+    function mostrar(nome, cpf, telefone, cep, rua, numero, bairro, cidade, estado, dataF, tipo_chave, chave_pix) {
         $('#nome_dados-cli').text(nome);
         $('#cpf_dados-cli').text(cpf);
         $('#telefone_dados-cli').text(telefone);
@@ -155,6 +165,8 @@ HTML;
         $('#cidade_dados-cli').text(cidade);
         $('#estado_dados-cli').text(estado);
         $('#data_dados-cli').text(dataF);
+        $('#tipo_chave').text(tipo_chave);
+        $('#chave_pix').text(chave_pix);
 
         $('#modalDados').modal('show');
     }

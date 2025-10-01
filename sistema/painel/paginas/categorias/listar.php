@@ -65,7 +65,7 @@ echo <<<HTML
 
         <li class="dropdown head-dpdn2 d-il-b">
             <a title="Excluir Registro" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-trash text-danger pointer"></i></a>
-            <ul class="dropdown-menu mg-l--23">
+            <ul class="dropdown-menu mg-l--150">
                 <li>
                     <div class="notification_desc2">
                         <p>Confirmar Exclusão?<a href="#" onclick="excluir('{$id}')"><span class="text-danger"> Sim</span></a></p>

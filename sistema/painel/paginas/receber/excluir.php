@@ -1,6 +1,6 @@
-<?php
+<?php 
 require_once("../../../conexao.php");
-$tabela = 'usuarios';
+$tabela = 'receber';
 
 $id = $_POST['id'];
 
@@ -9,9 +9,10 @@ $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total_reg = @count($res);
 $foto = $res[0]['foto'];
 
-if ($foto != "sem-foto.jpg") {
-    @unlink('../../images/perfil/' . $foto);
+if($foto != "sem-foto.jpg"){
+	@unlink('../../img/contas/'.$foto);
 }
 
-$pdo->query("DELETE FROM $tabela WHERE id = '$id'");
+$pdo->query("DELETE from $tabela where id = '$id'");
 echo 'Excluído com Sucesso';
+ ?>

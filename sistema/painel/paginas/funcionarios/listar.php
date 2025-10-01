@@ -40,6 +40,10 @@ HTML;
         $ativo = $res[$i]['ativo'];
         $foto = $res[$i]['foto'];
         $data_cad = $res[$i]['data_cad'];
+        $data_cad = $res[$i]['data_cad'];
+        $data_cad = $res[$i]['data_cad'];
+        $tipo_chave = $res[$i]['tipo_chave'];
+        $chave_pix = $res[$i]['chave_pix'];
 
         $queryNivel = $pdo->query("SELECT * FROM cargos WHERE id = '$nivel'");
         $resNivel = $queryNivel->fetchAll(PDO::FETCH_ASSOC);
@@ -80,19 +84,34 @@ HTML;
                             '{$estado}',
                             '{$ativo}', 
                             '{$nivel}',
-                            '{$foto}')", title="Editar Registro">
+                            '{$foto}',
+                            '{$tipo_chave}',
+                            '{$chave_pix}')", title="Editar Registro">
             <i class="fa fa-edit text-primary pointer"></i>
         </a>
-        <li class="dropdown head-dpdn2 d-il-b">
-            <a title="Excluir Registro" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-trash text-danger pointer"></i></a>
-            <ul class="dropdown-menu mg-l--23">
-                <li>
-                    <div class="notification_desc2">
-                        <p>Confirmar Exclusão?<a href="#" onclick="excluir('{$id}')"><span class="text-danger"> Sim</span></a></p>
-                    </div>
-                </li>
-            </ul>
-        </li>
+			<li class="dropdown head-dpdn2 d-il-b">
+				<a  href="#" 
+					class="dropdown-toggle" 
+					data-toggle="dropdown" 
+					aria-expanded="false">
+					<i class="fa fa-trash-o text-danger"></i>
+				</a>
+
+				<ul class="dropdown-menu mg-l--230">
+					<li>
+						<div class="notification_desc2">
+							<p>Confirmar Exclusão? 
+								<a  href="#" 
+									onclick="excluir('{$id}')">
+									<span class="text-danger">
+										Sim
+									</span>
+								</a>
+							</p>
+						</div>
+					</li>										
+				</ul>
+			</li>
         <a onclick="mostrar('{$nome}', 
                             '{$cpf}', 
                             '{$telefone}',
@@ -103,7 +122,9 @@ HTML;
                             '{$cidade}',
                             '{$estado}',
                             '{$dataF}',
-                            '{$foto}')", title="Mostrar mais Dados">
+                            '{$foto}',
+                            '{$tipo_chave}',
+                            '{$chave_pix}')", title="Mostrar mais Dados">
             <i class="fa fa-info-circle text-secondary pointer"></i>
         </a>
         <a onclick="ativar('{$id}', 
@@ -136,7 +157,7 @@ HTML;
 </script>
 
 <script type="text/javascript">
-    function editar(id, nome, email, cpf, telefone, cep, rua, numero, bairro, cidade, estado, ativo, nivel, foto) {
+    function editar(id, nome, email, cpf, telefone, cep, rua, numero, bairro, cidade, estado, ativo, nivel, foto, tipo_chave, chave_pix) {
         $('#id-funcionario').val(id);
         $('#nome-funcionario').val(nome);
         $('#email-funcionario').val(email);
@@ -150,6 +171,8 @@ HTML;
         $('#estado-funcionario').val(estado);
         $('#ativo-funcionario').val(ativo).change();
         $('#nivel-funcionario').val(nivel).change();
+        $('#tipo_chave').val(tipo_chave).change();
+        $('#chave_pix').val(chave_pix);
 
         $('#titulo_inserir').text('Editar Registro');
         $('#modalForm').modal('show');
@@ -169,10 +192,11 @@ HTML;
         $('#bairro-funcionario').val('');
         $('#cidade-funcionario').val('');
         $('#estado-funcionario').val('');
+        $('#chave_pix').val('');
         $('#target-funcionario').attr('src', 'images/perfil/sem-foto.jpg')
     }
 
-    function mostrar(nome, cpf, telefone, cep, rua, numero, bairro, cidade, estado, dataF, foto) {
+    function mostrar(nome, cpf, telefone, cep, rua, numero, bairro, cidade, estado, dataF, foto, tipo_chave, chave_pix) {
         $('#nome_dados').text(nome);
         $('#cpf_dados').text(cpf);
         $('#telefone_dados').text(telefone);
@@ -183,6 +207,8 @@ HTML;
         $('#cidade_dados').text(cidade);
         $('#estado_dados').text(estado);
         $('#data_dados').text(dataF);
+        $('#tipo_chave-for').text(tipo_chave);
+        $('#chave_pix-for').text(chave_pix);
 
         $('#modalDados').modal('show');
         $('#target_mostrar').attr('src', 'images/perfil/' + foto);

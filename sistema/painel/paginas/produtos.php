@@ -16,7 +16,7 @@ $pag = 'produtos';
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"><span id="titulo_inserir"></span></h4>
-                <button id="btn-fechar" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -20px">
+                <button id="btn-fechar" type="button" class="close mg-t--20" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -509,33 +509,33 @@ $pag = 'produtos';
 </script>
 <!-- Fim Saida de produtos -->
 
-<!-- Entrada de produtos -->
-<script type="text/javascript">
-    $("#form-entrada").submit(function() {
-        event.preventDefault();
-        var formData = new FormData(this);
-        $.ajax({
-            url: 'paginas/' + pag + "/entrada.php",
-            type: 'POST',
-            data: formData,
-            success: function(mensagem) {
-                $('#mensagem-entrada').text('');
-                $('#mensagem-entrada').removeClass('text-danger text-success')
-                if (mensagem.trim() == "Salvo com Sucesso") {
-                    $('#btn-fechar-entrada').click();
-                    listar();
-                } else {
-                    $('#mensagem-entrada').addClass('text-danger')
-                    $('#mensagem-entrada').text(mensagem)
-                }
-            },
-            cache: false,
-            contentType: false,
-            processData: false,
+    <!-- Entrada de produtos -->
+    <script type="text/javascript">
+        $("#form-entrada").submit(function() {
+            event.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: 'paginas/' + pag + "/entrada.php",
+                type: 'POST',
+                data: formData,
+                success: function(mensagem) {
+                    $('#mensagem-entrada').text('');
+                    $('#mensagem-entrada').removeClass('text-danger text-success')
+                    if (mensagem.trim() == "Salvo com Sucesso") {
+                        $('#btn-fechar-entrada').click();
+                        listar();
+                    } else {
+                        $('#mensagem-entrada').addClass('text-danger')
+                        $('#mensagem-entrada').text(mensagem)
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+            });
         });
-    });
-</script>
-<!-- Fim Entrada de produtos -->
+    </script>
+    <!-- Fim Entrada de produtos -->
 
 <!-- Inserir e Editar Variações de produtos -->
 <script type="text/javascript">
