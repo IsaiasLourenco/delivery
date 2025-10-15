@@ -7,7 +7,6 @@ $dataInicial = @$_POST['dataInicial'];
 $dataFinal = @$_POST['dataFinal'];
 $status = '%'.@$_POST['status'].'%';
 
-
 $total_pago = 0;
 $total_a_pagar = 0;
 
@@ -24,14 +23,13 @@ echo <<<HTML
 	<table class="table table-hover tabela-menor" id="tabela">
 	<thead> 
 	<tr> 
-	<th>Produto</th>	
-	<th class="esc">Valor</th> 	
-	<th class="esc">Vencimento</th> 	
-	<th class="esc">Data PGTO</th> 
-	
-	<th class="esc">Fornecedor</th>	
-	<th class="esc">Arquivo</th>	
-	<th>Ações</th>
+	<th class="centro">Produto</th>	
+	<th class="esc centro">Valor</th> 	
+	<th class="esc centro">Vencimento</th> 	
+	<th class="esc centro">Data PGTO</th> 
+	<th class="esc centro">Fornecedor</th>	
+	<th class="esc centro">Arquivo</th>	
+	<th class="centro">Ações</th>
 	</tr> 
 	</thead> 
 	<tbody>	
@@ -53,7 +51,7 @@ for($i=0; $i < $total_reg; $i++){
 	$produto = $res[$i]['produto'];
 	$pago = $res[$i]['pago'];
 	
-	$valorF = number_format($valor, 2, ',', '.');
+	$valorF = 'R$ ' . number_format($valor, 2, ',', '.');
 	$data_lancF = implode('/', array_reverse(explode('-', $data_lanc)));
 	$data_pgtoF = implode('/', array_reverse(explode('-', $data_pgto)));
 	$data_vencF = implode('/', array_reverse(explode('-', $data_venc)));
@@ -93,7 +91,7 @@ for($i=0; $i < $total_reg; $i++){
 			$visivel = '';
 			$total_a_pagar += $valor;
 		}else{
-			$classe_alerta = 'verde';
+			$classe_alerta = 'text-verde';
 			$visivel = 'ocultar';
 			$total_pago += $valor;
 		}
@@ -115,15 +113,14 @@ if($data_venc < $data_hoje and $pago != 'Sim'){
 }
 
 echo <<<HTML
-<tr class="{$classe_debito}">
+<tr class=" centro{$classe_debito}">
 <td><i class="fa fa-square {$classe_alerta}"></i> {$descricao}</td>
-<td class="esc">R$ {$valorF}</td>
-<td class="esc">{$data_vencF}</td>
-<td class="esc">{$data_pgtoF}</td>
-
-<td class="esc">{$nome_pessoa}</td>
-<td><a href="img/contas/{$foto}" target="_blank"><img src="images/contas/{$tumb_arquivo}" width="27px" class="mr-2"></a></td>
-<td>
+<td class="esc centro">{$valorF}</td>
+<td class="esc centro">{$data_vencF}</td>
+<td class="esc centro">{$data_pgtoF}</td>
+<td class="esc centro">{$nome_pessoa}</td>
+<td class="centro"><a href="images/contas/{$foto}" target="_blank"><img src="images/contas/{$tumb_arquivo}" width="27px" class="mr-2"></a></td>
+<td class="centro">
 		
 		<a href="#" onclick="mostrar('{$descricao}', 
 									 '{$valorF}', 
@@ -181,7 +178,7 @@ echo <<<HTML
 </table>
 
 <br>	
-<div class="right">Total Pago: <span class="verde">R$ {$total_pagoF}</span> </div>
+<div class="right">Total Pago: <span class="text-verde">R$ {$total_pagoF}</span> </div>
 <div class="right">Total à Pagar: <span class="text-danger">R$ {$total_a_pagarF}</span> </div>
 
 HTML;

@@ -61,6 +61,15 @@ if (@$_GET['pagina'] != "") {
     $pagina = 'home';
 }
 
+$data_atual = date('Y-m-d');
+$mes_atual = date('m');
+$ano_atual = date('Y');
+$data_mes = $ano_atual . "-" . $mes_atual . "-01";
+$data_ano = $ano_atual . "-01-01";
+$partes_inicial = explode('-', $data_atual);
+$dataDiaInicial = $partes_inicial[2];
+$dataMesInicial = $partes_inicial[1];
+
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -262,6 +271,7 @@ if (@$_GET['pagina'] != "") {
                                     <li><a href="index.php?pagina=pagar"><i class="fa fa-angle-right"></i> Contas à Pagar</a></li>
                                     <li><a href="index.php?pagina=receber"><i class="fa fa-angle-right"></i> Contas à Receber</a></li>
                                     <li><a href="index.php?pagina=compras"><i class="fa fa-angle-right"></i> Compras</a></li>
+                                    <li><a href="index.php?pagina=vendas"><i class="fa fa-angle-right"></i> Vendas | Pedidos</a></li>
                                 </ul>
                             </li>
                             <li class="treeview">
@@ -272,6 +282,9 @@ if (@$_GET['pagina'] != "") {
                                 </a>
                                 <ul class="treeview-menu">
                                     <li><a href="rel/produtos_class.php" target="_blank"><i class="fa fa-angle-right"></i> Produtos</a></li>
+                                    <li><a href="" data-toggle="modal" data-target="#RelCon"><i class="fa fa-angle-right"></i> Contas</a></li>
+                                    <li><a href="" data-toggle="modal" data-target="#RelLucro"><i class="fa fa-angle-right"></i> Lucro</a></li>
+                                    <li><a href="" data-toggle="modal" data-target="#RelVen"><i class="fa fa-angle-right"></i> Vendas | Pedidos</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -714,6 +727,147 @@ if (@$_GET['pagina'] != "") {
 </div>
 <!-- Fim Modal Perfil-->
 
+<!-- Modal Relatório de Contas -->
+<div class="modal fade" id="RelCon" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title texto-menor-bold">Relatório de Contas
+                    <span class="texto-menor">(
+                        <a href="#" onclick="datas('1980-01-01', 'tudo-Con', 'Con')">
+                            <span class="cor-rel" id="tudo-Con">Tudo</span>
+                        </a> /
+                        <a href="#" onclick="datas('<?php echo $data_atual ?>', 'hoje-Con', 'Con')">
+                            <span id="hoje-Con">Hoje</span>
+                        </a> /
+                        <a href="#" onclick="datas('<?php echo $data_mes ?>', 'mes-Con', 'Con')">
+                            <span class="cor-rel" id="mes-Con">Mês</span>
+                        </a> /
+                        <a href="#" onclick="datas('<?php echo $data_ano ?>', 'ano-Con', 'Con')">
+                            <span class="cor-rel" id="ano-Con">Ano</span>
+                        </a>
+                        )</span>
+                </h4>
+                <button type="button" class="close mg-t--20" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="rel/contas_class.php" target="_blank">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Data Inicial</label>
+                                <input type="date" class="form-control" name="dataInicial" id="dataInicialRel-Con" value="<?php echo date('Y-m-d') ?>" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Data Final</label>
+                                <input type="date" class="form-control" name="dataFinal" id="dataFinalRel-Con" value="<?php echo date('Y-m-d') ?>" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Pago</label>
+                                <select class="form-control" name="pago">
+                                    <option value="">Todas</option>
+                                    <option value="Sim">Somente Pagas</option>
+                                    <option value="Não">Pendentes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Pagar / Receber</label>
+                                <select class="form-control" name="tabela">
+                                    <option value="pagar">Contas à Pagar</option>
+                                    <option value="receber">Contas à Receber</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Consultar Por</label>
+                                <select class="form-control" name="busca">
+                                    <option value="data_vencimento">Data de Vencimento</option>
+                                    <option value="data_pagamento">Data de Pagamento</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Fim Modal Relatório de Contas -->
+
+<!-- Modal Relatório de Lucro -->
+<div class="modal fade" id="RelLucro" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title texto-menor-bold">Demonstrativo de Lucro
+                    <span class="texto-menor">(
+                        <a href="#" onclick="datas('1980-01-01', 'tudo-Luc', 'Luc')">
+                            <span class="cor-rel" id="tudo-Luc">Tudo</span>
+                        </a> /
+                        <a href="#" onclick="datas('<?php echo $data_atual ?>', 'hoje-Luc', 'Luc')">
+                            <span id="hoje-Luc">Hoje</span>
+                        </a> /
+                        <a href="#" onclick="datas('<?php echo $data_mes ?>', 'mes-Luc', 'Luc')">
+                            <span class="cor-rel" id="mes-Luc">Mês</span>
+                        </a> /
+                        <a href="#" onclick="datas('<?php echo $data_ano ?>', 'ano-Luc', 'Luc')">
+                            <span class="cor-rel" id="ano-Luc">Ano</span>
+                        </a>
+                        )</span>
+                </h4>
+                <button type="button" class="close mg-t--20" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="rel/lucro_class.php" target="_blank">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Data Inicial</label>
+                                <input type="date" class="form-control" 
+                                       name="dataInicial" 
+                                       id="dataInicialRel-Luc" 
+                                       value="<?php echo date('Y-m-d') ?>" 
+                                       required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Data Final</label>
+                                <input type="date" 
+                                       class="form-control" 
+                                       name="dataFinal" 
+                                       id="dataFinalRel-Luc" 
+                                       value="<?php echo date('Y-m-d') ?>" 
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Fim Modal Relatório de Lucro -->
+
 <!-- BUSCA CEP -->
 <script type="text/javascript" src="../../js/buscaCepModal.js"></script>
 <!-- MÁSCARA -->
@@ -847,3 +1001,43 @@ if (@$_GET['pagina'] != "") {
     });
 </script>
 <!-- FIM AJAX SALVA EDITA CONFIGURAÇÕES -->
+
+<!-- SCRIPT DATAS PARA OS RELATÓRIOS -->
+<script type="text/javascript">
+    function datas(data, id, campo) {
+        var data_atual = "<?= $data_atual ?>";
+        var separarData = data_atual.split("-");
+        var mes = separarData[1];
+        var ano = separarData[0];
+        var separarId = id.split("-");
+        if (separarId[0] == 'tudo') {
+            data_atual = '2100-12-31';
+        }
+        if (separarId[0] == 'ano') {
+            data_atual = ano + '-12-31';
+        }
+        if (separarId[0] == 'mes') {
+            if (mes == 4 || mes == 6 || mes == 9 || mes == 11) {
+                data_atual = ano + '-' + mes + '-30';
+            } else if (mes == 2) {
+                // Verifica se o ano é bissexto
+                if ((ano % 4 == 0 && ano % 100 != 0) || (ano % 400 == 0)) {
+                    data_atual = ano + '-' + mes + '-29';
+                } else {
+                    data_atual = ano + '-' + mes + '-28';
+                }
+            } else {
+                data_atual = ano + '-' + mes + '-31';
+            }
+        }
+        $('#dataInicialRel-' + campo).val(data);
+        $('#dataFinalRel-' + campo).val(data_atual);
+        document.getElementById('hoje-' + campo).style.color = "#000";
+        document.getElementById('mes-' + campo).style.color = "#000";
+        document.getElementById(id).style.color = "blue";
+        document.getElementById('tudo-' + campo).style.color = "#000";
+        document.getElementById('ano-' + campo).style.color = "#000";
+        document.getElementById(id).style.color = "blue";
+    }
+</script>
+<!-- FIM SCRIPT DATAS PARA OS RELATÓRIOS -->

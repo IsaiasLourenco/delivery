@@ -3,7 +3,7 @@
 require_once("verificar.php");
 require_once("../conexao.php");
 
-$pag = 'compras';
+$pag = 'vendas';
 
 $data_hoje = date('Y-m-d');
 $data_ontem = date('Y-m-d', strtotime("-1 days", strtotime($data_hoje)));
@@ -27,17 +27,13 @@ $data_final_mes = $ano_atual . "-" . $mes_atual . "-" . $dia_final_mes;
 
 ?>
 
-<a type="button" class="btn btn-dark" onclick="inserir()">Nova Compra
-	<i class="fa fa-plus" aria-hidden="true"></i>
-</a>
-
 <div class="bs-example widget-shadow pddg-15">
 
 	<div class="row">
 		<div class="col-md-5 mg-b-5">
 			<div class="esquerda mg-r-10">
 				<span>
-					<i title="Data de Vencimento Inicial" class="fa fa-calendar-o texto-menor"></i>
+					<i title="Data Inicial" class="fa fa-calendar-o texto-menor"></i>
 				</span>
 			</div>
 			<div class="esquerda mg-r-20">
@@ -45,13 +41,13 @@ $data_final_mes = $ano_atual . "-" . $mes_atual . "-" . $dia_final_mes;
 					class="form-control texto-menor"
 					name="data-inicial"
 					id="data-inicial-caixa"
-					value="<?php echo $data_inicio_mes ?>"
+					value="<?php echo $data_hoje ?>"
 					required>
 			</div>
 
 			<div class="esquerda mg-r-10">
 				<span>
-					<i title="Data de Vencimento Final" class="fa fa-calendar-o texto-menor"></i>
+					<i title="Data Final" class="fa fa-calendar-o texto-menor"></i>
 				</span>
 			</div>
 			<div class="esquerda mg-t-30">
@@ -59,26 +55,26 @@ $data_final_mes = $ano_atual . "-" . $mes_atual . "-" . $dia_final_mes;
 					class="form-control texto-menor"
 					name="data-final"
 					id="data-final-caixa"
-					value="<?php echo $data_final_mes ?>"
+					value="<?php echo $data_hoje ?>"
 					required>
 			</div>
 		</div>
 
 		<div class="col-md-2 centro mg-t-5">
 			<div class="texto-menor">
-				<a title="Conta de Ontem"
+				<a title="Venda de Ontem"
 					class="text-muted"
 					href="#"
 					onclick="valorData('<?php echo $data_ontem ?>', '<?php echo $data_ontem ?>')">
 					<span>Ontem</span>
 				</a> /
-				<a title="Conta de Hoje"
+				<a title="Venda de Hoje"
 					class="text-muted"
 					href="#"
 					onclick="valorData('<?php echo $data_hoje ?>', '<?php echo $data_hoje ?>')">
 					<span>Hoje</span>
 				</a> /
-				<a title="Conta do Mês"
+				<a title="Venda do Mês"
 					class="text-muted"
 					href="#"
 					onclick="valorData('<?php echo $data_inicio_mes ?>', '<?php echo $data_final_mes ?>')">
@@ -89,22 +85,22 @@ $data_final_mes = $ano_atual . "-" . $mes_atual . "-" . $dia_final_mes;
 
 		<div class="col-md-3 centro mg-t-5">
 			<div class="texto-menor">
-				<a title="Todas as Contas"
+				<a title="Todas as Vendas"
 					class="text-muted"
 					href="#"
 					onclick="buscarContas('')">
 					<span>Todas</span>
 				</a> /
-				<a title="Contas Pendentes"
+				<a title="Vendas Pendentes"
 					class="text-muted"
 					href="#"
-					onclick="buscarContas('Não')">
-					<span>Pendentes</span>
+					onclick="buscarContas('Cancelado')">
+					<span>Canceladas</span>
 				</a> /
-				<a title="Contas Pagas"
+				<a title="Vendas Pagas"
 					class="text-muted"
 					href="#"
-					onclick="buscarContas('Sim')">
+					onclick="buscarContas('Finalizado')">
 					<span>Pagas</span>
 				</a>
 			</div>
@@ -121,118 +117,12 @@ $data_final_mes = $ano_atual . "-" . $mes_atual . "-" . $dia_final_mes;
 
 </div>
 
-<!-- Modal Inserir-->
-<div class="modal fade" id="modalForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title"><span id="titulo_inserir"></span></h4>
-				<button id="btn-fechar" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -20px">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<form id="form">
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-md-5">
-							<div class="form-group">
-								<label for="produto">Produto</label>
-								<select class="form-control sel2" id="produto" name="produto" style="width:100%;">
-									<?php
-									$query = $pdo->query("SELECT * FROM produtos ORDER BY nome asc");
-									$res = $query->fetchAll(PDO::FETCH_ASSOC);
-									$total_reg = @count($res);
-									if ($total_reg > 0) {
-										for ($i = 0; $i < $total_reg; $i++) {
-											foreach ($res[$i] as $key => $value) {
-											}
-											echo '<option value="' . $res[$i]['id'] . '">' . $res[$i]['nome'] . '</option>';
-										}
-									} else {
-										echo '<option value="0">Cadastre um Produto</option>';
-									}
-									?>
-								</select>
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="fornecedor">Fornecedor</label>
-								<select class="form-control sel2" id="pessoa" name="pessoa" style="width:100%;">
-									<?php
-									$query = $pdo->query("SELECT * FROM fornecedores ORDER BY nome asc");
-									$res = $query->fetchAll(PDO::FETCH_ASSOC);
-									$total_reg = @count($res);
-									echo '<option value="0">Selecione um Fornecedor</option>';
-									if ($total_reg > 0) {
-										for ($i = 0; $i < $total_reg; $i++) {
-											foreach ($res[$i] as $key => $value) {
-											}
-											echo '<option value="' . $res[$i]['id'] . '">' . $res[$i]['nome'] . '</option>';
-										}
-									}
-									?>
-								</select>
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								<label for="quantidade">Quantidade</label>
-								<input type="number" class="form-control" id="quantidade" name="quantidade" placeholder="Quantidade" required>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="valor">Valor Total Compra</label>
-								<input type="text" class="form-control" id="valor" name="valor" placeholder="Valor" required>
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="data_venc">Vencimento</label>
-								<input type="date" class="form-control" id="data_venc" name="data_venc" value="<?php echo $data_hoje ?>">
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="data_pgto">Pago Em</label>
-								<input type="date" class="form-control" id="data_pgto" name="data_pgto">
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-8">
-							<div class="form-group">
-								<label>Arquivo (Nota Fiscal)</label>
-								<input class="form-control" type="file" name="foto" onChange="carregarImg();" id="foto">
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div id="divImg">
-								<img src="images/contas/sem-foto.jpg" width="80px" id="target">
-							</div>
-						</div>
-					</div>
-					<input type="text" name="id" id="id">
-					<br>
-					<div id="mensagem" class="centro texto-menor"></div>
-				</div>
-				<div class="modal-footer">
-					<button type="submit" class="btn btn-primary">Salvar</button>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
-
 <!-- Modal Dados-->
 <div class="modal fade" id="modalDados" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title" id="exampleModalLabel"><span id="nome_dados"></span></h4>
+				<h4 class="modal-title"><span id="cliente_dados"></span></h4>
 				<button id="btn-fechar-perfil" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -20px">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -240,42 +130,62 @@ $data_final_mes = $ano_atual . "-" . $mes_atual . "-" . $dia_final_mes;
 			<div class="modal-body">
 				<div class="row br-btt">
 					<div class="col-md-6">
-						<span><strong>Valor : </strong></span>
-						<span id="valor_dados"></span>
+						<span><strong>Valor da Compra : </strong></span>
+						<span id="valor_compra_dados"></span>
 					</div>
 					<div class="col-md-6">
-						<span><strong>Data Lançamento: </strong></span>
-						<span id="data_lanc_dados"></span>
+						<span><strong>Valor Pago: </strong></span>
+						<span id="valor_pago_dados"></span>
 					</div>
 				</div>
 				<div class="row br-btt">
 					<div class="col-md-6">
-						<span><strong>Data Vencimento: </strong></span>
-						<span id="data_venc_dados"></span>
+						<span><strong>Troco: </strong></span>
+						<span id="troco_dados"></span>
 					</div>
 					<div class="col-md-6">
-						<span><strong>Data PGTO: </strong></span>
+						<span><strong>Data: </strong></span>
 						<span id="data_pgto_dados"></span>
 					</div>
 				</div>
 				<div class="row br-btt">
 					<div class="col-md-6">
-						<span><strong>Usuário Lanc: </strong></span>
-						<span id="usuario_lanc_dados"></span>
+						<span><strong>Hora: </strong></span>
+						<span id="hora_pgto_dados"></span>
 					</div>
 					<div class="col-md-6">
-						<span><strong>Usuário Baixa: </strong></span>
-						<span id="usuario_baixa_dados"></span>
+						<span><strong>Status: </strong></span>
+						<span id="status_venda_dados"></span>
 					</div>
 				</div>
 				<div class="row br-btt">
 					<div class="col-md-6">
-						<span><strong>Fornecedor: </strong></span>
-						<span id="pessoa_dados"></span>
+						<span><strong>Pago: </strong></span>
+						<span id="pago_dados"></span>
 					</div>
 					<div class="col-md-6">
-						<span><strong>Telefone: </strong></span>
-						<span id="telefone_dados"></span>
+						<span><strong>Observações: </strong></span>
+						<span id="obs_dados"></span>
+					</div>
+				</div>
+				<div class="row br-btt">
+					<div class="col-md-6">
+						<span><strong>Bairro: </strong></span>
+						<span id="nome_bairro_dados"></span>
+					</div>
+					<div class="col-md-6">
+						<span><strong>Valor Entrega: </strong></span>
+						<span id="valor_entrega_dados"></span>
+					</div>
+				</div>
+				<div class="row br-btt">
+					<div class="col-md-6">
+						<span><strong>Pago com: </strong></span>
+						<span id="tipo_pagto_dados"></span>
+					</div>
+					<div class="col-md-6">
+						<span><strong>Usuário Baixa: </strong></span>
+						<span id="usuario_pagto_dados"></span>
 					</div>
 				</div>
 				<div class="row">

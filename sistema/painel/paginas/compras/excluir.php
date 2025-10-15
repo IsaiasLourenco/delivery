@@ -12,7 +12,7 @@ $produto = $res[0]['produto'];
 $quantidade = $res[0]['quantidade'];
 
 if($foto != "sem-foto.jpg"){
-	@unlink('../../img/contas/'.$foto);
+	@unlink('../../images/contas/'.$foto);
 }
 
 $query = $pdo->query("SELECT * FROM produtos where id = '$produto'");
@@ -21,7 +21,9 @@ $total_reg = @count($res);
 $estoque = $res[0]['estoque'];
 
 $total_estoque = $estoque - $quantidade;
-$pdo->query("UPDATE produtos SET estoque = '$total_estoque', valor_compra = '0' WHERE id = '$produto'");
+$pdo->query("UPDATE produtos SET estoque = '$total_estoque', 
+								 valor_compra = '0' 
+								 WHERE id = '$produto'");
 
 
 $pdo->query("DELETE from $tabela where id = '$id'");

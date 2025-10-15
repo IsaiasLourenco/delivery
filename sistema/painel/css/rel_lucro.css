@@ -1,0 +1,170 @@
+@page {
+    margin: 20px 30px;
+}
+
+body {
+    margin-top: 5px;
+    font-family: Times, "Times New Roman", Georgia, serif;
+    color: #222;
+}
+
+/* Cabeçalho */
+.header-relatorio {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #0340a3;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.logo-rel {
+    width: 60px;
+    height: auto;
+}
+
+.titulo-rel {
+    text-align: center;
+    flex-grow: 1;
+}
+
+.nome-sistema {
+    font-size: 16px;
+    font-weight: bold;
+    color: #0340a3;
+}
+
+.titulo-principal {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 5px;
+    color: #222;
+    text-transform: uppercase;
+}
+
+.data-rel {
+    font-size: 10px;
+    color: #666;
+    text-align: right;
+}
+
+/* Tabela */
+table.borda {
+    border-collapse: collapse;
+    background: #FFF;
+    font-size: 12px;
+    vertical-align: middle;
+    width: 100%;
+}
+
+table.borda th {
+    border: 1px solid #dbdbdb;
+    background: #ededed;
+    font-size: 13px;
+    padding: 5px;
+    text-align: center;
+}
+
+table.borda td {
+    border: 1px solid #dbdbdb;
+    padding: 5px;
+    text-align: center;
+}
+
+/* Rodapé */
+.footer-relatorio {
+    width: 100%;
+    border-top: 2px solid #0340a3;
+    padding-top: 12px;
+    margin-top: 40px;
+    background-color: #f9f9f9;
+    text-align: center;
+    font-size: 11px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.footer-relatorio a {
+    color: #0340a3;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer-relatorio a:hover {
+    text-decoration: underline;
+}
+
+.footer-linha {
+    margin: 2px 0;
+}
+
+/* QR Code */
+.style-qr-code {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.style-text-qr-code {
+    font-size: 10px;
+    color: #555;
+}
+
+.cor-estilo-link-vetor {
+    color: #0340a3;
+    text-decoration: underline;
+}
+
+/* Utilitários */
+.mg-t-3 {
+    margin-top: 3px;
+}
+
+.mg-tb-5 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.mx-2 {
+    margin-left: 0.5rem !important;
+    margin-right: 0.5rem !important;
+}
+
+.texto-menor {
+    font-size: 0.7rem;
+}
+
+.texto-cabecalho {
+    font-size: 0.5rem;
+    text-decoration: underline;
+}
+
+.verde {
+    color: green;
+}
+
+.text-success {
+    color: #28a745;
+}
+
+.text-danger {
+    color: #dc3545;
+}
+
+.centro {
+    text-align: center;
+}
+
+.esc {
+    text-align: right;
+}
+
+.saldo-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.saldo-final {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+}

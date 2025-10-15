@@ -53,8 +53,17 @@
     font-size: 0.7rem;
 }
 
+.cor-rel {
+    color: #000;
+}
+
 .texto-menor {
     font-size: 0.7rem;
+}
+
+.texto-menor-bold {
+    font-size: 1rem;
+    font-weight: bold;
 }
 
 .centro {

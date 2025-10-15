@@ -266,3 +266,19 @@ CREATE TABLE fornecedores_produtos (
   FOREIGN KEY (fornecedor_id) REFERENCES fornecedores(id),
   FOREIGN KEY (produto_id) REFERENCES produtos(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+CREATE TABLE vendas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente INT NOT NULL,
+    valor_compra DECIMAL(10,2) NOT NULL,
+    valor_pago DECIMAL(10,2) NOT NULL,
+    troco DECIMAL(10,2),
+    data_pagamento DATE NOT NULL,
+    hora_pagamento TIME NOT NULL,
+    status_venda VARCHAR(10),
+    pago VARCHAR(5),
+    obs VARCHAR(80),
+    valor_entrega INT,
+    tipo_pagamento VARCHAR(80)
+);
