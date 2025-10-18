@@ -5,12 +5,12 @@ include('../../conexao.php');
 $dataInicial = $_POST['dataInicial'];
 $dataFinal = $_POST['dataFinal'];
 
-//ALIMENTAR OS DADOS NO RELATÓRIO
-$html = file_get_contents($url_sistema."sistema/painel/rel/lucro.php?dataInicial=$dataInicial&dataFinal=$dataFinal");
-
 $query = $pdo->query("SELECT * FROM config");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $tipo_rel = $res[0]['tipo_relatorio'];
+$url_sistema = $res[0]['url_sistema'];
+//ALIMENTAR OS DADOS NO RELATÓRIO
+$html = file_get_contents($url_sistema."sistema/painel/rel/lucro.php?dataInicial=$dataInicial&dataFinal=$dataFinal");
 
 if($tipo_rel != 'PDF'){
 	echo $html;

@@ -6,6 +6,7 @@ $logo_rel = $res[0]['logo_rel'];
 $nome_sistema = $res[0]['nome_sistema'];
 $desenvolvedor = $res[0]['desenvolvedor'];
 $site_dev = $res[0]['site_dev'];
+$url_sistema = $res[0]['url_sistema'];
 setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
 date_default_timezone_set('America/Sao_Paulo');
 $formatter = new IntlDateFormatter(

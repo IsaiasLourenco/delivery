@@ -1,10 +1,11 @@
 <?php
 include('../../conexao.php');
-$html = file_get_contents($url_sistema."sistema/painel/rel/produtos.php");
 
 $query = $pdo->query("SELECT * FROM config");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $tipo_rel = $res[0]['tipo_relatorio'];
+$url_sistema = $res[0]['url_sistema'];
+$html = file_get_contents($url_sistema."sistema/painel/rel/produtos.php");
 
 if ($tipo_rel != 'PDF') {
     echo $html;

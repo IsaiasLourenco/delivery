@@ -7,11 +7,11 @@ $pago = urlencode($_POST['pago']);
 $tabela = urlencode($_POST['tabela']);
 $busca = urlencode($_POST['busca']);
 
-$html = file_get_contents($url_sistema."sistema/painel/rel/contas.php?dataInicial=$dataInicial&dataFinal=$dataFinal&pago=$pago&tabela=$tabela&busca=$busca");
-
 $query = $pdo->query("SELECT * FROM config");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $tipo_rel = $res[0]['tipo_relatorio'];
+$url_sistema = $res[0]['url_sistema'];
+$html = file_get_contents($url_sistema."sistema/painel/rel/contas.php?dataInicial=$dataInicial&dataFinal=$dataFinal&pago=$pago&tabela=$tabela&busca=$busca");
 
 if ($tipo_rel != 'PDF') {
     echo $html;

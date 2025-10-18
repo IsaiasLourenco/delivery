@@ -54,6 +54,7 @@ $txt_fechamento = $res_sistema[0]['texto_fechamento'];
 $logo_sistema = $res_sistema[0]['logotipo'];
 $icone_sistema = $res_sistema[0]['icone'];
 $logo_rel = $res_sistema[0]['logo_rel'];
+$url_sistema = $res_sistema[0]['url_sistema'];
 
 if (@$_GET['pagina'] != "") {
     $pagina = @$_GET['pagina'];
@@ -568,6 +569,12 @@ $dataMesInicial = $partes_inicial[1];
                             <label for="txt_fechamento">Texto Fechamento</label>
                             <input type="text" class="form-control" id="txt_fechamento" name="txt_fechamento" value="<?php echo $txt_fechamento ?>">
                         </div>
+                        <div class="col-md-6">
+                            <label for="url_sistema">URL para Relatório</label>
+                            <input type="text" class="form-control" id="url_sistema" name="url_sistema" value="<?php echo $url_sistema ?>">
+                        </div>                        
+                    </div>
+                    <div class="row">
                         <div class="col-md-4">
                             <label for="logotipo">Logotipo(*.png)</label>
                             <input type="file" class="form-control" id="logotipo" name="logotipo" onchange="carregarImgLogotipo()">
@@ -575,8 +582,6 @@ $dataMesInicial = $partes_inicial[1];
                         <div class="col-md-2">
                             <img src="../../img/<?php echo $logo_sistema; ?>" alt="Logotipo" style="width: 80px;" id="target-logo">
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-4">
                             <label for="icone">Ícone(*.png)</label>
                             <input type="file" class="form-control" id="icone" name="icone" onchange="carregarImgIcone()">
@@ -584,6 +589,9 @@ $dataMesInicial = $partes_inicial[1];
                         <div class="col-md-2">
                             <img src="../../img/<?php echo $icone_sistema; ?>" alt="Icone" style="width: 80px;" id="target-ico">
                         </div>
+                        <input type="hidden" name="id" value="<?php echo $id_sistema ?>">
+                    </div>
+                    <div class="row">
                         <div class="col-md-4">
                             <label for="logo_rel">Logotipo Relatório(*.jpg)</label>
                             <input type="file" class="form-control" id="logo_rel" name="logo_rel" onchange="carregarImgLogoRel()">
@@ -591,7 +599,6 @@ $dataMesInicial = $partes_inicial[1];
                         <div class="col-md-2">
                             <img src="../../img/<?php echo $logo_rel; ?>" alt="Logotipo do Relatório" style="width: 80px;" id="target-logo-rel">
                         </div>
-                        <input type="hidden" name="id" value="<?php echo $id_sistema ?>">
                     </div>
                     <div id="msg-config" class="centro"></div>
                 </div>

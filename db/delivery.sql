@@ -62,6 +62,8 @@ CREATE TABLE config (
     logo_rel VARCHAR(100)
 );
 
+ALTER TABLE config ADD COLUMN url_sistema VARCHAR(100) AFTER logo_rel;
+
 CREATE TABLE cargos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) NOT NULL
