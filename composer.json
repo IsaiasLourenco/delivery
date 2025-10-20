@@ -1,0 +1,15 @@
+{
+    "name": "isaias/delivery",
+    "description": "Sistema de relatórios PDF com DOMPDF",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Isaias",
+            "email": "isaias.lourenco2020@outlook.com"
+        }
+    ],
+    "require": {
+        "dompdf/dompdf": "^3.1"
+    }
+}

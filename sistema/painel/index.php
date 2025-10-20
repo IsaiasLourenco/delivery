@@ -282,10 +282,18 @@ $dataMesInicial = $partes_inicial[1];
                                     <i class="fa fa-angle-left pull-right"></i>
                                 </a>
                                 <ul class="treeview-menu">
-                                    <li><a href="rel/produtos_class.php" target="_blank"><i class="fa fa-angle-right"></i> Produtos</a></li>
-                                    <li><a href="" data-toggle="modal" data-target="#RelCon"><i class="fa fa-angle-right"></i> Contas</a></li>
-                                    <li><a href="" data-toggle="modal" data-target="#RelLucro"><i class="fa fa-angle-right"></i> Lucro</a></li>
-                                    <li><a href="" data-toggle="modal" data-target="#RelVen"><i class="fa fa-angle-right"></i> Vendas | Pedidos</a></li>
+                                    <li><a href="rel/produtos_class.php" target="_blank"><i class="fa fa-angle-right">
+                                        </i> Produtos</a>
+                                    </li>
+                                    <li><a href="" data-toggle="modal" data-target="#RelCon"><i class="fa fa-angle-right">
+                                        </i> Contas</a>
+                                    </li>
+                                    <li><a href="" data-toggle="modal" data-target="#RelLucro"><i class="fa fa-angle-right">
+                                        </i> Lucro</a>
+                                    </li>
+                                    <li><a href="" data-toggle="modal" data-target="#RelVen"><i class="fa fa-angle-right">
+                                        </i> Vendas | Pedidos</a>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>
@@ -304,12 +312,19 @@ $dataMesInicial = $partes_inicial[1];
                 <!--toggle button end-->
                 <div class="profile_details_left"><!--notifications of menu start -->
                     <ul class="nofitications-dropdown">
+                        <?php
+                            $query = $pdo->query("SELECT * FROM vendas WHERE data_pagamento = curDate() AND status_venda = 'Iniciado'");
+                            $res = $query->fetchAll(PDO::FETCH_ASSOC);
+                            $total_reg = count($res);
+                        ?>
                         <li class="dropdown head-dpdn">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-envelope"></i><span class="badge">4</span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-envelope"></i><span class="badge"><?php echo $total_reg?></span>
+                            </a>
                             <ul class="dropdown-menu">
                                 <li>
                                     <div class="notification_header">
-                                        <h3>You have 3 new messages</h3>
+                                        <h3>Você tem <?php echo $total_reg?> novos pedidos iniciados</h3>
                                     </div>
                                 </li>
                                 <li><a href="#">
@@ -561,17 +576,20 @@ $dataMesInicial = $partes_inicial[1];
                         </div>
                         <div class="col-md-4">
                             <label for="fechamento">Horário Fechamento</label>
-                            <input type="time" class="form-control" id="fechamento" name="fechamento" value="<?php echo $fechamento ?>">
+                            <input type="time" class="form-control" id="fechamento" name="fechamento" 
+                                   value="<?php echo $fechamento ?>">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <label for="txt_fechamento">Texto Fechamento</label>
-                            <input type="text" class="form-control" id="txt_fechamento" name="txt_fechamento" value="<?php echo $txt_fechamento ?>">
+                            <input type="text" class="form-control" id="txt_fechamento" name="txt_fechamento" 
+                                   value="<?php echo $txt_fechamento ?>">
                         </div>
                         <div class="col-md-6">
                             <label for="url_sistema">URL para Relatório</label>
-                            <input type="text" class="form-control" id="url_sistema" name="url_sistema" value="<?php echo $url_sistema ?>">
+                            <input type="text" class="form-control" id="url_sistema" name="url_sistema" 
+                                   value="<?php echo $url_sistema ?>">
                         </div>                        
                     </div>
                     <div class="row">
@@ -597,7 +615,8 @@ $dataMesInicial = $partes_inicial[1];
                             <input type="file" class="form-control" id="logo_rel" name="logo_rel" onchange="carregarImgLogoRel()">
                         </div>
                         <div class="col-md-2">
-                            <img src="../../img/<?php echo $logo_rel; ?>" alt="Logotipo do Relatório" style="width: 80px;" id="target-logo-rel">
+                            <img src="../../img/<?php echo $logo_rel; ?>" alt="Logotipo do Relatório" style="width: 80px;" 
+                                 id="target-logo-rel">
                         </div>
                     </div>
                     <div id="msg-config" class="centro"></div>
@@ -743,13 +762,13 @@ $dataMesInicial = $partes_inicial[1];
                     <span class="texto-menor">(
                         <a href="#" onclick="datas('1980-01-01', 'tudo-Con', 'Con')">
                             <span class="cor-rel" id="tudo-Con">Tudo</span>
-                        </a> /
+                        </a> |
                         <a href="#" onclick="datas('<?php echo $data_atual ?>', 'hoje-Con', 'Con')">
                             <span id="hoje-Con">Hoje</span>
-                        </a> /
+                        </a> |
                         <a href="#" onclick="datas('<?php echo $data_mes ?>', 'mes-Con', 'Con')">
                             <span class="cor-rel" id="mes-Con">Mês</span>
-                        </a> /
+                        </a> |
                         <a href="#" onclick="datas('<?php echo $data_ano ?>', 'ano-Con', 'Con')">
                             <span class="cor-rel" id="ano-Con">Ano</span>
                         </a>
@@ -788,7 +807,7 @@ $dataMesInicial = $partes_inicial[1];
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Pagar / Receber</label>
+                                <label>Pagar | Receber</label>
                                 <select class="form-control" name="tabela">
                                     <option value="pagar">Contas à Pagar</option>
                                     <option value="receber">Contas à Receber</option>
@@ -824,13 +843,13 @@ $dataMesInicial = $partes_inicial[1];
                     <span class="texto-menor">(
                         <a href="#" onclick="datas('1980-01-01', 'tudo-Luc', 'Luc')">
                             <span class="cor-rel" id="tudo-Luc">Tudo</span>
-                        </a> /
+                        </a> |
                         <a href="#" onclick="datas('<?php echo $data_atual ?>', 'hoje-Luc', 'Luc')">
                             <span id="hoje-Luc">Hoje</span>
-                        </a> /
+                        </a> |
                         <a href="#" onclick="datas('<?php echo $data_mes ?>', 'mes-Luc', 'Luc')">
                             <span class="cor-rel" id="mes-Luc">Mês</span>
-                        </a> /
+                        </a> |
                         <a href="#" onclick="datas('<?php echo $data_ano ?>', 'ano-Luc', 'Luc')">
                             <span class="cor-rel" id="ano-Luc">Ano</span>
                         </a>
@@ -874,6 +893,81 @@ $dataMesInicial = $partes_inicial[1];
     </div>
 </div>
 <!-- Fim Modal Relatório de Lucro -->
+
+<!-- Modal Relatório de Vendas -->
+<div class="modal fade" id="RelVen" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title texto-menor-bold">Relatório de Vendas
+                    <span class="texto-menor">(
+                        <a href="#" onclick="datas('1980-01-01', 'tudo-Ven', 'Ven')">
+                            <span class="cor-rel" id="tudo-Ven">Tudo</span>
+                        </a> /
+                        <a href="#" onclick="datas('<?php echo $data_atual ?>', 'hoje-Ven', 'Ven')">
+                            <span id="hoje-Ven">Hoje</span>
+                        </a> /
+                        <a href="#" onclick="datas('<?php echo $data_mes ?>', 'mes-Con', 'Ven')">
+                            <span class="cor-rel" id="mes-Ven">Mês</span>
+                        </a> /
+                        <a href="#" onclick="datas('<?php echo $data_ano ?>', 'ano-Ven', 'Ven')">
+                            <span class="cor-rel" id="ano-Ven">Ano</span>
+                        </a>
+                        )</span>
+                </h4>
+                <button type="button" class="close mg-t--20" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="rel/vendas_class.php" target="_blank">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Data Inicial</label>
+                                <input type="date" class="form-control" name="dataInicial" id="dataInicialRel-Ven" value="<?php echo date('Y-m-d') ?>" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Data Final</label>
+                                <input type="date" class="form-control" name="dataFinal" id="dataFinalRel-Ven" value="<?php echo date('Y-m-d') ?>" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select class="form-control" name="status">
+                                    <option value="">Todas</option>
+                                    <option value="finalizado">Finalizadas</option>
+                                    <option value="cancelado">Canceladas</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Forma PGTO</label>
+                                <select class="form-control" name="forma_pgto">
+                                    <option value="">Todas</option>
+                                    <option value="dinheiro">Dinheiro</option>
+                                    <option value="pix">PIX</option>
+                                    <option value="credito">Cartão de Crédito</option>
+                                    <option value="debito">Cartão de Débito</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Fim Modal Relatório de Vendas -->
 
 <!-- BUSCA CEP -->
 <script type="text/javascript" src="../../js/buscaCepModal.js"></script>

@@ -8,10 +8,10 @@ $id = $_POST['id'];
 $descricao = $_POST['descricao'];
 $valor = $_POST['valor'];
 $valor = str_replace(',', '.', $valor);
-$pessoa = $_POST['pessoa'];
-$fornecedor = $_POST['fornecedor'];
-$data_venc = $_POST['data_venc'];
-$data_pgto = $_POST['data_pagto'];
+$pessoa = isset($_POST['pessoa']) ? $_POST['pessoa'] : '';
+$fornecedor = isset($_POST['fornecedor']) ? $_POST['fornecedor'] : '';
+$data_venc = isset($_POST['data_venc']) ? $_POST['data_venc'] : '';
+$data_pgto = isset($_POST['data_pgto']) ? $_POST['data_pgto'] : '';
 $produto = $_POST['produto'];
 $quantidade = $_POST['quantidade'];
 
@@ -94,6 +94,8 @@ if($id == ""){
 
 $query->bindValue(":descricao", "$descricao");
 $query->bindValue(":valor", "$valor");
+$query->bindValue(":produto", "$produto");
+$query->bindValue(":quantidade", "$quantidade");
 $query->execute();
 
 echo 'Salvo com Sucesso';

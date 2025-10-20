@@ -158,6 +158,14 @@ table.borda td {
     text-align: right;
 }
 
+.bg-positivo {
+    background: #e6ffe8;
+}
+
+.bg-negativo {
+    background: #ffe7e6;
+}
+
 .saldo-container {
     text-align: center;
     margin-top: 20px;

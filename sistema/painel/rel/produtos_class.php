@@ -15,7 +15,7 @@ if ($tipo_rel != 'PDF') {
 date_default_timezone_set('America/Sao_Paulo');
 
 //CARREGAR DOMPDF
-require_once '../dompdf/autoload.inc.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 

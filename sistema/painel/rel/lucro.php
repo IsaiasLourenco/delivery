@@ -41,7 +41,7 @@ if ($dataInicial == $dataFinal) {
 		rel="stylesheet"
 		integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
 		crossorigin="anonymous">
-	<link rel="stylesheet" href="http://localhost/delivery/sistema/painel/css/rel_lucro.css">
+	<link rel="stylesheet" href="<?php echo $url_sistema ?>sistema/painel/css/rel_lucro.css">
 </head>
 
 <body>
@@ -82,15 +82,15 @@ if ($dataInicial == $dataFinal) {
 
 				<?php
 				//totalizar os vendas 
-				$query = $pdo->query("SELECT * FROM receber WHERE data_pagamento >= '$dataInicial' AND data_pagamento 
-									  <= '$dataFinal' AND tipo = 'Venda' AND pago = 'Sim' ORDER BY data_pagamento ASC");
+				$query = $pdo->query("SELECT * FROM vendas WHERE data_pagamento >= '$dataInicial' AND data_pagamento 
+									  <= '$dataFinal' AND pago = 'Sim' AND status_venda != 'Cancelado' ORDER BY data_pagamento ASC");
 				$res = $query->fetchAll(PDO::FETCH_ASSOC);
 				$total_reg = @count($res);
 				for ($i = 0; $i < $total_reg; $i++) {
 					foreach ($res[$i] as $key => $value) {
 					}
 
-					$total_vendas += $res[$i]['valor'];
+					$total_vendas += $res[$i]['valor_compra'];
 				}
 				//totalizar contas recebidas
 				$query = $pdo->query("SELECT * FROM receber where data_pagamento >= '$dataInicial' and data_pagamento 
@@ -125,16 +125,7 @@ if ($dataInicial == $dataFinal) {
 
 					$total_compras += $res[$i]['valor'];
 				}
-				//totalizar contas despesas
-				$query = $pdo->query("SELECT * FROM pagar WHERE data_pagamento >= '$dataInicial' AND data_pagamento 
-									   <= '$dataFinal' AND tipo = 'Comissão' AND pago = 'Sim' ORDER BY data_pagamento ASC");
-				$res = $query->fetchAll(PDO::FETCH_ASSOC);
-				$total_reg = @count($res);
-				for ($i = 0; $i < $total_reg; $i++) {
-					foreach ($res[$i] as $key => $value) {
-					}
-					$total_comissoes += $res[$i]['valor'];
-				}
+
 				$total_vendasF = number_format($total_vendas, 2, ',', '.');
 				$total_receberF = number_format($total_receber, 2, ',', '.');
 				$total_pagarF = number_format($total_pagar, 2, ',', '.');
@@ -160,13 +151,13 @@ if ($dataInicial == $dataFinal) {
 					<td class="text-danger">R$ <?php echo $total_comprasF ?></td>
 				</tr>
 				<tr class="centro">
-					<td style="background: #e6ffe8" colspan="3" scope="col">Total de Entradas / Ganhos</td>
-					<td style="background: #ffe7e6" colspan="3" scope="col">Total de Saídas / Despesas</td>
+					<td class="bg-positivo" colspan="2" scope="col">Total de Entradas | Ganhos</td>
+					<td class="bg-negativo" colspan="2" scope="col">Total de Saídas | Despesas</td>
 				</tr>
 
 				<tr class="centro">
-					<td colspan="3" class="text-success"> R$ <?php echo $total_entradasF ?></td>
-					<td colspan="3" class="text-danger"> R$ <?php echo $total_saidasF ?></td>
+					<td colspan="2" class="text-success"> R$ <?php echo $total_entradasF ?></td>
+					<td colspan="2" class="text-danger"> R$ <?php echo $total_saidasF ?></td>
 				</tr>
 
 			</tbody>

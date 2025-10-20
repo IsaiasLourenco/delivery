@@ -53,6 +53,14 @@
     font-size: 0.7rem;
 }
 
+.tamanho_texto h5{
+    font-size: 2rem !important;
+}
+
+.tamanho_texto_2 h5{
+    font-size: 1.6rem !important;
+}
+
 .cor-rel {
     color: #000;
 }
@@ -108,6 +116,11 @@ button.close.mg-t--20 {
 
 .mg-t-20 {
     margin-top: 20px;
+}
+
+.lineGraph {
+    width: 98%;
+    height: 350px;
 }
 
 .mg-t-5 {

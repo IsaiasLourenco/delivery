@@ -63,7 +63,7 @@ $pago = '%' . $pago . '%';
         rel="stylesheet"
         integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
         crossorigin="anonymous">
-    <link rel="stylesheet" href="http://localhost/delivery/sistema/painel/css/rel_contas.css">
+    <link rel="stylesheet" href="<?php echo $url_sistema ?>sistema/painel/css/rel_contas.css">
 </head>
 
 <body>

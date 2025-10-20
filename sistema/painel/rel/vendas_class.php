@@ -1,20 +1,20 @@
-<?php 
-
+<?php
 include('../../conexao.php');
 
 $dataInicial = $_POST['dataInicial'];
 $dataFinal = $_POST['dataFinal'];
+$status = urlencode($_POST['status']);
+$forma_pgto = urlencode($_POST['forma_pgto']);
 
 $query = $pdo->query("SELECT * FROM config");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $tipo_rel = $res[0]['tipo_relatorio'];
 $url_sistema = $res[0]['url_sistema'];
-//ALIMENTAR OS DADOS NO RELATÓRIO
-$html = file_get_contents($url_sistema."sistema/painel/rel/lucro.php?dataInicial=$dataInicial&dataFinal=$dataFinal");
+$html = file_get_contents($url_sistema."sistema/painel/rel/vendas.php?dataInicial=$dataInicial&dataFinal=$dataFinal&status=$status&forma_pgto=$forma_pgto");
 
-if($tipo_rel != 'PDF'){
-	echo $html;
-	exit();
+if ($tipo_rel != 'PDF') {
+    echo $html;
+    exit();
 }
 
 date_default_timezone_set('America/Sao_Paulo');
@@ -41,9 +41,10 @@ $pdf->loadHtml($html);
 //Renderizar o PDF
 $pdf->render();
 
-//NOMEAR O PDF GERADO
+//Nomear o PDF gerado
 $pdf->stream(
-'lucro.pdf',
-array("Attachment" => false)
+    'vendas.pdf',
+    array("Attachment"=> false)
 );
+
 ?>
