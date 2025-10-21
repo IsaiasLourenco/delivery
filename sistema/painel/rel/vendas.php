@@ -96,6 +96,7 @@ $forma_pgto = '%' . $forma_pgto . '%';
             <table class="table table-striped borda" cellpadding="6">
                 <thead>
                     <tr class="centro">
+                        <th scope="col">Pedido</th>
                         <th scope="col">Cliente</th>
                         <th scope="col">Valor</th>
                         <th scope="col">Total Pago</th>
@@ -111,6 +112,7 @@ $forma_pgto = '%' . $forma_pgto . '%';
                         foreach ($res[$i] as $key => $value) {
                         }
                         $id = $res[$i]['id'];
+                        $idF = str_pad($id, 2, '0', STR_PAD_LEFT);
                         $id_cliente = $res[$i]['cliente'];
                         $valor_compra = $res[$i]['valor_compra'];
                         $valor_pago = $res[$i]['valor_pago'];
@@ -181,12 +183,14 @@ $forma_pgto = '%' . $forma_pgto . '%';
 
                         $total_pagoF = number_format($total_pago, 2, ',', '.');
                         $total_a_pagarF = number_format($total_a_pagar, 2, ',', '.');
+                        
                     ?>
                         <tr class="centro">
                             <td class="centro mg-t-3">
                                 <img src="<?php echo $url_sistema ?>/img/<?php echo $imagem ?>" width="11px" height="11px">
-                                <?php echo $nome_cliente ?>
+                                <strong><?php echo $idF?></strong>
                             </td>
+                            <td><?php echo $nome_cliente ?></td>                            
                             <td class="esc"><?php echo $valor_compraF ?></td>
                             <td class="esc"><?php echo $valor_pagoF ?></td>
                             <td class="esc"><?php echo $trocoF ?></td>

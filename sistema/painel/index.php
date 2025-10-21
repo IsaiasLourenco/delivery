@@ -55,6 +55,9 @@ $logo_sistema = $res_sistema[0]['logotipo'];
 $icone_sistema = $res_sistema[0]['icone'];
 $logo_rel = $res_sistema[0]['logo_rel'];
 $url_sistema = $res_sistema[0]['url_sistema'];
+$tempo_atualizacao = $res_sistema[0]['tempo_atualizacao'];
+
+$segundos = $tempo_atualizacao * 1000;
 
 if (@$_GET['pagina'] != "") {
     $pagina = @$_GET['pagina'];
@@ -91,6 +94,15 @@ $dataMesInicial = $partes_inicial[1];
         }
     </script>
 
+    <script>
+        document.addEventListener('click', () => {
+            const audio = new Audio();
+            audio.play().catch(() => {});
+        }, {
+            once: true
+        });
+    </script>
+
     <!-- js-->
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="js/modernizr.custom.js"></script>
@@ -105,6 +117,7 @@ $dataMesInicial = $partes_inicial[1];
 
     <!-- font-awesome icons CSS -->
     <link href="css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- //font-awesome icons CSS-->
 
     <!-- side nav css file -->
@@ -224,6 +237,11 @@ $dataMesInicial = $partes_inicial[1];
                                 </a>
                             </li>
                             <li class="treeview">
+                                <a href="index.php?pagina=pedidos">
+                                    <i class="fa fa-receipt"></i> <span>Pedidos</span>
+                                </a>
+                            </li>
+                            <li class="treeview">
                                 <a href="#">
                                     <i class="fa fa-users"></i>
                                     <span>Pessoas</span>
@@ -249,7 +267,7 @@ $dataMesInicial = $partes_inicial[1];
                             </li>
                             <li class="treeview">
                                 <a href="#">
-                                    <i class="fa fa-cutlery"></i>
+                                    <i class="fa fa-cart-shopping"></i>
                                     <span>Produtos</span>
                                     <i class="fa fa-angle-left pull-right"></i>
                                 </a>
@@ -283,16 +301,16 @@ $dataMesInicial = $partes_inicial[1];
                                 </a>
                                 <ul class="treeview-menu">
                                     <li><a href="rel/produtos_class.php" target="_blank"><i class="fa fa-angle-right">
-                                        </i> Produtos</a>
+                                            </i> Produtos</a>
                                     </li>
                                     <li><a href="" data-toggle="modal" data-target="#RelCon"><i class="fa fa-angle-right">
-                                        </i> Contas</a>
+                                            </i> Contas</a>
                                     </li>
                                     <li><a href="" data-toggle="modal" data-target="#RelLucro"><i class="fa fa-angle-right">
-                                        </i> Lucro</a>
+                                            </i> Lucro</a>
                                     </li>
                                     <li><a href="" data-toggle="modal" data-target="#RelVen"><i class="fa fa-angle-right">
-                                        </i> Vendas | Pedidos</a>
+                                            </i> Vendas | Pedidos</a>
                                     </li>
                                 </ul>
                             </li>
@@ -311,62 +329,9 @@ $dataMesInicial = $partes_inicial[1];
                 <button id="showLeftPush" data-toggle="collapse" data-target=".collapse"><i class="fa fa-bars"></i></button>
                 <!--toggle button end-->
                 <div class="profile_details_left"><!--notifications of menu start -->
-                    <ul class="nofitications-dropdown">
-                        <?php
-                            $query = $pdo->query("SELECT * FROM vendas WHERE data_pagamento = curDate() AND status_venda = 'Iniciado'");
-                            $res = $query->fetchAll(PDO::FETCH_ASSOC);
-                            $total_reg = count($res);
-                        ?>
-                        <li class="dropdown head-dpdn">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa-envelope"></i><span class="badge"><?php echo $total_reg?></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <div class="notification_header">
-                                        <h3>Você tem <?php echo $total_reg?> novos pedidos iniciados</h3>
-                                    </div>
-                                </li>
-                                <li><a href="#">
-                                        <div class="user_img"><img src="images/" alt=""></div>
-                                        <div class="notification_desc">
-                                            <p>Lorem ipsum dolor amet</p>
-                                            <p><span>1 hour ago</span></p>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </a></li>
-                                <li class="odd"><a href="#">
-                                        <div class="user_img"><img src="images/" alt=""></div>
-                                        <div class="notification_desc">
-                                            <p>Lorem ipsum dolor amet </p>
-                                            <p><span>1 hour ago</span></p>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </a></li>
-                                <li><a href="#">
-                                        <div class="user_img"><img src="images/" alt=""></div>
-                                        <div class="notification_desc">
-                                            <p>Lorem ipsum dolor amet </p>
-                                            <p><span>1 hour ago</span></p>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </a></li>
-                                <li><a href="#">
-                                        <div class="user_img"><img src="images/" alt=""></div>
-                                        <div class="notification_desc">
-                                            <p>Lorem ipsum dolor amet </p>
-                                            <p><span>1 hour ago</span></p>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </a></li>
-                                <li>
-                                    <div class="notification_bottom">
-                                        <a href="#">See all messages</a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                    <div id="atualizar-pedidos">
+                        <?php include('atualizar-pedidos.php'); ?>
+                    </div>
                     <div class="clearfix"> </div>
                 </div>
             </div>
@@ -523,26 +488,33 @@ $dataMesInicial = $partes_inicial[1];
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="tipoRel">Tipo Relatório</label>
                             <select class="form-control" name="tipoRel">
                                 <option value="PDF" <?php if ($tipo_rel == 'PDF') { ?> selected <?php } ?>>PDF</option>
                                 <option value="HTML" <?php if ($tipo_rel == 'HTML') { ?> selected <?php } ?>>HTML</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="cards">Cards</label>
                             <select class="form-control" name="cards">
                                 <option value="Cores" <?php if ($cards == 'Cores') { ?> selected <?php } ?>>Cores</option>
                                 <option value="Foto" <?php if ($cards == 'Foto') { ?> selected <?php } ?>>Foto</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label for="pedidos">Pedidos Whatsapp</label>
                             <select class="form-control" name="pedidos">
                                 <option value="Sim" <?php if ($pedidos == 'Sim') { ?> selected <?php } ?>>Sim</option>
                                 <option value="Não" <?php if ($pedidos == 'Não') { ?> selected <?php } ?>>Não</option>
                             </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="tempo" class="form-label">Atualização (segundos)</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="tempo" name="tempo" value="<?php echo $tempo_atualizacao ?>" required min="1">
+                                <span class="input-group-text">seg</span>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -576,21 +548,21 @@ $dataMesInicial = $partes_inicial[1];
                         </div>
                         <div class="col-md-4">
                             <label for="fechamento">Horário Fechamento</label>
-                            <input type="time" class="form-control" id="fechamento" name="fechamento" 
-                                   value="<?php echo $fechamento ?>">
+                            <input type="time" class="form-control" id="fechamento" name="fechamento"
+                                value="<?php echo $fechamento ?>">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <label for="txt_fechamento">Texto Fechamento</label>
-                            <input type="text" class="form-control" id="txt_fechamento" name="txt_fechamento" 
-                                   value="<?php echo $txt_fechamento ?>">
+                            <input type="text" class="form-control" id="txt_fechamento" name="txt_fechamento"
+                                value="<?php echo $txt_fechamento ?>">
                         </div>
                         <div class="col-md-6">
                             <label for="url_sistema">URL para Relatório</label>
-                            <input type="text" class="form-control" id="url_sistema" name="url_sistema" 
-                                   value="<?php echo $url_sistema ?>">
-                        </div>                        
+                            <input type="text" class="form-control" id="url_sistema" name="url_sistema"
+                                value="<?php echo $url_sistema ?>">
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
@@ -615,8 +587,8 @@ $dataMesInicial = $partes_inicial[1];
                             <input type="file" class="form-control" id="logo_rel" name="logo_rel" onchange="carregarImgLogoRel()">
                         </div>
                         <div class="col-md-2">
-                            <img src="../../img/<?php echo $logo_rel; ?>" alt="Logotipo do Relatório" style="width: 80px;" 
-                                 id="target-logo-rel">
+                            <img src="../../img/<?php echo $logo_rel; ?>" alt="Logotipo do Relatório" style="width: 80px;"
+                                id="target-logo-rel">
                         </div>
                     </div>
                     <div id="msg-config" class="centro"></div>
@@ -865,22 +837,22 @@ $dataMesInicial = $partes_inicial[1];
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Data Inicial</label>
-                                <input type="date" class="form-control" 
-                                       name="dataInicial" 
-                                       id="dataInicialRel-Luc" 
-                                       value="<?php echo date('Y-m-d') ?>" 
-                                       required>
+                                <input type="date" class="form-control"
+                                    name="dataInicial"
+                                    id="dataInicialRel-Luc"
+                                    value="<?php echo date('Y-m-d') ?>"
+                                    required>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Data Final</label>
-                                <input type="date" 
-                                       class="form-control" 
-                                       name="dataFinal" 
-                                       id="dataFinalRel-Luc" 
-                                       value="<?php echo date('Y-m-d') ?>" 
-                                       required>
+                                <input type="date"
+                                    class="form-control"
+                                    name="dataFinal"
+                                    id="dataFinalRel-Luc"
+                                    value="<?php echo date('Y-m-d') ?>"
+                                    required>
                             </div>
                         </div>
                     </div>
@@ -1142,3 +1114,23 @@ $dataMesInicial = $partes_inicial[1];
     }
 </script>
 <!-- FIM SCRIPT DATAS PARA OS RELATÓRIOS -->
+
+<!-- ATUALIZAR PEDIDOS -->
+<script>
+    var seg = parseInt('<?= $segundos ?>');
+
+    function atualizarNotificacoesPedidos() {
+        $.ajax({
+            url: 'atualizar-pedidos.php',
+            method: 'POST',
+            success: function(data) {
+                $('#atualizar-pedidos').html(data);
+            }
+        });
+    }
+
+    // Atualiza a cada 10 segundos
+    atualizarNotificacoesPedidos();
+    setInterval(atualizarNotificacoesPedidos, seg);
+</script>
+<!-- FIM ATUALIZAR PEDIDOS -->

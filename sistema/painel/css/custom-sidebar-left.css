@@ -53,12 +53,20 @@
     font-size: 0.7rem;
 }
 
-.tamanho_texto h5{
+.tabela-menor-ainda {
+    font-size: 0.5rem;
+}
+
+.inl-blck {
+    display: inline-block;
+}
+
+.tamanho_texto h5 {
     font-size: 2rem !important;
 }
 
-.tamanho_texto_2 h5{
-    font-size: 1.6rem !important;
+.tamanho_texto_2 h5 {
+    font-size: 1.2rem !important;
 }
 
 .cor-rel {
@@ -114,6 +122,10 @@ button.close.mg-t--20 {
     margin-top: -40px;
 }
 
+.mg-t--5 {
+    margin-top: -5px;
+}
+
 .mg-t-20 {
     margin-top: 20px;
 }
@@ -141,6 +153,33 @@ button.close.mg-t--20 {
 
 .mg-r-30 {
     margin-right: 30px;
+}
+
+.branco {
+    color: #FFF;
+}
+
+.linha {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.dropdown-menu .fonte-verde {
+    color: green !important;
+    font-weight: bold;
+}
+
+.text-preparando {
+    color: #e6841c;
+}
+
+.text-emRota {
+    color: rgb(26, 183, 26);
+}
+
+.text-fim {
+    color: #000;
 }
 
 .mg-b-5 {

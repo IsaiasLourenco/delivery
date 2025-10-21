@@ -1,3 +1,6 @@
+ALTER TABLE usuarios 
+ADD COLUMN data_cad DATE AFTER ativo;
+
 CREATE DATABASE delivery;
 
 CREATE TABLE usuarios (
@@ -63,6 +66,7 @@ CREATE TABLE config (
 );
 
 ALTER TABLE config ADD COLUMN url_sistema VARCHAR(100) AFTER logo_rel;
+ALTER TABLE config ADD COLUMN tempo_atualizacao VARCHAR(10) AFTER url_sistema;
 
 CREATE TABLE cargos (
     id INT AUTO_INCREMENT PRIMARY KEY,

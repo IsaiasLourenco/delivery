@@ -168,7 +168,7 @@ for ($i = 1; $i <= 12; $i++) {
                 <div class="r3_counter_box">
                     <i class="pull-left fa fa-users icon-rounded"></i>
                     <div class="tamanho_texto">
-                        <h5><?php echo $total_clientes ?></h5>
+                        <h5><?php echo str_pad($total_clientes, 2, '0', STR_PAD_LEFT) ?></h5>
                     </div>
                     <hr class="mg-t-10">
                     <div class="centro"><span>Total de Clientes</span></div>
@@ -183,7 +183,7 @@ for ($i = 1; $i <= 12; $i++) {
                 <div class="r3_counter_box">
                     <i class="pull-left fa fa-money user1 icon-rounded"></i>
                     <div class="tamanho_texto">
-                        <h5><?php echo $contas_pagar_hoje ?></h5>
+                        <h5><?php echo str_pad($contas_pagar_hoje, 2, '0', STR_PAD_LEFT) ?></h5>
                     </div>
                     <hr class="mg-t-10">
                     <div cLass="centro"><span>Contas à Pagar Hoje</span></div>
@@ -197,7 +197,7 @@ for ($i = 1; $i <= 12; $i++) {
                 <div class="r3_counter_box">
                     <i class="pull-left fa fa-money dollar2 icon-rounded"></i>
                     <div class="tamanho_texto">
-                        <h5><?php echo $contas_receber_hoje ?></h5>
+                        <h5><?php echo str_pad($contas_receber_hoje, 2, '0', STR_PAD_LEFT) ?></h5>
                     </div>
                     <hr class="mg-t-10">
                     <div class="centro"><span>Contas à Receber Hoje</span></div>
@@ -210,7 +210,7 @@ for ($i = 1; $i <= 12; $i++) {
                 <div class="r3_counter_box">
                     <i class="pull-left fa fa-pie-chart dollar1 icon-rounded"></i>
                     <div class="tamanho_texto">
-                        <h5><?php echo $estoque_baixo ?></h5>
+                        <h5><?php echo str_pad($estoque_baixo, 2, '0', STR_PAD_LEFT) ?></h5>
                     </div>
                     <hr class="mg-t-10">
                     <div class="centro"><span>Produtos Estoque Baixo</span></div>
@@ -222,10 +222,10 @@ for ($i = 1; $i <= 12; $i++) {
             <div class="r3_counter_box">
                 <i class="pull-left fa fa-usd <?php echo $classe_saldo_dia ?> icon-rounded"></i>
                 <div class="tamanho_texto_2">
-                    <h5><?php echo @$saldo_total_diaF ?></h5>
+                    <h5>R$ <?php echo @$saldo_total_diaF ?></h5>
                 </div>
                 <hr class="mg-t-10">
-                <div class="centro"><span>R$ Saldo do Dia</span></div>
+                <div class="centro"><span>Saldo do Dia</span></div>
             </div>
         </div>
         <div class="clearfix"> </div>

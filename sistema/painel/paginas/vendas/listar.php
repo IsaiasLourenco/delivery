@@ -21,14 +21,16 @@ $total_reg = @count($res);
 if($total_reg > 0){
 
 echo <<<HTML
+	<h4 class="centro">Vendas | Pedidos</h4>
 	<table class="table table-hover tabela-menor" id="tabela">
 	<thead> 
 		<tr> 
+			<th class="centro">Pedido</th>	
 			<th class="centro">Cliente</th>	
 			<th class="esc centro">Local Entrega</th> 	
-			<th class="esc centro">Valor Entrega</th> 	
+			<th class="esc centro">Entrega</th> 	
 			<th class="esc centro">Valor</th> 	
-			<th class="esc centro">Total Pago</th> 	
+			<th class="esc centro">Pago</th> 	
 			<th class="esc centro">Troco</th>	
 			<th class="esc centro">Forma PGTO</th> 
 			<th class="esc centro">Data</th>	
@@ -72,6 +74,7 @@ for($i=0; $i < $total_reg; $i++){
 	$trocoF = 'R$ ' . number_format($troco, 2, ',', '.');
 	$valor_entregaF = 'R$ ' . number_format($valor_entrega, 2, ',', '.');
 	$data_pgtoF = implode('/', array_reverse(explode('-', $data_pgto)));
+	$idF = str_pad($id, 2, '0', STR_PAD_LEFT);
 
 	$query2 = $pdo->query("SELECT * FROM usuarios where id = '$id_usuario_baixa'");
 	$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
@@ -107,7 +110,11 @@ for($i=0; $i < $total_reg; $i++){
 
 echo <<<HTML
 <tr class="{$classe_linha}">
-	<td class="centro"><i class="fa fa-square {$classe_alerta}"></i> {$nome_cliente}</td>
+	<td class="centro">
+		<i class="fa fa-square {$classe_alerta}"></i> 
+		<strong>{$idF}</strong>
+	</td>
+	<td class="centro">{$nome_cliente}</td>
 	<td class="esc centro">{$nome_bairro}</td>
 	<td class="esc centro">{$valor_entregaF}</td>
 	<td class="esc centro">{$valor_compraF}</td>

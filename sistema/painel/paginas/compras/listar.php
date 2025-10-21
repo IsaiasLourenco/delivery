@@ -20,6 +20,7 @@ $total_reg = @count($res);
 if($total_reg > 0){
 
 echo <<<HTML
+	<h4 class="centro">Compras</h4>
 	<table class="table table-hover tabela-menor" id="tabela">
 	<thead> 
 	<tr> 
@@ -137,33 +138,31 @@ echo <<<HTML
 		</a>
 
 		<li class="dropdown head-dpdn2" style="display: inline-block;">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-			<i class="fa fa-trash-o text-danger"></i>
-		</a>
-
-		<ul class="dropdown-menu" style="margin-left:-230px;">
-		<li>
-		<div class="notification_desc2">
-		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
-		</div>
-		</li>										
-		</ul>
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+				<i class="fa fa-trash-o text-danger"></i>
+			</a>
+			<ul class="dropdown-menu" style="margin-left:-230px;">
+				<li>
+					<div class="notification_desc2">
+						<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+					</div>
+				</li>										
+			</ul>
 		</li>
 
 		<li class="dropdown head-dpdn2" style="display: inline-block;">
-		<a title="Baixar Conta" href="#" class="dropdown-toggle {$visivel}" data-toggle="dropdown" aria-expanded="false">
-			<i class="fa fa-check-square texto-verde"></i>
-		</a>
-
-		<ul class="dropdown-menu" style="margin-left:-230px;">
-		<li>
-		<div class="notification_desc2">
-		<p>Confirmar Baixa na Conta? <a href="#" onclick="baixar('{$id}')"><span class="texto-verde">Sim</span></a></p>
-		</div>
-		</li>										
-		</ul>
+			<a title="Baixar Conta" href="#" class="dropdown-toggle {$visivel}" data-toggle="dropdown" aria-expanded="false">
+				<i class="fa fa-check-square texto-verde"></i>
+			</a>
+			<ul class="dropdown-menu" style="margin-left:-230px;">
+				<li>
+					<div class="notification_desc2">
+						<p>Confirmar Baixa na Conta? <a href="#" onclick="baixar('{$id}')"><span class="texto-verde">Sim</span></a></p>
+					</div>
+				</li>										
+			</ul>
 		</li>
-		</td>
+</td>
 </tr>
 HTML;
 

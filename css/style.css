@@ -19,16 +19,66 @@ body {
     justify-content: center;
 }
 
+.card,
+.foto {
+  height: 160px;
+  margin-bottom: 20px;
+}
+
 .card {
     margin: 10px;
     padding: 20px;
-    height: 120px;
     border-radius: 10px;
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
     transition: all 0.2s;
     width: 100%;
 }
 
+.foto {
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    border: none;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 10px;
+    color: white;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+}
+
+.foto:hover {
+    transform: scale(1.02);
+    transition: transform 0.2s ease-in-out;
+}
+
+.foto::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+}
+
+.badge2 {
+    position: absolute;
+    display: inline-block;
+    min-width: 10px;
+    padding: 4px 9px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #f6f2f8;
+    line-height: 1;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-align: center;
+    background-color: #242424;
+    border-radius: 5px;
+    left: 0;
+    top: -10px;
+    z-index: 200;
+}
 
 .card:hover {
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.4);
@@ -82,11 +132,11 @@ body {
     background: radial-gradient(#1adb54, #36a867);
 }
 
-.laranja     {
+.laranja {
     background: radial-gradient(#f5c071, #c98116);
 }
 
-.amarelo     {
+.amarelo {
     background: radial-gradient(#e4eb6e, #c3cc14);
 }
 
@@ -482,6 +532,19 @@ body {
         font-weight: bold;
     }
 
+    .foto {
+        height: 120px;
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    .badge2 {
+        font-size: 12px;
+        padding: 4px 8px;
+        top: 6px;
+        left: 6px;
+    }
+
 }
 
 @media (min-width: 768px) {
@@ -490,4 +553,10 @@ body {
         margin-right: 100px;
     }
 
+}
+
+@media (hover: none) {
+    .foto:active {
+        opacity: 0.9;
+    }
 }

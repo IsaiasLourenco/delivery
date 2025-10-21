@@ -16,6 +16,7 @@ $total_reg = @count($res);
 if ($total_reg > 0) {
 
 	echo <<<HTML
+	<h4 class="centro">Contas à Receber</h4>
 	<table class="table table-hover tabela-menor" id="tabela">
 		<thead> 
 			<tr> 

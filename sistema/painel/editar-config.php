@@ -24,6 +24,7 @@ $abertura = $_POST['abertura'];
 $fechamento = $_POST['fechamento'];
 $txt_fechamento = $_POST['txt_fechamento'];
 $url_sistema = $_POST['url_sistema'];
+$tempo_atualizacao = $_POST['tempo'];
 
 //validar troca das fotos
 $query = $pdo->query("SELECT * FROM config where id = '$id'");
@@ -132,7 +133,8 @@ $query = $pdo->prepare("UPDATE config SET nome_sistema = :nome,
                                             logotipo = '$logotipo',
                                             icone = '$icone',
                                             logo_rel = '$logo_rel',
-                                            url_sistema = :url_sistema
+                                            url_sistema = :url_sistema,
+                                            tempo_atualizacao = :tempo_atualizacao
                                             WHERE id = '$id'");
 $query->bindValue(":nome", "$nome");
 $query->bindValue(":email", "$email");
@@ -157,6 +159,7 @@ $query->bindValue(":abertura", "$abertura");
 $query->bindValue(":fechamento", "$fechamento");
 $query->bindValue(":texto_fechamento", "$txt_fechamento");
 $query->bindValue(":url_sistema", "$url_sistema");
+$query->bindValue(":tempo_atualizacao", "$tempo_atualizacao");
 $query->execute();
 
 echo 'Editado com Sucesso';
