@@ -266,7 +266,7 @@ HTML;
 			</li>
 
 			<a href='{$link}' target='_blank' title='Abrir Whatsapp' class='{$classe_whats}'>
-    		    <i class='fa fa-whatsapp text-verde'></i>
+    		    <i class='fa-brands fa-whatsapp text-verde'></i>
 	      	</a>
 	
 		</td>

@@ -1,11 +1,13 @@
 <?php
 require_once('../../../conexao.php');
+require_once('../../../../funcoes.php');
 $tabela = 'categorias';
 $id = $_POST['id'];
 $nome = $_POST['nome'];
 $descricao = $_POST['descricao'];
 $cor = $_POST['cor'];
 $ativo = $_POST['ativo'];
+$url = gerarSlug($nome);
 
 //Validar Nome
 $foto = 'sem-foto.jpg';
@@ -58,13 +60,15 @@ if ($id == "" || $id == null) {
                                                     descricao = :descricao,
                                                     foto = :foto,
                                                     cor = :cor,
-                                                    ativo = :ativo");
+                                                    ativo = :ativo,
+                                                    url = '$url'");
 } else {
     $query = $pdo->prepare("UPDATE $tabela SET  nome = :nome,
                                                 descricao = :descricao,
                                                 foto = :foto,
                                                 cor = :cor,
-                                                ativo = :ativo
+                                                ativo = :ativo,
+                                                url = '$url'
                                                 WHERE id = '$id'");
 }
 $query->bindValue(":nome", "$nome");

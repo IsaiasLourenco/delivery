@@ -103,6 +103,8 @@ CREATE TABLE categorias (
     cor  VARCHAR(30) NOT NULL
 );
 
+ALTER TABLE categorias ADD COLUMN url VARCHAR(100) AFTER ativo;
+
 ALTER TABLE categorias 
 ADD COLUMN ativo VARCHAR(3) AFTER cor;
 
@@ -118,6 +120,8 @@ CREATE TABLE produtos (
     nivel_estoque INT NOT NULL,
     ativo VARCHAR(3) NOT NULL
 );
+
+ALTER TABLE produtos ADD COLUMN url VARCHAR(100) AFTER tem_estoque;
 
 ALTER TABLE produtos 
 ADD COLUMN tem_estoque VARCHAR(3) AFTER ativo;

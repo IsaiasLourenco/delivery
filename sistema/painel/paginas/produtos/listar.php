@@ -41,7 +41,7 @@ HTML;
         // Consulta da categoria
         $queryCategoria = $pdo->query("SELECT * FROM categorias WHERE id = '$categoria'");
         $resCategoria = $queryCategoria->fetchAll(PDO::FETCH_ASSOC);
-        $nomeCategoria = $resCategoria[0]['nome'];
+        @$nomeCategoria = $resCategoria[0]['nome'];
 
 
         if ($ativo == 'Sim') {
@@ -165,7 +165,7 @@ HTML;
         $('#id-produto').val(id);
         $('#nome-produto').val(nome);
         $('#descricao-produto').val(descricao);
-        $('#categoria-produto').val(categoria);
+        $('#categoria-produto').val(categoria).trigger('change');
         $('#valor_compra-produto').val(valor_compra);
         $('#valor_venda-produto').val(valor_venda);
         $('#estoque-produto').val(estoque);

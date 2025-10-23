@@ -1,5 +1,6 @@
 <?php
 require_once('../../../conexao.php');
+require_once('../../../../funcoes.php');
 $tabela = 'produtos';
 $id = $_POST['id'];
 $nome = $_POST['nome'];
@@ -13,8 +14,9 @@ $estoque = $_POST['estoque'];
 $nivel_estoque = $_POST['nivel_estoque'];
 $ativo = $_POST['ativo'];
 $tem_estoque = $_POST['tem_estoque'];
+$url = gerarSlug($nome);
 
-//VALIDAR EMAIL
+//VALIDAR NOME
 $query = $pdo->query("SELECT * FROM $tabela WHERE nome = '$nome'");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 if (count($res) > 0 and $id != $res[0]['id']) {
@@ -69,7 +71,8 @@ if ($id == "" || $id == null) {
                                                     nivel_estoque = :nivel_estoque,
                                                     ativo = :ativo,
                                                     tem_estoque = :tem_estoque,
-                                                    foto = '$foto'");
+                                                    foto = '$foto',
+                                                    url = '$url'");
 } else {
     $query = $pdo->prepare("UPDATE $tabela SET nome = :nome, 
                                                 descricao = :descricao, 
@@ -80,7 +83,8 @@ if ($id == "" || $id == null) {
                                                 nivel_estoque = :nivel_estoque,
                                                 ativo = :ativo,
                                                 tem_estoque = :tem_estoque,
-                                                foto = '$foto'
+                                                foto = '$foto',
+                                                url = '$url'
                                                 WHERE id = '$id'");
 }
 $query->bindValue(":nome", "$nome");

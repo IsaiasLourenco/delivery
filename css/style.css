@@ -21,8 +21,17 @@ body {
 
 .card,
 .foto {
-  height: 160px;
-  margin-bottom: 20px;
+    height: 160px;
+    margin-bottom: 20px;
+}
+
+.ocultar {
+    display: none;
+}
+
+.img-var {
+    width: 200px;
+    height: 100px;
 }
 
 .card {
@@ -443,6 +452,13 @@ body {
     align-items: center;
 }
 
+.texto-preco-centro {
+    text-align: center;
+    color: green;
+    font-size: 18px;
+    font-weight: bold;
+}
+
 .total {
     text-align: right;
     margin-right: 20px;
@@ -494,8 +510,11 @@ body {
 }
 
 .imagem-produto {
-    width: 100%;
-    margin-top: 20px;
+    width: 200px;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+    object-fit: cover;
 }
 
 .carrinho-qtd {
