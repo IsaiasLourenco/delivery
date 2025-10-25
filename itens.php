@@ -15,10 +15,10 @@ if ($total_reg > 0) {
     <nav class="navbar navbar-light bg-light fixed-top sombra-nav">
         <div class="container-fluid">
             <div class="navbar-brand">
-                <a href="index.php" class="link-neutro">
+                <a href="index" class="link-neutro">
                     <i class="bi bi-arrow-left"></i>
                 </a>
-                <span class="margin-itens"><?php echo strtoupper(@$nome_categoria)?></span>
+                <span class="margin-itens"><?php echo mb_strtoupper(@$nome_categoria)?></span>
             </div>
             <?php require_once("icone-popup-carrinho.php"); ?>
         </div>
@@ -46,7 +46,7 @@ if ($total_reg > 0) {
                     $mostrar = '';
                 }                   
     ?>
-        <a href="variacoes.php" class="link-neutro <?php echo $mostrar?>">
+        <a href="produto-<?php echo $url?>" class="link-neutro <?php echo $mostrar?>">
         <a href="variacoes.php?url=<?php echo $url_produto ?>" class="link-neutro <?php echo $mostrar?>">
             <li class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="me-auto">

@@ -7,11 +7,12 @@ $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total = count($res);
 if ($total > 0) {
     echo <<<HTML
-    <h4 class="centro">Ingredientes do Produto</h4>
+    <h4 class="centro mg-b-20">Ingredientes do Produto</h4>
     <table class="table table-hover table-sm table-responsive tabela-menor" id="tabela-ing">
         <thead>
             <tr>
                 <th class="centro">Nome</th>
+                <th class="esc centro">Valor</th>
                 <th class="esc centro">Ativo</th>
                 <th class="centro">Ações</th>
             </tr>
@@ -25,6 +26,7 @@ HTML;
         $idIng = $res[$i]['id'];
         $produto = $res[$i]['produto'];
         $nome = $res[$i]['nome'];
+        $valor = $res[$i]['valor'];
         $ativo = $res[$i]['ativo'];
 
         if ($ativo == 'Sim') {
@@ -39,14 +41,18 @@ HTML;
             $classe_linha = 'text-muted';
         }
 
+        $valor_formatado = "R$ " . number_format($valor, 2, ',', '.');
+
         echo <<<HTML
 <tr class="{$classe_linha}">
     <td class="esc centro">{$nome}</td>
+    <td class="esc centro">{$valor_formatado}</td>
     <td class="centro">{$ativo}</td>
     <td class="centro">
         <a onclick="editarIng( '{$idIng}',
                                 '{$produto}', 
                                 '{$nome}', 
+                                '{$valor_formatado}', 
                                 '{$ativo}')", title="Editar Registro">
             <i class="fa fa-edit text-primary pointer"></i>
         </a>
@@ -90,10 +96,11 @@ HTML;
 </script>
 
 <script type="text/javascript">
-    function editarIng(idIng, produto, nome, ativo) {
+    function editarIng(idIng, produto, nome, valor, ativo) {
         $('#id_ingrediente').val(idIng); // ID do ingrediente
         $('#id_ing').val(produto); // ID do produto
         $('#nome_ing').val(nome);
+        $('#valor_ing').val(valor);
         $('#ativo_ing').val(ativo);
         $('#btn-salvar-ing').text('Editar');
         $('#btn-novo-ing').show();

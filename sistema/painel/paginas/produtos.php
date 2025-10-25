@@ -312,12 +312,20 @@ $pag = 'produtos';
             <div class="modal-body">
                 <form id="form-ing">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-8">
                             <div class="form-group">
                                 <label for="nome">Nome</label>
                                 <input maxlength="50" type="text" class="form-control" id="nome_ing" name="nome" required>
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="valor">Valor</label>
+                                <input type="text" class="form-control" id="valor_ing" name="valor" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="ativo">Ativo</label>
@@ -474,6 +482,10 @@ $pag = 'produtos';
     document.getElementById("valor_var").addEventListener("input", function() {
         formatarMoedaInput(this);
     });
+    
+    document.getElementById("valor_ing").addEventListener("input", function() {
+        formatarMoedaInput(this);
+    });
 
     document.getElementById("valor_ad").addEventListener("input", function() {
         formatarMoedaInput(this);
@@ -509,33 +521,33 @@ $pag = 'produtos';
 </script>
 <!-- Fim Saida de produtos -->
 
-    <!-- Entrada de produtos -->
-    <script type="text/javascript">
-        $("#form-entrada").submit(function() {
-            event.preventDefault();
-            var formData = new FormData(this);
-            $.ajax({
-                url: 'paginas/' + pag + "/entrada.php",
-                type: 'POST',
-                data: formData,
-                success: function(mensagem) {
-                    $('#mensagem-entrada').text('');
-                    $('#mensagem-entrada').removeClass('text-danger text-success')
-                    if (mensagem.trim() == "Salvo com Sucesso") {
-                        $('#btn-fechar-entrada').click();
-                        listar();
-                    } else {
-                        $('#mensagem-entrada').addClass('text-danger')
-                        $('#mensagem-entrada').text(mensagem)
-                    }
-                },
-                cache: false,
-                contentType: false,
-                processData: false,
-            });
+<!-- Entrada de produtos -->
+<script type="text/javascript">
+    $("#form-entrada").submit(function() {
+        event.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            url: 'paginas/' + pag + "/entrada.php",
+            type: 'POST',
+            data: formData,
+            success: function(mensagem) {
+                $('#mensagem-entrada').text('');
+                $('#mensagem-entrada').removeClass('text-danger text-success')
+                if (mensagem.trim() == "Salvo com Sucesso") {
+                    $('#btn-fechar-entrada').click();
+                    listar();
+                } else {
+                    $('#mensagem-entrada').addClass('text-danger')
+                    $('#mensagem-entrada').text(mensagem)
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
         });
-    </script>
-    <!-- Fim Entrada de produtos -->
+    });
+</script>
+<!-- Fim Entrada de produtos -->
 
 <!-- Inserir e Editar Variações de produtos -->
 <script type="text/javascript">

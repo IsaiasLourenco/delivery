@@ -1,4 +1,4 @@
-<?php require_once("header.php"); 
+<?php require_once("header.php");
 $url = $_GET['url'] ?? '';
 $query = $pdo->query("SELECT * FROM produtos WHERE url = '$url' AND ativo = 'Sim'");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -21,10 +21,10 @@ if ($total_reg > 0) {
     <nav class="navbar navbar-light bg-light fixed-top sombra-nav">
         <div class="container-fluid">
             <div class="navbar-brand">
-                <a href="itens.php?url=<?php echo $url_categoria?>" class="link-neutro">
+                <a href="categoria-<?php echo $url_categoria ?>" class="link-neutro">
                     <i class="bi bi-arrow-left"></i>
                 </a>
-                <span class="margin-itens"><?php echo $nome_produto ?></span>
+                <span class="margin-itens"><?php echo mb_strtoupper($nome_produto) ?></span>
             </div>
             <?php require_once("icone-popup-carrinho.php"); ?>
         </div>
@@ -32,13 +32,14 @@ if ($total_reg > 0) {
 
     <ol class="list-group mg-t-6">
 
-    <?php
+        <?php
         $query = $pdo->query("SELECT * FROM variacoes WHERE produto = '$id_produto' AND ativo = 'Sim'");
         $res = $query->fetchAll(PDO::FETCH_ASSOC);
         $total_reg = count($res);
         if ($total_reg > 0) {
-            for ($i=0; $i < $total_reg; $i++) {
-                foreach ($res[$i] as $key => $value) {}
+            for ($i = 0; $i < $total_reg; $i++) {
+                foreach ($res[$i] as $key => $value) {
+                }
                 $id_var =  $res[$i]['id'];
                 $produto_var =  $res[$i]['produto'];
                 $sigla_var =  $res[$i]['sigla'];
@@ -47,31 +48,39 @@ if ($total_reg > 0) {
                 $valor_var =  $res[$i]['valor'];
 
                 $valor_varF = "R$ " . number_format($valor_var, 2, ',', '.');
-    ?>
-        <a href="adicionais.php" class="link-neutro">
-            <li class="list-group-item d-flex justify-content-between align-items-start">
-                <div class="me-auto">
-                    <div class="font-weight-bold">
-                        <span><?php echo $sigla_var?></span><br>
-                        <p><?php echo $descricao_var?></p>
-                    </div>                    
-                    <p class="valor-item"><?php echo $valor_varF?></p>
-                </div>
-            </li>
-        </a>
-        <?php }
-        } else {
-            echo "<div class='mg-t-2'>";
-            echo "<a href='observacoes.php' class='btn btn-primary w-100'>Avançar →</a>";
-            echo "</div>";
-            echo "<p class='valor-item texto-preco-centro mg-t-2'>" . $valor_produtoF . "</p>";
-        }
         ?>
+                <a href="adicionais-<?php echo $url ?>&item-<?php echo $sigla_var ?>" class="link-neutro">
+
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="me-auto">
+                            <div class="font-weight-bold">
+                                <span><?php echo $sigla_var ?></span><br>
+                                <p><?php echo $descricao_var ?></p>
+                            </div>
+                            <p class="valor-item"><?php echo $valor_varF ?></p>
+                        </div>
+                    </li>
+                </a>
+            <?php }
+        } else { ?>
+
+            <div class="linha-produto">
+                <div>
+                    <span><?php echo $nome_produto ?></span>
+                    <span class="valor-item-final">(<?php echo $valor_produtoF ?>)</span>
+                </div>
+                <i class="bi bi-check text-success fs-25"></i>
+            </div>
+        <?php } ?>
     </ol>
 
     <div>
-        <img class="imagem-produto" src="sistema/painel/images/produtos/<?php echo $foto_produto?>" 
-             alt="<?php echo $nome_produto?>">
+        <img class="imagem-produto" src="sistema/painel/images/produtos/<?php echo $foto_produto ?>"
+            alt="<?php echo $nome_produto ?>">
+    </div>
+
+    <div class='mg-t-2'>
+        <a href='observacoes.php' class='btn btn-primary w-100'>Avançar →</a>
     </div>
 
 </div>
