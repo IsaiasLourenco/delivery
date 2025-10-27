@@ -6,6 +6,7 @@ $total_reg = count($res);
 if ($total_reg > 0) {
     $id_produto = $res[0]['id'];
     $nome_produto = $res[0]['nome'];
+    $descricao_produto = $res[0]['descricao'];
     $foto_produto = $res[0]['foto'];
     $id_categoria = $res[0]['categoria'];
     $valor_produto = $res[0]['valor_venda'];
@@ -13,6 +14,19 @@ if ($total_reg > 0) {
     $queryCat = $pdo->query("SELECT url FROM categorias WHERE id = '$id_categoria'");
     $resCat = $queryCat->fetch(PDO::FETCH_ASSOC);
     $url_categoria = $resCat['url'];
+
+    // Verifica se há adicionais
+    $queryAd = $pdo->query("SELECT * FROM adicionais WHERE produto = '$id_produto' AND ativo = 'Sim'");
+    $resAd = $queryAd->fetchAll(PDO::FETCH_ASSOC);
+    $total_adicionais = count($resAd);
+
+    // Verifica se há ingredientes
+    $queryIng = $pdo->query("SELECT * FROM ingredientes WHERE produto = '$id_produto' AND ativo = 'Sim'");
+    $resIng = $queryIng->fetchAll(PDO::FETCH_ASSOC);
+    $total_ingredientes = count($resIng);
+
+    // Define se deve ir para adicionais.php ou direto para observacoes.php
+    $tem_adicionais_ou_ingredientes = ($total_adicionais + $total_ingredientes) > 0;
 }
 ?>
 <link rel="stylesheet" href="css/style.css">
@@ -46,41 +60,43 @@ if ($total_reg > 0) {
                 $nome_var =  $res[$i]['nome'];
                 $descricao_var =  $res[$i]['descricao'];
                 $valor_var =  $res[$i]['valor'];
-
                 $valor_varF = "R$ " . number_format($valor_var, 2, ',', '.');
+                $total_item = $valor_var;
         ?>
-                <a href="adicionais-<?php echo $url ?>&item-<?php echo $sigla_var ?>" class="link-neutro">
+                <?php if ($tem_adicionais_ou_ingredientes) { ?>
+                    <a href="adicionais-<?php echo $url ?>&item-<?php echo $sigla_var ?>&total=<?php echo $total_item ?>" class="link-neutro">
+                    <?php } else { ?>
+                        <a href="observacoes.php?total=<?php echo $total_item ?>" class="link-neutro">
+                        <?php } ?>
 
-                    <li class="list-group-item d-flex justify-content-between align-items-start">
-                        <div class="me-auto">
-                            <div class="font-weight-bold">
-                                <span><?php echo $sigla_var ?></span><br>
-                                <p><?php echo $descricao_var ?></p>
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="me-auto">
+                                <div class="font-weight-bold">
+                                    <span><?php echo $descricao_var ?></span><br>
+                                </div>
+                                <p class="valor-item-final"><?php echo $valor_varF ?></p>
                             </div>
-                            <p class="valor-item"><?php echo $valor_varF ?></p>
+                            <i class="bi bi-square text-success fs-25"></i>
+                        </li>
+                        </a>
+                    <?php }
+            } else { ?>
+                    <?php $total_item = $valor_produto; ?>
+                        <a href="observacoes.php?total=<?php echo $total_item ?>" class="link-neutro">
+                        <div class="linha-produto font-weight-bold">
+                            <div>
+                                <span><?php echo $descricao_produto ?></span><br>
+                                <span class="valor-item-final"><?php echo $valor_produtoF ?></span>
+                            </div>
+                            <i class="bi bi-square text-success fs-25"></i>
                         </div>
-                    </li>
-                </a>
-            <?php }
-        } else { ?>
-
-            <div class="linha-produto">
-                <div>
-                    <span><?php echo $nome_produto ?></span>
-                    <span class="valor-item-final">(<?php echo $valor_produtoF ?>)</span>
-                </div>
-                <i class="bi bi-check text-success fs-25"></i>
-            </div>
-        <?php } ?>
+                    </a>
+                <?php } ?>
     </ol>
 
     <div>
         <img class="imagem-produto" src="sistema/painel/images/produtos/<?php echo $foto_produto ?>"
             alt="<?php echo $nome_produto ?>">
-    </div>
-
-    <div class='mg-t-2'>
-        <a href='observacoes.php' class='btn btn-primary w-100'>Avançar →</a>
     </div>
 
 </div>

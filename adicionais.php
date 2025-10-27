@@ -1,5 +1,6 @@
 <?php require_once("header.php");
 $url = $_GET['url'] ?? '';
+$total_item = $_GET['total'] ?? 0;
 $query = $pdo->query("SELECT * FROM produtos WHERE url = '$url' AND ativo = 'Sim'");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total_reg = count($res);
@@ -34,66 +35,76 @@ if ($total_reg > 0) {
         </div>
     </nav>
 
-    <ol class="list-group mg-t-6">
-
+    <?php
+    $queryAd = $pdo->query("SELECT * FROM adicionais WHERE produto = '$id_produto' AND ativo = 'Sim'");
+    $resAd = $queryAd->fetchAll(PDO::FETCH_ASSOC);
+    $total_reg_ad = count($resAd);
+    if ($total_reg_ad > 0) { ?>
         <div class="remover-ing">
-            Adicionais?
-            <?php
-            $queryAd = $pdo->query("SELECT * FROM adicionais WHERE produto = '$id_produto' AND ativo = 'Sim'");
-            $resAd = $queryAd->fetchAll(PDO::FETCH_ASSOC);
-            $total_reg_ad = count($resAd);
-            if ($total_reg_ad > 0) {
+            <ol class="list-group mg-t-6">
+                Adicionais?
+                <?php
                 for ($i = 0; $i < $total_reg_ad; $i++) {
-                    foreach ($resAd[$i] as $key => $value) {
-                    }
                     $id_ad = $resAd[$i]['id'];
                     $nome_ad = $resAd[$i]['nome'];
                     $valor_ad = $resAd[$i]['valor'];
                     $valor_adF = "R$ " . number_format($valor_ad, 2, ',', '.');
-            ?>
-
-                    <a href="adicionais.php" class="link-neutro">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span class="sem-bold"><?php echo $nome_ad ?> <span class="valor-item"><?php echo $valor_adF ?></span></span>
-                            <i class="bi bi-square"></i>
-                        </li>
-                    </a>
-                <?php
-                } ?>
+                ?>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="sem-bold">
+                            <?php echo $nome_ad ?> <span class="valor-item"><?php echo $valor_adF ?></span>
+                        </span>
+                        <input type="checkbox"
+                            class="adicional"
+                            data-valor="<?php echo $valor_ad ?>"
+                            onchange="atualizarTotal()"
+                            style="display:none;">
+                        <i class="bi bi-square" onclick="toggleCheckbox(this)"></i>
+                    </li>
+                <?php } ?>
+            </ol>
         </div>
-    </ol>
-    <div class="remover-ing">
-        Remover Ingredientes?
+    <?php } ?>
 
-        <ol class="list-group mg-t-1">
+    <?php
 
-            <?php
-                $queryIng = $pdo->query("SELECT * FROM ingredientes WHERE produto = '$id_produto' AND ativo = 'Sim'");
-                $resIng = $queryIng->fetchAll(PDO::FETCH_ASSOC);
-                $total_reg_ing = count($resIng);
-                if ($total_reg_ing > 0) {
-                    for ($i = 0; $i < $total_reg_ing; $i++) {
-                        foreach ($resIng[$i] as $key => $value) {
-                        }
-                        $id_ing = $resIng[$i]['id'];
-                        $nome_ing = $resIng[$i]['nome'];
-                        $valor_ing = $resIng[$i]['valor'];
-                        $valor_ingF = "R$ " . number_format($valor_ing, 2, ',', '.');
-            ?>
-                    <a href="adicionais.php" class="link-neutro">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span class="sem-bold"><?php echo $nome_ing ?> <span class="valor-menos"><?php echo $valor_ingF ?></span></span>
-                            <i class="bi bi-check-square"></i>
-                        </li>
-                    </a>
-        <?php }
-                }
-            } ?>
-        </ol>
-    </div>
+    $queryIng = $pdo->query("SELECT * FROM ingredientes WHERE produto = '$id_produto' AND ativo = 'Sim'");
+    $resIng = $queryIng->fetchAll(PDO::FETCH_ASSOC);
+    $total_reg_ing = count($resIng);
+    if ($total_reg_ing > 0) { ?>
+        <div class="remover-ing">
+            Remover Ingredientes?
+            <ol class="list-group mg-t-1">
+                <?php
+                for ($i = 0; $i < $total_reg_ing; $i++) {
+                    $id_ing = $resIng[$i]['id'];
+                    $nome_ing = $resIng[$i]['nome'];
+                    $valor_ing = $resIng[$i]['valor'];
+                    $valor_ingF = "R$ " . number_format($valor_ing, 2, ',', '.');
+                ?>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="sem-bold">
+                            <?php echo $nome_ing ?> <span class="valor-menos"><?php echo $valor_ingF ?></span>
+                        </span>
+                        <input type="checkbox"
+                            class="ingrediente"
+                            data-valor="<?php echo $valor_ing ?>"
+                            onchange="atualizarTotal()"
+                            style="display:none;"
+                            checked>
+                        <i class="bi bi-square" onclick="toggleCheckbox(this)"></i>
+                    </li>
+                <?php } ?>
+            </ol>
+        </div>
+
+    <?php } ?>
 
     <div class="total">
-        <p>Total <strong>R$ 25,00</strong></p>
+        <?php
+        $total_itemF = "R$ " . number_format($total_item, 2, ',', '.');
+        ?>
+        <p>Total <strong><?php echo $total_itemF ?></strong></p>
     </div>
 
     <div class="mg-t-2">
@@ -107,3 +118,39 @@ if ($total_reg > 0) {
 </body>
 
 </html>
+
+<script>
+    function toggleCheckbox(icon) {
+        const checkbox = icon.closest('li').querySelector('input[type="checkbox"]');
+        checkbox.checked = !checkbox.checked;
+        icon.className = checkbox.checked ? 'bi bi-check-square' : 'bi bi-square';
+        atualizarTotal();
+    }
+
+    let totalBase = parseFloat(<?php echo $total_item ?>);
+
+    function atualizarTotal() {
+        let total = totalBase;
+
+        document.querySelectorAll('.adicional:checked').forEach(el => {
+            total += parseFloat(el.dataset.valor);
+        });
+
+        document.querySelectorAll('.ingrediente:not(:checked)').forEach(el => {
+            total -= parseFloat(el.dataset.valor);
+        });
+
+        document.querySelector('.total strong').textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+    }
+
+    // ✅ Sincroniza ícones com estado dos checkboxes ao carregar
+    window.onload = () => {
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            const icon = checkbox.closest('li').querySelector('i');
+            if (icon) {
+                icon.className = checkbox.checked ? 'bi bi-check-square' : 'bi bi-square';
+            }
+        });
+        atualizarTotal();
+    };
+</script>

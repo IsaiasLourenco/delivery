@@ -23,3 +23,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (window.location.hash === '#popup-1') {
+                window.location.hash = ''; // remove o hash e fecha o popup
+            }
+        }
+    });
+</script>
