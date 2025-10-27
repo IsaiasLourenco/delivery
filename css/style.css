@@ -149,6 +149,10 @@ body {
     background: radial-gradient(#e4eb6e, #c3cc14);
 }
 
+.prata {
+    background: radial-gradient(#dcdcdc, #a9a9a9);
+}
+
 .carrinho {
     font-size: 22px;
     list-style: none;

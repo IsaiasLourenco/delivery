@@ -31,14 +31,15 @@ $pag = 'categorias';
                             <label for="cor">Cor</label>
                             <select class="form-control" name="cor" id="cor-cat">
                                 <option value="azul" selected>Azul</option>
-                                <option value="rosa">Rosa</option>
                                 <option value="azul-escuro">Azul-Escuro</option>
+                                <option value="rosa">Rosa</option>
                                 <option value="verde">Verde</option>
+                                <option value="verde-escuro">Verde-Escuro</option>
                                 <option value="roxo">Roxo</option>
                                 <option value="vermelho">Vermelho</option>
-                                <option value="verde-escuro">Verde-Escuro</option>
                                 <option value="laranja">Laranja</option>
                                 <option value="amarelo">Amarelo</option>
+                                <option value="prata">Prata</option>
                             </select>
                         </div>
                     </div>

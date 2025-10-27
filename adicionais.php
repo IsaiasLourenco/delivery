@@ -57,6 +57,8 @@ if ($total_reg > 0) {
                         <input type="checkbox"
                             class="adicional"
                             data-valor="<?php echo $valor_ad ?>"
+                            value="<?php echo $valor_ad ?>"
+                            data-categoria="<?php echo $resAd[$i]['categoria']; ?>"
                             onchange="atualizarTotal()"
                             style="display:none;">
                         <i class="bi bi-square" onclick="toggleCheckbox(this)"></i>
@@ -89,10 +91,11 @@ if ($total_reg > 0) {
                         <input type="checkbox"
                             class="ingrediente"
                             data-valor="<?php echo $valor_ing ?>"
+                            value="<?php echo $valor_ing ?>"
                             onchange="atualizarTotal()"
                             style="display:none;"
                             checked>
-                        <i class="bi bi-square" onclick="toggleCheckbox(this)"></i>
+                        <i class="bi bi-check-square" onclick="toggleCheckbox(this)"></i>
                     </li>
                 <?php } ?>
             </ol>
@@ -103,12 +106,13 @@ if ($total_reg > 0) {
     <div class="total">
         <?php
         $total_itemF = "R$ " . number_format($total_item, 2, ',', '.');
+
         ?>
         <p>Total <strong><?php echo $total_itemF ?></strong></p>
     </div>
 
     <div class="mg-t-2">
-        <a href="observacoes.php" class="btn btn-primary w-100">Avançar →</a>
+        <a href="observacoes.php?total=<?php echo $total_item ?>" class="btn btn-primary w-100" id="btn-avancar">Avançar →</a>
     </div>
 
 </div>
@@ -121,36 +125,86 @@ if ($total_reg > 0) {
 
 <script>
     function toggleCheckbox(icon) {
-        const checkbox = icon.closest('li').querySelector('input[type="checkbox"]');
+        const li = icon.closest('li');
+        const checkbox = li.querySelector('input[type="checkbox"]');
+        const categoria = checkbox.dataset.categoria;
+
+        const isAdicional = checkbox.classList.contains('adicional');
+        const isIngrediente = checkbox.classList.contains('ingrediente');
+
+        // Alternar o estado do checkbox
         checkbox.checked = !checkbox.checked;
+
+        // Atualizar o ícone visual
         icon.className = checkbox.checked ? 'bi bi-check-square' : 'bi bi-square';
+
+        // Se for adicional, aplicar exclusividade visual por categoria
+        if (isAdicional) {
+            if (checkbox.checked) {
+                document.querySelectorAll(`.adicional[data-categoria="${categoria}"]`).forEach(el => {
+                    if (el !== checkbox) {
+                        el.checked = false;
+                        el.closest('li').querySelector('i').className = 'bi bi-square';
+                        el.closest('li').classList.add('text-muted');
+                    }
+                });
+                li.classList.remove('text-muted');
+            } else {
+                li.classList.remove('text-muted');
+            }
+        }
+
         atualizarTotal();
     }
 
-    let totalBase = parseFloat(<?php echo $total_item ?>);
-
-    function atualizarTotal() {
-        let total = totalBase;
-
-        document.querySelectorAll('.adicional:checked').forEach(el => {
-            total += parseFloat(el.dataset.valor);
-        });
-
-        document.querySelectorAll('.ingrediente:not(:checked)').forEach(el => {
-            total -= parseFloat(el.dataset.valor);
-        });
-
-        document.querySelector('.total strong').textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
-    }
-
-    // ✅ Sincroniza ícones com estado dos checkboxes ao carregar
-    window.onload = () => {
+    function inicializarCheckboxes() {
         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             const icon = checkbox.closest('li').querySelector('i');
             if (icon) {
                 icon.className = checkbox.checked ? 'bi bi-check-square' : 'bi bi-square';
             }
+
+            // Se for adicional e estiver marcado, aplicar exclusividade visual
+            if (checkbox.classList.contains('adicional') && checkbox.checked) {
+                const categoria = checkbox.dataset.categoria;
+                document.querySelectorAll(`.adicional[data-categoria="${categoria}"]`).forEach(el => {
+                    if (el !== checkbox) {
+                        el.closest('li').classList.add('text-muted');
+                    }
+                });
+            }
         });
+
         atualizarTotal();
-    };
+    }
+
+    const valorBaseProduto = <?php echo $total_item ?>;
+
+    function atualizarTotal() {
+        let total = valorBaseProduto || 0;
+
+        // Soma os adicionais marcados
+        document.querySelectorAll('.adicional:checked').forEach((checkbox) => {
+            total += parseFloat(checkbox.dataset.valor) || 0;
+        });
+
+        // Subtrai os ingredientes desmarcados
+        document.querySelectorAll('.ingrediente:not(:checked)').forEach((checkbox) => {
+            total -= parseFloat(checkbox.dataset.valor) || 0;
+        });
+
+        const totalElement = document.querySelector('.total strong');
+        if (totalElement) {
+            totalElement.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        }
+        const btnAvancar = document.getElementById('btn-avancar');
+        if (btnAvancar) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const url = urlParams.get('url') || '';
+            const sigla_var = urlParams.get('sigla_var') || '';
+            btnAvancar.href = `observacoes.php?total=${total.toFixed(2)}`;
+        }
+    }
 </script>
+
+window.addEventListener('load', inicializarCheckboxes);

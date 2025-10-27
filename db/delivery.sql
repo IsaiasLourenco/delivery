@@ -173,6 +173,8 @@ CREATE TABLE adicionais (
     ativo VARCHAR(3)
 );
 
+ALTER TABLE adicionais ADD COLUMN categoria INT AFTER ativo;
+
 CREATE TABLE cliente (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,

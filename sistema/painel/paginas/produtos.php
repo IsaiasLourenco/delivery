@@ -31,7 +31,7 @@ $pag = 'produtos';
                             <label for="categoria">Categoria</label>
                             <select class="form-control sel2" name="categoria" id="categoria-produto">
                                 <?php
-                                $query = $pdo->query("SELECT * FROM categorias ORDER BY nome asc");
+                                $query = $pdo->query("SELECT * FROM categorias ORDER BY nome ASC");
                                 $res = $query->fetchAll(PDO::FETCH_ASSOC);
                                 $total_reg = @count($res);
                                 if ($total_reg > 0) {
@@ -380,12 +380,33 @@ $pag = 'produtos';
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="ativo">Ativo</label>
                                 <select class="form-control" name="ativo" id="ativo_ad">
                                     <option value="Sim" selected>Sim</option>
                                     <option value="Não">Não</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="categoria">Categoria</label>
+                                <select class="form-control sel2" name="categoria" id="cat_adicional">
+                                    <?php
+                                    $query = $pdo->query("SELECT * FROM categorias ORDER BY nome ASC");
+                                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+                                    $total_reg = @count($res);
+                                    if ($total_reg > 0) {
+                                        for ($i = 0; $i < $total_reg; $i++) {
+                                            foreach ($res[$i] as $key => $value) {
+                                            }
+                                            echo '<option value="' . $res[$i]['id'] . '">' . $res[$i]['nome'] . '</option>';
+                                        }
+                                    } else {
+                                        echo '<option value="0">Cadastre uma Categoria</option>';
+                                    }
+                                    ?>
                                 </select>
                             </div>
                         </div>
@@ -482,7 +503,7 @@ $pag = 'produtos';
     document.getElementById("valor_var").addEventListener("input", function() {
         formatarMoedaInput(this);
     });
-    
+
     document.getElementById("valor_ing").addEventListener("input", function() {
         formatarMoedaInput(this);
     });
@@ -880,8 +901,12 @@ $pag = 'produtos';
 <!-- SELECT2 -->
 <script type="text/javascript">
     $(document).ready(function() {
-        $('.sel2').select2({
+        $('#categoria-produto').select2({
             dropdownParent: $('#modalForm')
+        });
+
+        $('#cat_adicional').select2({
+            dropdownParent: $('#modalAdicionais')
         });
     });
 </script>

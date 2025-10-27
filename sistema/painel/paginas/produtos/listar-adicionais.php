@@ -12,6 +12,7 @@ if ($total > 0) {
         <thead>
             <tr>
                 <th class="centro">Nome</th>
+                <th class="centro">Categoria</th>
                 <th class="esc centro">Valor</th>
                 <th class="esc centro">Ativo</th>
                 <th class="centro">Ações</th>
@@ -28,6 +29,7 @@ HTML;
         $nome = $res[$i]['nome'];
         $valor = $res[$i]['valor'];
         $ativo = $res[$i]['ativo'];
+        $categoria = $res[$i]['categoria'];
 
         if ($ativo == 'Sim') {
             $icone = 'fa-check-square';
@@ -41,11 +43,19 @@ HTML;
             $classe_linha = 'text-muted';
         }
 
+        $queryCat = $pdo->query("SELECT * FROM categorias WHERE id = '$categoria'");
+        $resCat = $queryCat->fetchAll(PDO::FETCH_ASSOC);
+        $totalCat = count($resCat);
+        if ($totalCat > 0) {
+            $nomeCat = $resCat[0]['nome'];
+        }
+
         $valor_formatado = "R$ " . number_format($valor, 2, ',', '.');
 
         echo <<<HTML
 <tr class="{$classe_linha}">
     <td class="esc centro">{$nome}</td>
+    <td class="esc centro">{$nomeCat}</td>
     <td class="esc centro">{$valor_formatado}</td>
     <td class="centro">{$ativo}</td>
     <td class="centro">
@@ -53,7 +63,8 @@ HTML;
                               '{$produto}', 
                               '{$nome}', 
                               '{$valor_formatado}', 
-                              '{$ativo}')", title="Editar Registro">
+                              '{$ativo}',
+                              '{$categoria}')", title="Editar Registro">
             <i class="fa fa-edit text-primary pointer"></i>
         </a>
         <li class="dropdown head-dpdn2 d-il-b">
@@ -96,12 +107,13 @@ HTML;
 </script>
 
 <script type="text/javascript">
-    function editarAd(idAd, produto, nome, valor, ativo) {
+    function editarAd(idAd, produto, nome, valor, ativo, categoria) {
         $('#id_adicional').val(idAd); // ID do ingrediente
         $('#id_ad').val(produto); // ID do produto
         $('#nome_ad').val(nome);
         $('#valor_ad').val(valor);
         $('#ativo_ad').val(ativo);
+        $('#cat_adicional').val(categoria).trigger('change');
         $('#btn-salvar-ad').text('Editar');
         $('#btn-novo-ad').show();
     }

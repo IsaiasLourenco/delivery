@@ -76,7 +76,6 @@ if ($total_reg > 0) {
                                 </div>
                                 <p class="valor-item-final"><?php echo $valor_varF ?></p>
                             </div>
-                            <i class="bi bi-square text-success fs-25"></i>
                         </li>
                         </a>
                     <?php }
@@ -88,7 +87,6 @@ if ($total_reg > 0) {
                                 <span><?php echo $descricao_produto ?></span><br>
                                 <span class="valor-item-final"><?php echo $valor_produtoF ?></span>
                             </div>
-                            <i class="bi bi-square text-success fs-25"></i>
                         </div>
                     </a>
                 <?php } ?>
