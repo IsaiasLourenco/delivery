@@ -309,3 +309,29 @@ CREATE TABLE carrinho_temp (
 
 ALTER TABLE carrinho_temp
 ADD produto_id INT AFTER sessao;
+
+CREATE TABLE pedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sessao VARCHAR(50),             
+    cliente_id INT NULL,             -- se houver tabela de clientes
+    nome_cliente VARCHAR(100) NULL,
+    telefone VARCHAR(20) NULL,
+    endereco TEXT NULL,
+    total DECIMAL(10,2),
+    observacao TEXT,
+    status VARCHAR(20) DEFAULT 'aberto',
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE pedido_itens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pedido_id INT,                   -- FK para pedidos.id
+    produto_id INT,
+    tipo VARCHAR(20),                -- produto, variacao, adicional, ingrediente
+    id_item INT,                     -- ID do item na tabela original
+    quantidade INT DEFAULT 1,
+    valor_item DECIMAL(10,2),
+    valor_total DECIMAL(10,2),
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE
+);

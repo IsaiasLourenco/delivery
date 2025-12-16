@@ -507,10 +507,43 @@ body {
     font-size: 15px;
 }
 
+/* Garantir que o nome do produto e o ícone de lixo fiquem na mesma linha */
+.list-group-item {
+    padding: 10px 0; /* Adiciona um pouco de espaçamento para cada item */
+}
+
+/* Linha do nome do produto e ícone de lixo */
+.list-group-item .d-flex {
+    align-items: center;
+    width: 100%;
+}
+
+/* Linha de quantidade e preço (na linha de baixo) */
 .area-qtd {
-    position: absolute;
-    right: 15px;
-    font-size: 20px;
+    font-size: 16px;
+    margin-top: 5px; /* Pequeno espaço entre o nome e a linha de baixo */
+    gap: 10px; /* Adiciona espaçamento entre os ícones e a quantidade */
+}
+
+/* Ajuste para os ícones de aumentar/diminuir a quantidade */
+.area-qtd i {
+    cursor: pointer;
+}
+
+/* Ajuste do texto da quantidade */
+.area-qtd strong {
+    margin: 0 5px; /* Espaço entre a quantidade e os ícones */
+    font-size: 18px;
+}
+
+/* Ajuste para o preço */
+.valor-total {
+    font-weight: bold;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+.maozinha {
     cursor: pointer;
 }
 

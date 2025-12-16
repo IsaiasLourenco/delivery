@@ -1,11 +1,47 @@
-<?php require_once("header.php"); ?>
+<?php require_once("header.php");
 
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
+$sessao = $_SESSION['sessao_usuario'] ?? session_id();
+
+// BUSCA ITENS DO CARRINHO TEMPORÁRIO
+$stmtItens = $pdo->prepare("
+        SELECT ct.*, 
+               p.nome AS nome_produto, 
+               v.descricao AS nome_variacao, 
+               a.nome AS nome_adicional, 
+               i.nome AS nome_ingrediente
+        FROM carrinho_temp ct
+        LEFT JOIN produtos p ON ct.produto_id = p.id
+        LEFT JOIN variacoes v ON ct.id_item = v.id AND ct.tipo = 'variacao'
+        LEFT JOIN adicionais a ON ct.id_item = a.id AND ct.tipo = 'adicional'
+        LEFT JOIN ingredientes i ON ct.id_item = i.id AND ct.tipo = 'ingrediente'
+        WHERE ct.sessao = :sessao
+        ORDER BY ct.id ASC
+    ");
+$stmtItens->execute([':sessao' => $sessao]);
+$itens = $stmtItens->fetchAll(PDO::FETCH_ASSOC);
+
+// TOTAL GERAL
+$stmtTotal = $pdo->prepare("SELECT COALESCE(SUM(valor_total), 0)
+                                FROM carrinho_temp
+                                WHERE sessao = :sessao");
+$stmtTotal->execute([':sessao' => $sessao]);
+$totalBase = (float)$stmtTotal->fetchColumn();
+$totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
+?>
+<style>
+    .bold {
+        font-weight: bold;
+    }
+</style>
 <div class="main-container">
-    <!-- Imagem e texto -->
     <nav class="navbar navbar-light bg-light fixed-top sombra-nav">
         <div class="container-fluid">
             <div class="navbar-brand">
-                <a href="#" class="link-neutro">
+                <a href="#" onclick="history.back()" class="link-neutro">
                     <i class="bi bi-arrow-left"></i>
                 </a>
                 <span class="margin-itens">RESUMO DO PEDIDO</span>
@@ -14,66 +50,66 @@
         </div>
     </nav>
 
-    <ol class="list-group mg-t-6">
-        <a href="#popup-excluir" class="link-neutro mg-t-3">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span class="sem-bold"><strong>Pizza Calabresa Pequena</strong></span>
-                <i class="bi bi-trash text-danger" title="Excluir produto"></i>
-            </li>
-            <span class="area-qtd">
-                <i class="bi bi-dash-circle-fill text-danger" title="Diminuir quantidade"></i>
-                <strong> 01 </strong>
-                <i class="bi bi-plus-circle-fill text-success" title="Aumentar quantidade"></i>
-                R$ 25,00
-            </span>
-        </a>
-        <a href="#popup-excluir" class="link-neutro mg-t-3">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span class="sem-bold"><strong>Pastel Palmito Grande</strong></span>
-                <i class="bi bi-trash text-danger" title="Excluir produto"></i>
-            </li>
-            <span class="area-qtd">
-                <i class="bi bi-dash-circle-fill text-danger" title="Diminuir quantidade"></i>
-                <strong> 01 </strong>
-                <i class="bi bi-plus-circle-fill text-success" title="Aumentar quantidade"></i>
-                R$ 12,00
-            </span>
-        </a>
-        <a href="#popup-excluir" class="link-neutro mg-t-3">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span class="sem-bold"><strong>Coca Cola Lata</strong></span>
-                <i class="bi bi-trash text-danger" title="Excluir produto"></i>
-            </li>
-            <span class="area-qtd">
-                <i class="bi bi-dash-circle-fill text-danger" title="Diminuir quantidade"></i>
-                <strong> 01 </strong>
-                <i class="bi bi-plus-circle-fill text-success" title="Aumentar quantidade"></i>
-                R$ 6,00
-            </span>
-        </a>
-        <a href="#popup-excluir" class="link-neutro mg-t-3">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span class="sem-bold"><strong>Brigadeiro de Colher</strong></span>
-                <i class="bi bi-trash text-danger" title="Excluir produto"></i>
-            </li>
-            <span class="area-qtd">
-                <i class="bi bi-dash-circle-fill text-danger" title="Diminuir quantidade"></i>
-                <strong> 01 </strong>
-                <i class="bi bi-plus-circle-fill text-success" title="Aumentar quantidade"></i>
-                R$ 10,00
-            </span>
-        </a>
-    </ol>
+    <?php if (!empty($itens)) { ?>
+        <ol class="list-group mg-t-6">
+            <?php foreach ($itens as $item) { ?>
+                <li class="list-group-item" id="item-<?php echo $item['id']; ?>">
+                    <!-- Linha do nome do produto e ícone de lixo (na mesma linha) -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="sem-bold" style="flex-grow: 1;">
+                            <strong>
+                                <?php
+                                if ($item['tipo'] == 'produto') {
+                                    echo $item['nome_produto'];
+                                } elseif ($item['tipo'] == 'variacao') {
+                                    echo $item['nome_variacao'];
+                                } elseif ($item['tipo'] == 'adicional') {
+                                    echo $item['nome_adicional'];
+                                } elseif ($item['tipo'] == 'ingrediente') {
+                                    echo $item['nome_ingrediente'];
+                                }
+                                ?>
+                            </strong>
+                        </span>
+
+                        <!-- Ícone de exclusão à direita -->
+                        <i class="bi bi-trash text-danger maozinha" title="Excluir produto" onclick="excluirItem(<?php echo $item['id']; ?>)"></i>
+                    </div>
+
+                    <!-- Linha de quantidade e preço (na linha abaixo) -->
+                    <div class="area-qtd d-flex justify-content-end align-items-center">
+                        <?php if ($item['tipo'] != 'ingrediente') { ?>
+                            <!-- Botões de aumentar e diminuir para produtos, variações e adicionais -->
+                            <i class="bi bi-dash-circle-fill text-danger" title="Diminuir quantidade" onclick="alterarQtd(<?php echo $item['id']; ?>, -1)"></i>
+                            <strong id="qtd-<?php echo $item['id']; ?>"><?php echo $item['quantidade']; ?></strong>
+                            <i class="bi bi-plus-circle-fill text-success" title="Aumentar quantidade" onclick="alterarQtd(<?php echo $item['id']; ?>, 1)"></i>
+                        <?php } else { ?>
+                            <!-- Para ingredientes, só mostra a quantidade sem botões de controle -->
+                            <strong id="qtd-<?php echo $item['id']; ?>" class="qtd-ingrediente"><?php echo $item['quantidade']; ?></strong>
+                        <?php } ?>
+
+                        <!-- Preço à esquerda -->
+                        <span class="valor-total" id="valor-<?php echo $item['id']; ?>" data-preco="<?php echo $item['valor_item']; ?>">
+                            R$ <?php echo number_format($item['valor_total'], 2, ',', '.'); ?>
+                        </span>
+                    </div>
+                </li>
+            <?php } ?>
+        </ol>
+    <?php } else { ?>
+        <p class="mg-t-6 text-center">Seu carrinho está vazio!!</p>
+    <?php } ?>
+
 
     <hr class="mg-t-3">
     <div class="mg-t-2">
         <div class="total">
-            <p class="area-qtd">SubTotal <strong>R$ 53,00</strong></p>
+            <p class="area-qtd" id="subtotal">SubTotal <span class="bold"><?php echo $totalBaseF; ?></span></p>
         </div>
     </div>
 
     <div class="mg-t-8">
-        <a href="#" class="btn btn-primary w-100">Finalizar Pedido</a>
+        <a href="finalizar.php" class="btn btn-primary w-100">Finalizar Pedido</a>
     </div>
 
 </div>
@@ -84,7 +120,61 @@
 
 </html>
 
-<div id="popup-excluir" class="overlay-excluir">
+<script>
+    function alterarQtd(id, delta) {
+        console.log(id, delta);
+        $.post('atualizar-carrinho.php', {
+            id_item: id,
+            delta: delta
+        }, function(total) {
+            console.log(total);
+            // Atualiza a quantidade no front-end
+            const qtdEl = document.getElementById('qtd-' + id);
+            qtdEl.textContent = parseInt(qtdEl.textContent) + delta;
+
+            // Atualiza o valor do item
+            const valorTotalEl = document.getElementById('valor-' + id);
+
+            if (valorTotalEl) {
+                const preco = parseFloat(valorTotalEl.dataset.preco);
+                const qtd = parseInt(qtdEl.textContent);
+
+                const novoValor = preco * qtd;
+
+                valorTotalEl.innerHTML =
+                    'R$ ' + novoValor.toFixed(2).replace('.', ',');
+            }
+
+
+            // Atualiza o total geral
+            const subtotalEl = document.getElementById('subtotal');
+            if (subtotalEl) {
+                let novoSubtotal = parseFloat(total.replace(',', '.'));
+                if (!isNaN(novoSubtotal)) {
+                    const spanSubtotal = subtotalEl.querySelector('.bold');
+                    if (spanSubtotal) {
+                        spanSubtotal.innerHTML = 'R$ ' + novoSubtotal.toFixed(2).replace('.', ',');
+                    }
+                } else {
+                    console.error('Erro: Total Inválido!', total);
+                }
+            }
+        });
+    }
+
+    function excluirItem(id) {
+        if (confirm('Deseja realmente excluir este item?')) {
+            $.post('excluir-carrinho.php', {
+                id_item: id
+            }, function(total) {
+                location.reload();
+            });
+        }
+    }
+</script>
+
+
+<!-- <div id="popup-excluir" class="overlay-excluir">
     <div class="popup-excluir">
         <div class="row">
             <div class="col-9">
@@ -100,4 +190,4 @@
             <button class="btn btn-danger mx-2">Não</button>
         </div>
     </div>
-</div>
+</div> -->

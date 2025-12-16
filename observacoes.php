@@ -8,6 +8,32 @@ if (session_status() === PHP_SESSION_NONE) {
 $sessao = $_SESSION['sessao_usuario'] ?? session_id();
 
 /**
+ * SE FOI ENVIADO O FORMULÁRIO DE FINALIZAÇÃO
+ */
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $quantidade = (int)($_POST['quantidade'] ?? 1);
+    $observacao = trim($_POST['observacao'] ?? '');
+
+    // Atualiza todos os itens do carrinho temporário dessa sessão
+    $stmtUpdate = $pdo->prepare("
+        UPDATE carrinho_temp
+        SET quantidade = :quantidade,
+            valor_total = quantidade * valor_item,
+            observacao = :observacao
+        WHERE sessao = :sessao
+    ");
+    $stmtUpdate->execute([
+        ':quantidade' => $quantidade,
+        ':observacao' => $observacao,
+        ':sessao'     => $sessao
+    ]);
+
+    // Redireciona para o carrinho real
+    header("Location: carrinho.php");
+    exit;
+}
+
+/**
  * BUSCA ITENS DO CARRINHO (PRODUTO + VARIAÇÃO + ADICIONAIS + INGREDIENTES)
  */
 $stmtItens = $pdo->prepare("
@@ -37,7 +63,6 @@ $stmtTotal = $pdo->prepare("
 ");
 $stmtTotal->execute([':sessao' => $sessao]);
 $totalBase = (float)$stmtTotal->fetchColumn();
-
 $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
 ?>
 
@@ -45,7 +70,7 @@ $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
     <nav class="navbar navbar-light bg-light fixed-top sombra-nav">
         <div class="container-fluid">
             <div class="navbar-brand">
-                <a href="adicionais.php" class="link-neutro">
+                <a href="#" id="voltar-link" class="link-neutro">
                     <i class="bi bi-arrow-left"></i>
                 </a>
                 <span class="margin-itens">RESUMO DO ITEM</span>
@@ -60,17 +85,16 @@ $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
                 <?php foreach ($itens as $item) { ?>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>
-                            <?php 
-                                // Exibe o nome correto do item com base no tipo
-                                if ($item['tipo'] == 'produto') {
-                                    echo $item['nome_produto'];
-                                } elseif ($item['tipo'] == 'variacao') {
-                                    echo $item['nome_variacao'];
-                                } elseif ($item['tipo'] == 'adicional') {
-                                    echo $item['nome_adicional'];
-                                } elseif ($item['tipo'] == 'ingrediente') {
-                                    echo $item['nome_ingrediente'];
-                                }
+                            <?php
+                            if ($item['tipo'] == 'produto') {
+                                echo $item['nome_produto'];
+                            } elseif ($item['tipo'] == 'variacao') {
+                                echo $item['nome_variacao'];
+                            } elseif ($item['tipo'] == 'adicional') {
+                                echo $item['nome_adicional'];
+                            } elseif ($item['tipo'] == 'ingrediente') {
+                                echo $item['nome_ingrediente'];
+                            }
                             ?>
                         </span>
                         <span>
@@ -82,7 +106,7 @@ $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
         </div>
     <?php } ?>
 
-    <form action="carrinho.php" method="POST">
+    <form action="" method="POST">
         <input type="hidden" name="sessao" value="<?php echo $sessao ?>">
 
         <div class="qtd mg-t-2">
@@ -117,6 +141,13 @@ $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
 </div>
 
 <?php require_once("footer.php"); ?>
+
+<script>
+    const linkVoltar = sessionStorage.getItem('back_url');
+    if (linkVoltar) {
+        document.getElementById('voltar-link').href = linkVoltar;
+    }
+</script>
 
 <script>
     const TOTAL_BASE = <?php echo $totalBase ?>;
