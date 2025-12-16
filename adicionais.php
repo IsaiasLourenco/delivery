@@ -1,210 +1,233 @@
-<?php require_once("header.php");
-$url = $_GET['url'] ?? '';
-$total_item = $_GET['total'] ?? 0;
-$query = $pdo->query("SELECT * FROM produtos WHERE url = '$url' AND ativo = 'Sim'");
-$res = $query->fetchAll(PDO::FETCH_ASSOC);
-$total_reg = count($res);
-if ($total_reg > 0) {
-    $id_produto = $res[0]['id'];
-    $nome_produto = $res[0]['nome'];
-    $foto_produto = $res[0]['foto'];
-    $id_categoria = $res[0]['categoria'];
-    $valor_produto = $res[0]['valor_venda'];
-    $valor_produtoF = "R$ " . number_format($valor_produto, 2, ',', '.');
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+require_once("header.php");
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
 }
+
+$sessao = $_SESSION['sessao_usuario'] ?? session_id();
+$_SESSION['sessao_usuario'] = $sessao;
+
+$url  = $_GET['url']  ?? '';
+$item = $_GET['item'] ?? '';
+
+$stmt = $pdo->prepare("SELECT * FROM produtos WHERE url = :url AND ativo = 'Sim'");
+$stmt->execute([':url' => $url]);
+$produto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$produto) {
+    die('Produto não encontrado');
+}
+
+$id_produto   = (int)$produto['id'];
+$nome_produto = $produto['nome'];
+$valor_base   = (float)$produto['valor_venda'];
+
+$descricao_var = '';
+$valor_var     = 0;
+$id_variacao   = null;
+
+if ($item) {
+    $stmtVar = $pdo->prepare("
+        SELECT * FROM variacoes 
+        WHERE produto = :produto AND sigla = :sigla
+    ");
+    $stmtVar->execute([
+        ':produto' => $id_produto,
+        ':sigla'   => $item
+    ]);
+    $var = $stmtVar->fetch(PDO::FETCH_ASSOC);
+
+    if ($var) {
+        $id_variacao   = (int)$var['id'];
+        $descricao_var = $var['descricao'];
+        $valor_var     = (float)$var['valor'];
+    }
+}
+
+/* PRODUTO BASE (SOMENTE SE NÃO TIVER VARIAÇÃO) */
+if (!$id_variacao) {
+
+    $checkProduto = $pdo->prepare("
+        SELECT COUNT(*) 
+        FROM carrinho_temp 
+        WHERE sessao = :sessao AND tipo = 'produto'
+    ");
+    $checkProduto->execute([':sessao' => $sessao]);
+
+    if ($checkProduto->fetchColumn() == 0) {
+        $insertProduto = $pdo->prepare("
+            INSERT INTO carrinho_temp
+            (sessao, produto_id, tipo, id_item, quantidade, valor_item, valor_total)
+            VALUES
+            (:sessao, :produto, 'produto', :produto, 1, :valor, :valor)
+        ");
+        $insertProduto->execute([
+            ':sessao'  => $sessao,
+            ':produto' => $id_produto,
+            ':valor'   => $valor_base
+        ]);
+    }
+}
+
+/* VARIAÇÃO */
+if ($id_variacao && $valor_var > 0) {
+
+    $checkVar = $pdo->prepare("
+        SELECT COUNT(*) 
+        FROM carrinho_temp 
+        WHERE sessao = :sessao AND tipo = 'variacao'
+    ");
+    $checkVar->execute([':sessao' => $sessao]);
+
+    if ($checkVar->fetchColumn() == 0) {
+        $insertVar = $pdo->prepare("
+            INSERT INTO carrinho_temp
+            (sessao, produto_id, tipo, id_item, quantidade, valor_item, valor_total)
+            VALUES
+            (:sessao, :produto, 'variacao', :variacao, 1, :valor, :valor)
+        ");
+        $insertVar->execute([
+            ':sessao'   => $sessao,
+            ':produto'  => $id_produto,
+            ':variacao' => $id_variacao,
+            ':valor'    => $valor_var
+        ]);
+    }
+}
+
+/* TOTAL */
+$stmtTotal = $pdo->prepare("
+    SELECT COALESCE(SUM(valor_total),0) 
+    FROM carrinho_temp 
+    WHERE sessao = :sessao
+");
+$stmtTotal->execute([':sessao' => $sessao]);
+$total  = (float)$stmtTotal->fetchColumn();
+$totalF = "R$ " . number_format($total, 2, ',', '.');
 ?>
 
 <div class="main-container">
-    <?php
-    $sigla_var = $_GET['sigla_var'] ?? '';
-    $queryVar = $pdo->query("SELECT * FROM variacoes WHERE produto = '$id_produto' AND sigla = '$sigla_var'");
-    $resVar = $queryVar->fetch(PDO::FETCH_ASSOC);
-
-    $descricao_var = $resVar['descricao'] ?? '';
-    ?>
-    <!-- Imagem e texto -->
     <nav class="navbar navbar-light bg-light fixed-top sombra-nav">
         <div class="container-fluid">
             <div class="navbar-brand">
                 <a href="variacoes.php?url=<?php echo $url ?>" class="link-neutro">
                     <i class="bi bi-arrow-left"></i>
                 </a>
-                <span class="margin-itens"><?php echo mb_strtoupper($nome_produto) ?> - <?php echo $sigla_var ?></span>
+                <span class="margin-itens">
+                    <?php echo mb_strtoupper($nome_produto); ?>
+                    <?php if ($descricao_var) echo " - $descricao_var"; ?>
+                </span>
             </div>
             <?php require_once("icone-popup-carrinho.php"); ?>
         </div>
     </nav>
 
+    <!-- ADICIONAIS -->
     <?php
-    $queryAd = $pdo->query("SELECT * FROM adicionais WHERE produto = '$id_produto' AND ativo = 'Sim'");
-    $resAd = $queryAd->fetchAll(PDO::FETCH_ASSOC);
-    $total_reg_ad = count($resAd);
-    if ($total_reg_ad > 0) { ?>
-        <div class="remover-ing">
-            <ol class="list-group mg-t-6">
-                Adicionais?
-                <?php
-                for ($i = 0; $i < $total_reg_ad; $i++) {
-                    $id_ad = $resAd[$i]['id'];
-                    $nome_ad = $resAd[$i]['nome'];
-                    $valor_ad = $resAd[$i]['valor'];
-                    $valor_adF = "R$ " . number_format($valor_ad, 2, ',', '.');
-                ?>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span class="sem-bold">
-                            <?php echo $nome_ad ?> <span class="valor-item"><?php echo $valor_adF ?></span>
-                        </span>
-                        <input type="checkbox"
-                            class="adicional"
-                            data-valor="<?php echo $valor_ad ?>"
-                            value="<?php echo $valor_ad ?>"
-                            data-categoria="<?php echo $resAd[$i]['categoria']; ?>"
-                            onchange="atualizarTotal()"
-                            style="display:none;">
-                        <i class="bi bi-square" onclick="toggleCheckbox(this)"></i>
-                    </li>
-                <?php } ?>
-            </ol>
+    $ads = $pdo->prepare("
+        SELECT * FROM adicionais 
+        WHERE produto = :produto AND ativo = 'Sim'
+    ");
+    $ads->execute([':produto' => $id_produto]);
+    $listaAds = $ads->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($listaAds) {
+    ?>
+        <div class="list-group mg-t-6">
+            <strong>Adicionais?</strong>
+
+            <?php foreach ($listaAds as $ad) { ?>
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        <?php echo $ad['nome']; ?>
+                        <span class="valor-item">R$ <?php echo number_format($ad['valor'], 2, ',', '.'); ?></span>
+                    </span>
+
+                    <input type="checkbox"
+                        class="adicional"
+                        data-id="<?php echo $ad['id']; ?>"
+                        data-valor="<?php echo $ad['valor']; ?>"
+                        onchange="adicionar(this,'adicional')">
+                </div>
+            <?php } ?>
         </div>
     <?php } ?>
 
+    <!-- INGREDIENTES -->
     <?php
+    $ings = $pdo->prepare("
+        SELECT * FROM ingredientes 
+        WHERE produto = :produto AND ativo = 'Sim'
+    ");
+    $ings->execute([':produto' => $id_produto]);
+    $listaIng = $ings->fetchAll(PDO::FETCH_ASSOC);
 
-    $queryIng = $pdo->query("SELECT * FROM ingredientes WHERE produto = '$id_produto' AND ativo = 'Sim'");
-    $resIng = $queryIng->fetchAll(PDO::FETCH_ASSOC);
-    $total_reg_ing = count($resIng);
-    if ($total_reg_ing > 0) { ?>
-        <div class="remover-ing">
-            Remover Ingredientes?
-            <ol class="list-group mg-t-1">
-                <?php
-                for ($i = 0; $i < $total_reg_ing; $i++) {
-                    $id_ing = $resIng[$i]['id'];
-                    $nome_ing = $resIng[$i]['nome'];
-                    $valor_ing = $resIng[$i]['valor'];
-                    $valor_ingF = "R$ " . number_format($valor_ing, 2, ',', '.');
-                ?>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span class="sem-bold">
-                            <?php echo $nome_ing ?> <span class="valor-menos"><?php echo $valor_ingF ?></span>
-                        </span>
-                        <input type="checkbox"
-                            class="ingrediente"
-                            data-valor="<?php echo $valor_ing ?>"
-                            value="<?php echo $valor_ing ?>"
-                            onchange="atualizarTotal()"
-                            style="display:none;"
-                            checked>
-                        <i class="bi bi-check-square" onclick="toggleCheckbox(this)"></i>
-                    </li>
-                <?php } ?>
-            </ol>
+    if ($listaIng) {
+    ?>
+        <div class="list-group mg-t-3">
+            <strong>Ingredientes</strong>
+
+            <?php foreach ($listaIng as $ing) { ?>
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        <?php echo $ing['nome']; ?>
+                        <span class="valor-menos">- R$ <?php echo number_format($ing['valor'], 2, ',', '.'); ?></span>
+                    </span>
+
+                    <input type="checkbox"
+                        class="ingrediente"
+                        data-id="<?php echo $ing['id']; ?>"
+                        data-valor="<?php echo $ing['valor']; ?>"
+                        checked
+                        onchange="adicionar(this,'ingrediente')">
+                </div>
+            <?php } ?>
         </div>
-
     <?php } ?>
 
     <div class="total">
-        <?php
-        $total_itemF = "R$ " . number_format($total_item, 2, ',', '.');
-
-        ?>
-        <p>Total <strong><?php echo $total_itemF ?></strong></p>
+        <p>Total <strong id="total"><?php echo $totalF; ?></strong></p>
     </div>
 
     <div class="mg-t-2">
-        <a href="observacoes.php?total=<?php echo $total_item ?>" class="btn btn-primary w-100" id="btn-avancar">Avançar →</a>
+        <a href="observacoes.php" class="btn btn-primary w-100">
+            Avançar →
+        </a>
     </div>
-
 </div>
 
 <?php require_once("footer.php"); ?>
 
-</body>
-
-</html>
-
 <script>
-    function toggleCheckbox(icon) {
-        const li = icon.closest('li');
-        const checkbox = li.querySelector('input[type="checkbox"]');
-        const categoria = checkbox.dataset.categoria;
+    const PRODUTO_ID = <?php echo $id_produto; ?>;
 
-        const isAdicional = checkbox.classList.contains('adicional');
-        const isIngrediente = checkbox.classList.contains('ingrediente');
+    function adicionar(el, tipo) {
 
-        // Alternar o estado do checkbox
-        checkbox.checked = !checkbox.checked;
+        let marcado;
 
-        // Atualizar o ícone visual
-        icon.className = checkbox.checked ? 'bi bi-check-square' : 'bi bi-square';
-
-        // Se for adicional, aplicar exclusividade visual por categoria
-        if (isAdicional) {
-            if (checkbox.checked) {
-                document.querySelectorAll(`.adicional[data-categoria="${categoria}"]`).forEach(el => {
-                    if (el !== checkbox) {
-                        el.checked = false;
-                        el.closest('li').querySelector('i').className = 'bi bi-square';
-                        el.closest('li').classList.add('text-muted');
-                    }
-                });
-                li.classList.remove('text-muted');
-            } else {
-                li.classList.remove('text-muted');
-            }
+        if (tipo === 'adicional') {
+            // adicional: checked = adicionar
+            marcado = el.checked ? 'true' : 'false';
         }
 
-        atualizarTotal();
-    }
-
-    function inicializarCheckboxes() {
-        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            const icon = checkbox.closest('li').querySelector('i');
-            if (icon) {
-                icon.className = checkbox.checked ? 'bi bi-check-square' : 'bi bi-square';
-            }
-
-            // Se for adicional e estiver marcado, aplicar exclusividade visual
-            if (checkbox.classList.contains('adicional') && checkbox.checked) {
-                const categoria = checkbox.dataset.categoria;
-                document.querySelectorAll(`.adicional[data-categoria="${categoria}"]`).forEach(el => {
-                    if (el !== checkbox) {
-                        el.closest('li').classList.add('text-muted');
-                    }
-                });
-            }
-        });
-
-        atualizarTotal();
-    }
-
-    const valorBaseProduto = <?php echo $total_item ?>;
-
-    function atualizarTotal() {
-        let total = valorBaseProduto || 0;
-
-        // Soma os adicionais marcados
-        document.querySelectorAll('.adicional:checked').forEach((checkbox) => {
-            total += parseFloat(checkbox.dataset.valor) || 0;
-        });
-
-        // Subtrai os ingredientes desmarcados
-        document.querySelectorAll('.ingrediente:not(:checked)').forEach((checkbox) => {
-            total -= parseFloat(checkbox.dataset.valor) || 0;
-        });
-
-        const totalElement = document.querySelector('.total strong');
-        if (totalElement) {
-            totalElement.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        if (tipo === 'ingrediente') {
+            // ingrediente: checked = manter, unchecked = remover
+            marcado = el.checked ? 'false' : 'true';
         }
-        const btnAvancar = document.getElementById('btn-avancar');
-        if (btnAvancar) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const url = urlParams.get('url') || '';
-            const sigla_var = urlParams.get('sigla_var') || '';
-            btnAvancar.href = `observacoes.php?total=${total.toFixed(2)}`;
-        }
+
+        $.post('inserir-carrinho.php', {
+            produto_id: PRODUTO_ID,
+            id_item: el.dataset.id,
+            tipo: tipo,
+            marcado: marcado
+        }, function(total) {
+            $('#total').text('R$ ' + total);
+        });
+
     }
 </script>
-
-window.addEventListener('load', inicializarCheckboxes);

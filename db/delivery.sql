@@ -294,3 +294,18 @@ CREATE TABLE vendas (
     valor_entrega INT,
     tipo_pagamento VARCHAR(80)
 );
+
+CREATE TABLE carrinho_temp (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sessao VARCHAR(50),          -- session_id() do PHP
+    tipo VARCHAR(20),            -- produto, variacao, adicional, ingrediente
+    id_item INT,                 -- ID do item na tabela original
+    quantidade INT DEFAULT 1,    -- quantidade escolhida
+    valor_item DECIMAL(10,2),         -- preço unitário
+    valor_total DECIMAL(10,2),   -- preço * quantidade
+    observacao TEXT,             -- observações do cliente
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE carrinho_temp
+ADD produto_id INT AFTER sessao;

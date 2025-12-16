@@ -44,7 +44,7 @@ $imagem_temp = $_FILES['foto']['tmp_name'];
 
 if (@$_FILES['foto']['name'] != "") {
     $ext = pathinfo($nome_img, PATHINFO_EXTENSION);
-    if ($ext == 'png' or $ext == 'jpg' or $ext == 'JPG' or $ext == 'jpeg' or $ext == 'gif') {
+    if ($ext == 'png' or $ext == 'jpg' or $ext == 'JPG' or $ext == 'jpeg' or $ext == 'gif' or $ext == 'jfif') {
 
         //EXCLUO A FOTO ANTERIOR
         if ($foto != "sem-foto.jpg") {

@@ -75,7 +75,7 @@ echo <<<HTML
         </li>
         <a onclick="ativar('{$id}', 
                             '{$acao}')", title="{$titulo_link}">
-            <i class="fa {$icone} text-success pointer"></i>
+            <i class="fa {$icone} text-verde pointer"></i>
         </a>
     </td>
 </tr>

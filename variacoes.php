@@ -64,9 +64,9 @@ if ($total_reg > 0) {
                 $total_item = $valor_var;
         ?>
                 <?php if ($tem_adicionais_ou_ingredientes) { ?>
-                    <a href="adicionais-<?php echo $url ?>&item-<?php echo $sigla_var ?>&total=<?php echo $total_item ?>" class="link-neutro">
+                    <a href="adicionais.php?url=<?php echo $url ?>&item=<?php echo $sigla_var ?>" class="link-neutro">
                     <?php } else { ?>
-                        <a href="observacoes.php?total=<?php echo $total_item ?>" class="link-neutro">
+                        <a href="observacoes.php" class="link-neutro">
                         <?php } ?>
 
                         <li class="list-group-item d-flex justify-content-between align-items-start">

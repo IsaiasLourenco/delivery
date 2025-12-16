@@ -4,7 +4,8 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 RewriteRule ^categoria-(.*)$ itens.php?url=$1 [L]
 RewriteRule ^produto-(.*)$ variacoes.php?url=$1 [L]
-RewriteRule ^adicionais-(.*)&item-(.*)$ adicionais.php?url=$1&sigla_var=$2 [L]
-RewriteRule ^adicionais-(.*)$ adicionais.php?url=$1 [L]
+RewriteRule ^adicionais-(.*)$ adicionais.php?url=$1&item=$1 [L]
+RewriteRule ^observacoes-(.*)$ observacoes.php?url=$1&item=$1 [L]
+RewriteRule ^carrinho(.*)$ carrinho.php [L]
 RewriteRule ^index(.*)$ index.php [L]
 RewriteRule ^index.php(.*)$ index.php [L]

@@ -1,13 +1,51 @@
-<?php require_once("header.php"); 
+<?php
+require_once("header.php");
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$sessao = $_SESSION['sessao_usuario'] ?? session_id();
+
+/**
+ * BUSCA ITENS DO CARRINHO (PRODUTO + VARIAÇÃO + ADICIONAIS + INGREDIENTES)
+ */
+$stmtItens = $pdo->prepare("
+    SELECT ct.*, 
+           p.nome AS nome_produto, 
+           v.descricao AS nome_variacao,
+           a.nome AS nome_adicional, 
+           i.nome AS nome_ingrediente
+    FROM carrinho_temp ct
+    LEFT JOIN produtos p ON ct.produto_id = p.id
+    LEFT JOIN variacoes v ON ct.id_item = v.id AND ct.tipo = 'variacao'
+    LEFT JOIN adicionais a ON ct.id_item = a.id AND ct.tipo = 'adicional'
+    LEFT JOIN ingredientes i ON ct.id_item = i.id AND ct.tipo = 'ingrediente'
+    WHERE ct.sessao = :sessao
+    ORDER BY ct.id ASC
+");
+$stmtItens->execute([':sessao' => $sessao]);
+$itens = $stmtItens->fetchAll(PDO::FETCH_ASSOC);
+
+/**
+ * TOTAL GERAL
+ */
+$stmtTotal = $pdo->prepare("
+    SELECT COALESCE(SUM(valor_total),0)
+    FROM carrinho_temp
+    WHERE sessao = :sessao
+");
+$stmtTotal->execute([':sessao' => $sessao]);
+$totalBase = (float)$stmtTotal->fetchColumn();
+
+$totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
 ?>
 
 <div class="main-container">
-    <!-- Imagem e texto -->
     <nav class="navbar navbar-light bg-light fixed-top sombra-nav">
         <div class="container-fluid">
             <div class="navbar-brand">
-                <a href="itens.php" class="link-neutro">
+                <a href="adicionais.php" class="link-neutro">
                     <i class="bi bi-arrow-left"></i>
                 </a>
                 <span class="margin-itens">RESUMO DO ITEM</span>
@@ -16,74 +54,82 @@
         </div>
     </nav>
 
-    <div class="obs">
-        <strong>PIZZA CALABRESA</strong>
-    </div>
-
-    <div class="qtd">
-        Quantidade
-        <span class="area-qtd">
-            <i class="bi bi-dash-circle-fill text-danger" title="Diminuir quantidade"></i>
-            <strong> 01 </strong>
-            <i class="bi bi-plus-circle-fill text-success" title="Aumentar quantidade"></i>
-        </span>
-    </div>
-
-    <div class="txt-area-obs">
-        OBSERVAÇÕES
-        <div class="form-group">
-            <textarea class="form-control" name="obs" id="obs"></textarea>
+    <?php if (!empty($itens)) { ?>
+        <div class="resumo-adicionais mg-t-6">
+            <ul class="list-group">
+                <?php foreach ($itens as $item) { ?>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            <?php 
+                                // Exibe o nome correto do item com base no tipo
+                                if ($item['tipo'] == 'produto') {
+                                    echo $item['nome_produto'];
+                                } elseif ($item['tipo'] == 'variacao') {
+                                    echo $item['nome_variacao'];
+                                } elseif ($item['tipo'] == 'adicional') {
+                                    echo $item['nome_adicional'];
+                                } elseif ($item['tipo'] == 'ingrediente') {
+                                    echo $item['nome_ingrediente'];
+                                }
+                            ?>
+                        </span>
+                        <span>
+                            <?php echo 'R$ ' . number_format($item['valor_total'], 2, ',', '.'); ?>
+                        </span>
+                    </li>
+                <?php } ?>
+            </ul>
         </div>
-    </div>
+    <?php } ?>
 
-    <div class="total">
-        <p>Total <strong>R$ 25,00</strong></p>
-    </div>
+    <form action="carrinho.php" method="POST">
+        <input type="hidden" name="sessao" value="<?php echo $sessao ?>">
 
-    <div class="mg-t-2">
-        <a href="#popup-2" class="btn btn-primary w-100">Adicionar ao carrinho</a>
-    </div>
+        <div class="qtd mg-t-2">
+            Quantidade
+            <span class="area-qtd">
+                <button type="button" onclick="alterarQtd(-1)" class="btn btn-link text-danger">
+                    <i class="bi bi-dash-circle-fill"></i>
+                </button>
 
+                <strong id="qtd">1</strong>
+                <input type="hidden" name="quantidade" id="qtd_input" value="1">
+
+                <button type="button" onclick="alterarQtd(1)" class="btn btn-link text-success">
+                    <i class="bi bi-plus-circle-fill"></i>
+                </button>
+            </span>
+        </div>
+
+        <div class="txt-area-obs">
+            OBSERVAÇÕES
+            <textarea class="form-control" name="observacao"></textarea>
+        </div>
+
+        <div class="total">
+            <p>Total <strong id="total"><?php echo $totalBaseF ?></strong></p>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mg-t-2">
+            Adicionar ao carrinho
+        </button>
+    </form>
 </div>
 
 <?php require_once("footer.php"); ?>
 
-</body>
+<script>
+    const TOTAL_BASE = <?php echo $totalBase ?>;
 
-</html>
+    function alterarQtd(delta) {
+        let qtd = parseInt(document.getElementById('qtd').textContent);
+        qtd = Math.max(1, qtd + delta);
 
-<div id="popup-2" class="overlay-2">
-    <div class="popup-2">
-        <form action="carrinho.php" method="POST">
-            <div class="row">
-                <div class="col-10">
-                    <div class="row">
-                        <div class="col-12">
-                            <input type="text" name="telefone" id="telefone" class="form-control" placeholder="Telefone" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 mg-t-2">
-                            <input type="text" name="nome" class="form-control" placeholder="Nome" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <a class="close-2" href="#">&times;</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6 text-center">
-                    <a href="index.php" class="btn btn-primary mg-t-2 wd-100">Comprar mais</a>
-                </div>
-                <div class="col-6 text-center">
-                    <button class="btn btn-success mg-t-2 wd-100">Finalizar pedido</button>
-                </div>
-            </div>
-            <hr class="linha">
-            <div class="conteudo-popup">
-                Você só precisará preencher seus dados no primeiro pedido!
-            </div>
-        </form>
-    </div>
-</div>
+        document.getElementById('qtd').textContent = qtd;
+        document.getElementById('qtd_input').value = qtd;
+
+        let total = qtd * TOTAL_BASE;
+        document.getElementById('total').textContent =
+            'R$ ' + total.toFixed(2).replace('.', ',');
+    }
+</script>
