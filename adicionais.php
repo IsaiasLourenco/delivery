@@ -36,6 +36,7 @@ $nome_produto = $produto['nome'];
 $valor_base   = (float)$produto['valor_venda'];
 
 $descricao_var = '';
+$sigla_var     = '';
 $valor_var     = 0;
 $id_variacao   = null;
 
@@ -53,6 +54,7 @@ if ($item) {
     if ($var) {
         $id_variacao   = (int)$var['id'];
         $descricao_var = $var['descricao'];
+        $sigla_var = $var['sigla'];
         $valor_var     = (float)$var['valor'];
     }
 }
@@ -95,7 +97,7 @@ if ($id_variacao && $valor_var > 0) {
             INSERT INTO carrinho_temp
             (sessao, produto_id, tipo, id_item, quantidade, valor_item, valor_total)
             VALUES
-            (:sessao, :produto, 'variacao', :variacao, 1, :valor, :valor)
+            (:sessao, :produto,'variacao', :variacao, 1, :valor, :valor)
         ");
         $insertVar->execute([
             ':sessao'   => $sessao,
@@ -116,7 +118,27 @@ $stmtTotal->execute([':sessao' => $sessao]);
 $total  = (float)$stmtTotal->fetchColumn();
 $totalF = "R$ " . number_format($total, 2, ',', '.');
 ?>
+<style>
+    /* por padrão, mostra desktop e esconde mobile */
+    .desktop-only {
+        display: inline;
+    }
 
+    .mobile-only {
+        display: none;
+    }
+
+    /* quando a tela for pequena (mobile), inverte */
+    @media (max-width: 768px) {
+        .desktop-only {
+            display: none;
+        }
+
+        .mobile-only {
+            display: inline;
+        }
+    }
+</style>
 <div class="main-container">
     <nav class="navbar navbar-light bg-light fixed-top sombra-nav">
         <div class="container-fluid">
@@ -126,7 +148,16 @@ $totalF = "R$ " . number_format($total, 2, ',', '.');
                 </a>
                 <span class="margin-itens">
                     <?php echo mb_strtoupper($nome_produto); ?>
-                    <?php if ($descricao_var) echo " - $descricao_var"; ?>
+
+                    <!-- versão desktop -->
+                    <?php if ($descricao_var) { ?>
+                        <span class="desktop-only"> - <?php echo $descricao_var; ?></span>
+                    <?php } ?>
+
+                    <!-- versão mobile -->
+                    <?php if ($sigla_var) { ?>
+                        <span class="mobile-only"> - <?php echo $sigla_var; ?></span>
+                    <?php } ?>
                 </span>
             </div>
             <?php require_once("icone-popup-carrinho.php"); ?>

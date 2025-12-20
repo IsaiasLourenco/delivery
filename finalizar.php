@@ -17,7 +17,7 @@ try {
     $pdo->beginTransaction();
 
     // Inserir os dados do pedido no banco (ajuste conforme sua estrutura de tabelas)
-    $stmt = $pdo->prepare("INSERT INTO pedidos (sessao, total, data_criacao) VALUES (:sessao, :total, NOW())");
+    $stmt = $pdo->prepare("INSERT INTO pedidos (sessao, total, criado_em) VALUES (:sessao, :total, NOW())");
     $stmt->execute([
         ':sessao' => $sessao,
         ':total' => $totalBase // Pode ser o total do carrinho, já calculado anteriormente

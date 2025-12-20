@@ -44,7 +44,7 @@ HTML;
         //Nome do bairro
         $queryBairro = $pdo->query("SELECT * FROM bairros WHERE id = '$id_bairro'");
         $resBairro = $queryBairro->fetchAll(PDO::FETCH_ASSOC);
-        $nome_bairro = $resBairro[0]['nome'];
+        @$nome_bairro = $resBairro[0]['nome'];
 
         echo <<<HTML
 <tr>

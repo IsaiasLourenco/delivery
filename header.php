@@ -28,9 +28,8 @@ $txt_fechamento = $res_sistema[0]['texto_fechamento'];
 $logo_sistema = $res_sistema[0]['logotipo'];
 $icone_sistema = $res_sistema[0]['icone'];
 $logo_rel = $res_sistema[0]['logo_rel'];
+$url_sistema = $res_sistema[0]['url_sistema'];
 
-// URL Base
-$url_base = "http://localhost/delivery";
 // Monta endereço completo
 $endereco_sistema = $rua_sistema . ', ' . $numero_sistema . ' - ' . $bairro_sistema . ' - ' . $cidade_sistema . '/' . $estado_sistema;
 // Tira caracteres para whatsapp link
@@ -46,7 +45,7 @@ $telefone_url = '55'.preg_replace('/[()-]+/', '', $telefone_sistema);
     <meta name="description" content="Serviços de entrega de comida e lanches completo.">
     <meta name="author" content="Vetor256.">
     <!-- FAVICON -->
-    <link rel="shortcut icon" href="<?php echo $url_base; ?>/img/<?php echo $icone_sistema; ?>" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo $url_sistema; ?>/img/<?php echo $icone_sistema; ?>" type="image/x-icon">
 
     <!-- TITLE -->
     <title><?php echo $nome_sistema; ?></title>

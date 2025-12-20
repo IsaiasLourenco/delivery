@@ -130,16 +130,17 @@ $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
             console.log(total);
             // Atualiza a quantidade no front-end
             const qtdEl = document.getElementById('qtd-' + id);
-            qtdEl.textContent = parseInt(qtdEl.textContent) + delta;
+            let novaQtd = Math.max(1, parseInt(qtdEl.textContent) + delta);
+            qtdEl.textContent = novaQtd;
 
             // Atualiza o valor do item
             const valorTotalEl = document.getElementById('valor-' + id);
 
             if (valorTotalEl) {
                 const preco = parseFloat(valorTotalEl.dataset.preco);
-                const qtd = parseInt(qtdEl.textContent);
 
-                const novoValor = preco * qtd;
+                // usa novaQtd, já validada com Math.max(1, …)
+                const novoValor = preco * novaQtd;
 
                 valorTotalEl.innerHTML =
                     'R$ ' + novoValor.toFixed(2).replace('.', ',');
@@ -172,7 +173,6 @@ $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
         }
     }
 </script>
-
 
 <!-- <div id="popup-excluir" class="overlay-excluir">
     <div class="popup-excluir">

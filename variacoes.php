@@ -29,6 +29,17 @@ if ($total_reg > 0) {
     $tem_adicionais_ou_ingredientes = ($total_adicionais + $total_ingredientes) > 0;
 }
 ?>
+<style>
+    .link-neutro,
+    .link-neutro:hover,
+    .link-neutro:focus,
+    .link-neutro:visited {
+        text-decoration: none;
+        color: inherit;
+        font-weight: bold;
+        cursor: pointer;
+    }
+</style>
 <link rel="stylesheet" href="css/style.css">
 <div class="main-container">
     <!-- Imagem e texto -->
@@ -66,7 +77,7 @@ if ($total_reg > 0) {
                 <?php if ($tem_adicionais_ou_ingredientes) { ?>
                     <a href="adicionais.php?url=<?php echo $url ?>&item=<?php echo $sigla_var ?>" class="link-neutro">
                     <?php } else { ?>
-                        <a href="observacoes.php" class="link-neutro">
+                        <a href="observacoes.php?produto=<?php echo $id_produto ?>&total=<?php echo $total_item ?>" class="link-neutro">
                         <?php } ?>
 
                         <li class="list-group-item d-flex justify-content-between align-items-start">
@@ -81,14 +92,30 @@ if ($total_reg > 0) {
                     <?php }
             } else { ?>
                     <?php $total_item = $valor_produto; ?>
-                        <a href="observacoes.php?total=<?php echo $total_item ?>" class="link-neutro">
-                        <div class="linha-produto font-weight-bold">
-                            <div>
+                    <div class="linha-produto font-weight-bold">
+                        <!-- <a href="add-produto-direto.php?produto=<?php echo $id_produto ?>&total=<?php echo $total_item ?>" class="link-neutro"> -->
+                        <a href="#" class="link-neutro" onclick="adicionarProdutoDireto(<?php echo $id_produto ?>, <?php echo $total_item ?>)">
+                            <div class="link-neutro">
                                 <span><?php echo $descricao_produto ?></span><br>
                                 <span class="valor-item-final"><?php echo $valor_produtoF ?></span>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
+                    <div class="qtd final">
+                        Quantidade
+                        <span class="area-qtd">
+                            <button type="button" onclick="alterarQtd(-1)" class="btn btn-link text-danger">
+                                <i class="bi bi-dash-circle-fill"></i>
+                            </button>
+
+                            <strong id="qtd">1</strong>
+                            <input type="hidden" name="quantidade" id="qtd_input" value="1">
+
+                            <button type="button" onclick="alterarQtd(1)" class="btn btn-link text-success">
+                                <i class="bi bi-plus-circle-fill"></i>
+                            </button>
+                        </span>
+                    </div>
                 <?php } ?>
     </ol>
 
@@ -104,3 +131,25 @@ if ($total_reg > 0) {
 </body>
 
 </html>
+
+<script>
+    function alterarQtd(delta) {
+        let qtd = parseInt(document.getElementById('qtd').textContent);
+        qtd = Math.max(1, qtd + delta);
+
+        document.getElementById('qtd').textContent = qtd;
+        document.getElementById('qtd_input').value = qtd;
+
+        let total = qtd * TOTAL_BASE;
+        document.getElementById('total').textContent =
+            'R$ ' + total.toFixed(2).replace('.', ',');
+    }
+
+    function adicionarProdutoDireto(produtoId, valorUnitario) {
+        const qtd = parseInt(document.getElementById('qtd').textContent);
+        const total = qtd * valorUnitario;
+
+        window.location.href =
+            `add-produto-direto.php?produto=${produtoId}&qtd=${qtd}&total=${valorUnitario}`;
+    }
+</script>
