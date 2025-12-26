@@ -64,7 +64,7 @@ $total = (float)$stmtTotal->fetchColumn();
         <div class="row">
             <div class="col-9">
                 <h5 class="titulo-popup">
-                    <?= $qtdCarrinho ?> item(ns) no carrinho
+                    <span id="popup-qtd"><?= $qtdCarrinho ?></span> item(ns) no carrinho
                 </h5>
             </div>
             <div class="col-3 text-end">
@@ -150,6 +150,12 @@ $total = (float)$stmtTotal->fetchColumn();
                     pill.textContent = qtd;
                 } else if (pill) {
                     pill.remove();
+                }
+
+                // 👇 AQUI ENTRA ISSO
+                const tituloQtd = document.getElementById('popup-qtd');
+                if (tituloQtd) {
+                    tituloQtd.textContent = qtd;
                 }
             });
     }

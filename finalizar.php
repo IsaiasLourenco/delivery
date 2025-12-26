@@ -1,58 +1,90 @@
 <?php
-require_once("./sistema/conexao.php"); // Incluindo a conexão com o banco
+require_once './sistema/conexao.php';
 
-session_start();
-
-// Verifica se o usuário está logado (pode ajustar conforme o seu fluxo)
-if (!isset($_SESSION['sessao_usuario'])) {
-    header("Location: login.php");
-    exit();
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
 }
 
 $sessao = $_SESSION['sessao_usuario'] ?? session_id();
 
-// Registrar pedido no banco
+// Cliente (se identificado)
+$clienteId   = $_SESSION['cliente_id']   ?? null;
+$nomeCliente = $_SESSION['cliente_nome'] ?? null;
+$telefone    = $_SESSION['cliente_tel']  ?? null;
+
 try {
-    // Inicia uma transação
     $pdo->beginTransaction();
 
-    // Inserir os dados do pedido no banco (ajuste conforme sua estrutura de tabelas)
-    $stmt = $pdo->prepare("INSERT INTO pedidos (sessao, total, criado_em) VALUES (:sessao, :total, NOW())");
-    $stmt->execute([
-        ':sessao' => $sessao,
-        ':total' => $totalBase // Pode ser o total do carrinho, já calculado anteriormente
+    // 🔹 Total do carrinho
+    $stmtTotal = $pdo->prepare("
+        SELECT COALESCE(SUM(valor_total), 0)
+        FROM carrinho_temp
+        WHERE sessao = :sessao
+    ");
+    $stmtTotal->execute([':sessao' => $sessao]);
+    $total = (float) $stmtTotal->fetchColumn();
+
+    // 🔹 Criar pedido
+    $stmtPedido = $pdo->prepare("
+        INSERT INTO pedidos
+        (sessao, cliente_id, nome_cliente, telefone, total, status)
+        VALUES
+        (:sessao, :cliente_id, :nome_cliente, :telefone, :total, :status)
+    ");
+
+    $stmtPedido->execute([
+        ':sessao'       => $sessao,
+        ':cliente_id'   => $clienteId,
+        ':nome_cliente' => $nomeCliente,
+        ':telefone'     => $telefone,
+        ':total'        => $total,
+        ':status'       => $clienteId ? 'confirmado' : 'aberto'
     ]);
 
-    // Obtém o ID do pedido inserido
-    $pedido_id = $pdo->lastInsertId();
+    $pedidoId = $pdo->lastInsertId();
 
-    // Inserir itens do carrinho no pedido (ajuste conforme sua estrutura)
-    $stmtItens = $pdo->prepare("SELECT * FROM carrinho_temp WHERE sessao = :sessao");
+    // 🔹 Itens do carrinho
+    $stmtItens = $pdo->prepare("
+        SELECT *
+        FROM carrinho_temp
+        WHERE sessao = :sessao
+    ");
     $stmtItens->execute([':sessao' => $sessao]);
-    $itens = $stmtItens->fetchAll(PDO::FETCH_ASSOC());
+    $itens = $stmtItens->fetchAll(PDO::FETCH_ASSOC);
+
+    // 🔹 Inserir itens no pedido
+    $stmtItem = $pdo->prepare("
+        INSERT INTO pedido_itens
+        (pedido_id, produto_id, tipo, id_item, quantidade, valor_item, valor_total)
+        VALUES
+        (:pedido_id, :produto_id, :tipo, :id_item, :quantidade, :valor_item, :valor_total)
+    ");
 
     foreach ($itens as $item) {
-        $stmtItemPedido = $pdo->prepare("INSERT INTO itens_pedido (pedido_id, produto_id, quantidade, preco) VALUES (:pedido_id, :produto_id, :quantidade, :preco)");
-        $stmtItemPedido->execute([
-            ':pedido_id' => $pedido_id,
-            ':produto_id' => $item['produto_id'], // Ou outro campo relevante
-            ':quantidade' => $item['quantidade'],
-            ':preco' => $item['valor_item'] // Preço do item
+        $stmtItem->execute([
+            ':pedido_id'   => $pedidoId,
+            ':produto_id'  => $item['produto_id'],
+            ':tipo'        => $item['tipo'],
+            ':id_item'     => $item['id_item'],
+            ':quantidade'  => $item['quantidade'],
+            ':valor_item'  => $item['valor_item'],
+            ':valor_total' => $item['valor_total']
         ]);
     }
 
-    // Apagar o carrinho temporário após a finalização
-    $stmtDelete = $pdo->prepare("DELETE FROM carrinho_temp WHERE sessao = :sessao");
-    $stmtDelete->execute([':sessao' => $sessao]);
+    // 🔹 Limpar carrinho
+    $stmtLimpa = $pdo->prepare("
+        DELETE FROM carrinho_temp
+        WHERE sessao = :sessao
+    ");
+    $stmtLimpa->execute([':sessao' => $sessao]);
 
-    // Confirmar a transação
     $pdo->commit();
 
-    // Redireciona para a página de confirmação ou pagamento
-    header("Location: confirmacao.php");
-    exit();
+    header('Location: confirmacao.php');
+    exit;
+
 } catch (Exception $e) {
-    // Se houver algum erro, desfaz a transação
     $pdo->rollBack();
-    echo "Erro ao finalizar o pedido: " . $e->getMessage();
+    echo 'Erro ao finalizar pedido: ' . $e->getMessage();
 }

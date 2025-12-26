@@ -144,6 +144,9 @@ $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
 
                 valorTotalEl.innerHTML =
                     'R$ ' + novoValor.toFixed(2).replace('.', ',');
+
+                atualizarPillCarrinho();
+                atualizarPopupCarrinho();
             }
 
 
@@ -167,27 +170,24 @@ $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
         if (confirm('Deseja realmente excluir este item?')) {
             $.post('excluir-carrinho.php', {
                 id_item: id
-            }, function(total) {
-                location.reload();
+            }, function() {
+
+                // remove item da lista
+                const li = document.getElementById('item-' + id);
+                if (li) li.remove();
+
+                atualizarPillCarrinho();
+                atualizarPopupCarrinho();
             });
         }
     }
-</script>
 
-<!-- <div id="popup-excluir" class="overlay-excluir">
-    <div class="popup-excluir">
-        <div class="row">
-            <div class="col-9">
-                <h3 class="titulo-popup">Deseja realmente excluir esse item?</h3>
-            </div>
-            <div class="col-3">
-                <a class="close-excluir" href="#">&times;</a>
-            </div>
-        </div>
-        <hr class="linha">
-        <div class="d-flex justify-content-center">
-            <button class="btn btn-primary mx-2">Sim</button>
-            <button class="btn btn-danger mx-2">Não</button>
-        </div>
-    </div>
-</div> -->
+    function atualizarPopupCarrinho() {
+        fetch('popup-carrinho.php')
+            .then(res => res.text())
+            .then(html => {
+                const container = document.querySelector('.conteudo-popup');
+                if (container) container.innerHTML = html;
+            });
+    }
+</script>
