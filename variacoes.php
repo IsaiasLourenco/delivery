@@ -77,7 +77,7 @@ if ($total_reg > 0) {
                 <?php if ($tem_adicionais_ou_ingredientes) { ?>
                     <a href="adicionais.php?url=<?php echo $url ?>&item=<?php echo $sigla_var ?>" class="link-neutro">
                     <?php } else { ?>
-                        <a href="observacoes.php?produto=<?php echo $id_produto ?>&total=<?php echo $total_item ?>" class="link-neutro">
+                        <a href="add-produto-direto.php?produto=<?php echo $id_produto ?>&variacao=<?php echo $id_var ?>" class="link-neutro">
                         <?php } ?>
 
                         <li class="list-group-item d-flex justify-content-between align-items-start">
@@ -93,8 +93,8 @@ if ($total_reg > 0) {
             } else { ?>
                     <?php $total_item = $valor_produto; ?>
                     <div class="linha-produto font-weight-bold">
-                        <!-- <a href="add-produto-direto.php?produto=<?php echo $id_produto ?>&total=<?php echo $total_item ?>" class="link-neutro"> -->
-                        <a href="#" class="link-neutro" onclick="adicionarProdutoDireto(<?php echo $id_produto ?>, <?php echo $total_item ?>)">
+                        <a href="#" class="link-neutro"
+                            onclick="adicionarProdutoDireto(<?php echo $id_produto ?>)">
                             <div class="link-neutro">
                                 <span><?php echo $descricao_produto ?></span><br>
                                 <span class="valor-item-final"><?php echo $valor_produtoF ?></span>
@@ -145,11 +145,10 @@ if ($total_reg > 0) {
             'R$ ' + total.toFixed(2).replace('.', ',');
     }
 
-    function adicionarProdutoDireto(produtoId, valorUnitario) {
+    function adicionarProdutoDireto(produtoId) {
         const qtd = parseInt(document.getElementById('qtd').textContent);
-        const total = qtd * valorUnitario;
 
         window.location.href =
-            `add-produto-direto.php?produto=${produtoId}&qtd=${qtd}&total=${valorUnitario}`;
+            `add-produto-direto.php?produto=${produtoId}&qtd=${qtd}`;
     }
 </script>

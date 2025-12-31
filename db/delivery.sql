@@ -297,41 +297,33 @@ CREATE TABLE vendas (
 
 CREATE TABLE carrinho_temp (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    sessao VARCHAR(50),          -- session_id() do PHP
-    tipo VARCHAR(20),            -- produto, variacao, adicional, ingrediente
-    id_item INT,                 -- ID do item na tabela original
-    quantidade INT DEFAULT 1,    -- quantidade escolhida
-    valor_item DECIMAL(10,2),         -- preço unitário
-    valor_total DECIMAL(10,2),   -- preço * quantidade
-    observacao TEXT,             -- observações do cliente
+    sessao VARCHAR(50),
+    tipo VARCHAR(20),                -- produto, variacao, adicional, ingrediente
+    id_item INT,                     -- ID do item real (produto, adicional etc)
+    produto_pai_id INT NULL,         -- ID do produto no carrinho_temp
+    quantidade INT DEFAULT 1,
+    valor_item DECIMAL(10,2),
+    valor_total DECIMAL(10,2),
+    observacao TEXT,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 ALTER TABLE carrinho_temp
 ADD produto_id INT AFTER sessao;
 
-CREATE TABLE pedidos (
+CREATE TABLE vendas_itens (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    sessao VARCHAR(50),             
-    cliente_id INT NULL,             -- se houver tabela de clientes
-    nome_cliente VARCHAR(100) NULL,
-    telefone VARCHAR(20) NULL,
-    endereco TEXT NULL,
-    total DECIMAL(10,2),
-    observacao TEXT,
-    status VARCHAR(20) DEFAULT 'aberto',
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    venda_id INT NOT NULL,
+    produto_id INT NOT NULL,
+    quantidade INT NOT NULL,
+    valor_unitario DECIMAL(10,2) NOT NULL,
+    valor_total DECIMAL(10,2) NOT NULL
 );
 
-
-CREATE TABLE pedido_itens (
+CREATE TABLE vendas_itens_opcoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    pedido_id INT,                   -- FK para pedidos.id
-    produto_id INT,
-    tipo VARCHAR(20),                -- produto, variacao, adicional, ingrediente
-    id_item INT,                     -- ID do item na tabela original
-    quantidade INT DEFAULT 1,
-    valor_item DECIMAL(10,2),
-    valor_total DECIMAL(10,2),
-    FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE
+    venda_item_id INT NOT NULL,
+    descricao VARCHAR(80),
+    valor DECIMAL(10,2)
 );

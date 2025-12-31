@@ -14,20 +14,25 @@ $stmtQtd = $pdo->prepare("
     WHERE sessao = :sessao
 ");
 $stmtQtd->execute([':sessao' => $sessao]);
-$qtdCarrinho = (int)$stmtQtd->fetchColumn();
+$qtdCarrinho = (int) $stmtQtd->fetchColumn();
 
-/* Itens do carrinho */
+/* Itens do carrinho (MODELO NOVO) */
 $stmtItens = $pdo->prepare("
-    SELECT ct.*,
-           p.nome AS nome_produto,
-           v.descricao AS nome_variacao,
-           a.nome AS nome_adicional,
-           i.nome AS nome_ingrediente
+    SELECT 
+        ct.*,
+        p.nome        AS nome_produto,
+        v.descricao   AS nome_variacao,
+        a.nome        AS nome_adicional,
+        i.nome        AS nome_ingrediente
     FROM carrinho_temp ct
-    LEFT JOIN produtos p ON ct.produto_id = p.id
-    LEFT JOIN variacoes v ON ct.id_item = v.id AND ct.tipo = 'variacao'
-    LEFT JOIN adicionais a ON ct.id_item = a.id AND ct.tipo = 'adicional'
-    LEFT JOIN ingredientes i ON ct.id_item = i.id AND ct.tipo = 'ingrediente'
+    LEFT JOIN produtos p 
+        ON p.id = ct.id_item AND ct.tipo = 'produto'
+    LEFT JOIN variacoes v 
+        ON v.id = ct.id_item AND ct.tipo = 'variacao'
+    LEFT JOIN adicionais a 
+        ON a.id = ct.id_item AND ct.tipo = 'adicional'
+    LEFT JOIN ingredientes i 
+        ON i.id = ct.id_item AND ct.tipo = 'ingrediente'
     WHERE ct.sessao = :sessao
     ORDER BY ct.id ASC
 ");
@@ -36,12 +41,12 @@ $itens = $stmtItens->fetchAll(PDO::FETCH_ASSOC);
 
 /* Total */
 $stmtTotal = $pdo->prepare("
-    SELECT COALESCE(SUM(valor_total),0)
+    SELECT COALESCE(SUM(valor_total), 0)
     FROM carrinho_temp
     WHERE sessao = :sessao
 ");
 $stmtTotal->execute([':sessao' => $sessao]);
-$total = (float)$stmtTotal->fetchColumn();
+$total = (float) $stmtTotal->fetchColumn();
 ?>
 
 <!-- ÍCONE DO CARRINHO -->
@@ -123,40 +128,41 @@ $total = (float)$stmtTotal->fetchColumn();
 </div>
 
 <script>
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && window.location.hash === '#popup-1') {
-            window.location.hash = '';
-        }
-    });
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && window.location.hash === '#popup-1') {
+        window.location.hash = '';
+    }
+});
 </script>
 
 <script>
-    function atualizarPillCarrinho() {
-        fetch('qtd-carrinho.php')
-            .then(res => res.text())
-            .then(qtd => {
-                qtd = parseInt(qtd);
+function atualizarPillCarrinho() {
+    fetch('qtd-carrinho.php')
+        .then(res => res.text())
+        .then(qtd => {
+            qtd = parseInt(qtd);
 
-                const carrinho = document.querySelector('.carrinho');
-                let pill = carrinho.querySelector('.pilula');
+            const carrinho = document.querySelector('.carrinho');
+            let pill = carrinho.querySelector('.pilula');
 
-                if (qtd > 0) {
-                    if (!pill) {
-                        pill = document.createElement('span');
-                        pill.className =
-                            'position-absolute top-0 start-100 translate-middle badge bg-danger pilula';
-                        carrinho.appendChild(pill);
-                    }
-                    pill.textContent = qtd;
-                } else if (pill) {
-                    pill.remove();
+            if (qtd > 0) {
+                if (!pill) {
+                    pill = document.createElement('span');
+                    pill.className =
+                        'position-absolute top-0 start-100 translate-middle badge bg-danger pilula';
+                    carrinho.appendChild(pill);
                 }
+                pill.textContent = qtd;
+            } else if (pill) {
+                pill.remove();
+            }
 
-                // 👇 AQUI ENTRA ISSO
-                const tituloQtd = document.getElementById('popup-qtd');
-                if (tituloQtd) {
-                    tituloQtd.textContent = qtd;
-                }
-            });
-    }
+            // atualiza o título do popup
+            const tituloQtd = document.getElementById('popup-qtd');
+            if (tituloQtd) {
+                tituloQtd.textContent = qtd;
+            }
+        });
+}
 </script>
+    
