@@ -8511,3 +8511,8 @@ h4.asd label {
     width: 20px;
     height: 20px;
 }
+
+.subTitle {
+  font-size: 16px;
+  font-weight: bold;
+}

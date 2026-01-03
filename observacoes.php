@@ -11,60 +11,102 @@ $sessao = $_SESSION['sessao_usuario'] ?? session_id();
  * SE FOI ENVIADO O FORMULÁRIO DE FINALIZAÇÃO
  */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $quantidade = (int)($_POST['quantidade'] ?? 1);
-    $observacao = trim($_POST['observacao'] ?? '');
 
-    // Atualiza todos os itens do carrinho temporário dessa sessão
-    $stmtUpdate = $pdo->prepare("
-        UPDATE carrinho_temp
-        SET quantidade = :quantidade,
-            valor_total = quantidade * valor_item,
-            observacao = :observacao
-        WHERE sessao = :sessao
-        AND tipo != 'ingrediente'
-    ");
-    $stmtUpdate->execute([
-        ':quantidade' => $quantidade,
-        ':observacao' => $observacao,
-        ':sessao'     => $sessao
-    ]);
+    $quantidade     = (int)($_POST['quantidade'] ?? 1);
+    $observacao     = trim($_POST['observacao'] ?? '');
+    $produto_pai_id = (int)($_POST['produto_pai_id'] ?? 0);
 
-    // Redireciona para o carrinho real
+    if ($produto_pai_id > 0) {
+
+        $stmtUpdate = $pdo->prepare("
+            UPDATE carrinho_temp
+            SET quantidade = :quantidade,
+                observacao = :observacao
+            WHERE id = :id
+              AND sessao = :sessao
+              AND tipo = 'produto'
+        ");
+
+        $stmtUpdate->execute([
+            ':quantidade' => $quantidade,
+            ':observacao' => $observacao,
+            ':id'         => $produto_pai_id,
+            ':sessao'     => $sessao
+        ]);
+    }
+
     header("Location: carrinho.php");
     exit;
 }
 
 /**
- * BUSCA ITENS DO CARRINHO (PRODUTO + VARIAÇÃO + ADICIONAIS + INGREDIENTES)
+ * BUSCA O PRODUTO PAI VIA GET
  */
-$stmtItens = $pdo->prepare("
-    SELECT ct.*, 
-           p.nome AS nome_produto, 
-           v.descricao AS nome_variacao,
-           a.nome AS nome_adicional, 
-           i.nome AS nome_ingrediente
-    FROM carrinho_temp ct
-    LEFT JOIN produtos p ON ct.produto_id = p.id
-    LEFT JOIN variacoes v ON ct.id_item = v.id AND ct.tipo = 'variacao'
-    LEFT JOIN adicionais a ON ct.id_item = a.id AND ct.tipo = 'adicional'
-    LEFT JOIN ingredientes i ON ct.id_item = i.id AND ct.tipo = 'ingrediente'
-    WHERE ct.sessao = :sessao
-    ORDER BY ct.id ASC
-");
-$stmtItens->execute([':sessao' => $sessao]);
+$produto_pai_id = (int)($_GET['pai'] ?? 0);
+
+if ($produto_pai_id <= 0) {
+    die("Produto pai não informado.");
+}
+
+/**
+ * ITENS DO PRODUTO (PAI + FILHOS)
+ */
+
+$stmtItens = $pdo->prepare("SELECT ct.id,
+                                   ct.tipo,
+                                   ct.id_item,
+                                   ct.produto_pai_id,
+                                   ct.quantidade,
+                                   ct.valor_item,
+                                   ct.valor_total,
+                                   p.nome AS nome_produto,
+                                   v.descricao AS nome_variacao,
+                                   a.nome AS nome_adicional,
+                                   i.nome AS nome_ingrediente
+                            FROM carrinho_temp ct
+                            LEFT JOIN produtos p ON p.id = ct.id_item AND ct.tipo = 'produto'
+                            LEFT JOIN variacoes v ON v.id = ct.id_item AND ct.tipo = 'variacao'
+                            LEFT JOIN adicionais a ON a.id = ct.id_item AND ct.tipo = 'adicional'
+                            LEFT JOIN ingredientes i ON i.id = ct.id_item AND ct.tipo = 'ingrediente'
+                            WHERE ct.sessao = :sessao
+                            AND (ct.id = :pai OR ct.produto_pai_id = :pai)
+                            ORDER BY ct.id ASC");
+$stmtItens->execute([
+    ':sessao' => $sessao,
+    ':pai'    => $produto_pai_id
+]);
 $itens = $stmtItens->fetchAll(PDO::FETCH_ASSOC);
 
 /**
- * TOTAL GERAL
+ * TOTAL DO ITEM (PAI + FILHOS)
  */
-$stmtTotal = $pdo->prepare("
+$totalItem = 0;
+foreach ($itens as $item) {
+    $totalItem += (float)$item['valor_total'];
+}
+
+/**
+ * TOTAL DO CARRINHO INTEIRO (TODOS OS ITENS DA SESSÃO)
+ */
+$stmtTotalCarrinho = $pdo->prepare("
     SELECT COALESCE(SUM(valor_total),0)
     FROM carrinho_temp
     WHERE sessao = :sessao
 ");
-$stmtTotal->execute([':sessao' => $sessao]);
-$totalBase = (float)$stmtTotal->fetchColumn();
-$totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
+$stmtTotalCarrinho->execute([
+    ':sessao' => $sessao
+]);
+$totalCarrinho = (float)$stmtTotalCarrinho->fetchColumn();
+
+/**
+ * TOTAL EXIBIDO = CARRINHO INTEIRO
+ */
+$totalExibido  = $totalCarrinho;
+$totalExibidoF = 'R$ ' . number_format($totalExibido, 2, ',', '.');
+
+// valores para o JS
+$totalItemJs            = $totalItem;
+$totalCarrinhoSemItemJs = $totalCarrinho - $totalItem;
 ?>
 <style>
     .bck-verde {
@@ -72,6 +114,7 @@ $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
         color: white;
     }
 </style>
+
 <div class="main-container">
     <nav class="navbar navbar-light bg-light fixed-top sombra-nav">
         <div class="container-fluid">
@@ -85,35 +128,34 @@ $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
         </div>
     </nav>
 
-    <?php if (!empty($itens)) { ?>
+    <?php if (!empty($itens)) : ?>
         <div class="resumo-adicionais mg-t-6">
             <ul class="list-group">
-                <?php foreach ($itens as $item) { ?>
+                <?php foreach ($itens as $item) : ?>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>
                             <?php
-                            if ($item['tipo'] == 'produto') {
-                                echo $item['nome_produto'];
-                            } elseif ($item['tipo'] == 'variacao') {
-                                echo $item['nome_variacao'];
-                            } elseif ($item['tipo'] == 'adicional') {
-                                echo $item['nome_adicional'];
-                            } elseif ($item['tipo'] == 'ingrediente') {
-                                echo $item['nome_ingrediente'];
-                            }
+                            if ($item['tipo'] == 'produto') echo $item['nome_produto'];
+                            elseif ($item['tipo'] == 'variacao') echo $item['nome_variacao'];
+                            elseif ($item['tipo'] == 'adicional') echo '+ ' . $item['nome_adicional'];
+                            elseif ($item['tipo'] == 'ingrediente') echo '- ' . $item['nome_ingrediente'];
                             ?>
                         </span>
                         <span>
-                            <?php echo 'R$ ' . number_format($item['valor_total'], 2, ',', '.'); ?>
+                            <?php
+                            if (in_array($item['tipo'], ['produto', 'adicional', 'ingrediente'])) {
+                                echo 'R$ ' . number_format($item['valor_total'], 2, ',', '.');
+                            }
+                            ?>
                         </span>
                     </li>
-                <?php } ?>
+                <?php endforeach; ?>
             </ul>
         </div>
-    <?php } ?>
+    <?php endif; ?>
 
     <form action="" method="POST">
-        <input type="hidden" name="sessao" value="<?php echo $sessao ?>">
+        <input type="hidden" name="produto_pai_id" value="<?= $produto_pai_id ?>">
 
         <div class="qtd final">
             Quantidade
@@ -137,79 +179,18 @@ $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
         </div>
 
         <div class="total">
-            <p>Total <strong id="total"><?php echo $totalBaseF ?></strong></p>
+            <p>Total <strong id="total"><?= $totalExibidoF ?></strong></p>
         </div>
 
-        <button
-            type="button"
-            class="btn btn-primary w-100 mg-t-2"
-            onclick="abrirPopupCliente()">
+        <button type="button" class="btn btn-primary w-100 mg-t-2" onclick="abrirPopupCliente()">
             Adicionar ao carrinho
         </button>
-
-
     </form>
 </div>
 
 <?php require_once("footer.php"); ?>
 
-<script>
-    const linkVoltar = sessionStorage.getItem('back_url');
-    if (linkVoltar) {
-        document.getElementById('voltar-link').href = linkVoltar;
-    }
-</script>
-
-<script>
-    const TOTAL_BASE = <?php echo $totalBase ?>;
-
-    function alterarQtd(delta) {
-        let qtd = parseInt(document.getElementById('qtd').textContent);
-        qtd = Math.max(1, qtd + delta);
-
-        document.getElementById('qtd').textContent = qtd;
-        document.getElementById('qtd_input').value = qtd;
-
-        let total = qtd * TOTAL_BASE;
-        document.getElementById('total').textContent =
-            'R$ ' + total.toFixed(2).replace('.', ',');
-    }
-
-    function verificarCliente() {
-        fetch('verificar-sessao-cliente.php')
-            .then(res => res.json())
-            .then(data => {
-                if (data.cliente_identificado) {
-                    document.querySelector('form').submit();
-                } else {
-                    abrirPopupCliente();
-                }
-            });
-    }
-
-
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            const popup = document.getElementById('popup-cliente');
-
-            if (popup && popup.style.visibility === 'visible') {
-                fecharPopupCliente();
-            }
-        }
-    });
-
-    function abrirPopupCliente() {
-        document.getElementById('popup-cliente').style.visibility = 'visible';
-        document.getElementById('popup-cliente').style.opacity = '1';
-    }
-
-    function fecharPopupCliente() {
-        document.getElementById('popup-cliente').style.visibility = 'hidden';
-        document.getElementById('popup-cliente').style.opacity = '0';
-    }
-</script>
-
-<!-- POPUP CLIENTE -->
+<!-- MODAL CLIENTE COMPRAR MAIS -->
 <div id="popup-cliente" class="overlay-excluir">
     <div class="popup-excluir">
         <a href="javascript:void(0)" class="close-excluir" onclick="fecharPopupCliente()">&times;</a>
@@ -227,9 +208,7 @@ $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
         </div>
 
         <div class="d-flex">
-            <button
-                type="button"
-                class="btn btn-primary w-50 mg-t-2 mr-2"
+            <button type="button" class="btn btn-primary w-50 mg-t-2 mr-2"
                 onclick="window.location.href='<?= $url_sistema ?>'">
                 Comprar Mais
             </button>
@@ -240,24 +219,68 @@ $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
         </div>
     </div>
 </div>
+<!-- FIM MODAL CLIENTE COMPRAR MAIS -->
 
 <script>
-    function confirmarCliente() {
-        const telefoneInput = document.getElementById('telefone-cli');
-        const nomeInput = document.getElementById('cliente-nome');
+    const linkVoltar = sessionStorage.getItem('back_url');
+    if (linkVoltar) {
+        document.getElementById('voltar-link').href = linkVoltar;
+    }
 
-        const telefone = telefoneInput.value.trim();
-        const nome = nomeInput.value.trim();
+    const TOTAL_ITEM_BASE = <?= json_encode($totalItemJs) ?>;
+    const TOTAL_CARRINHO_SEM_ITEM = <?= json_encode($totalCarrinhoSemItemJs) ?>;
+
+    function alterarQtd(delta) {
+        let qtd = parseInt(document.getElementById('qtd').textContent);
+        qtd = Math.max(1, qtd + delta);
+
+        document.getElementById('qtd').textContent = qtd;
+        document.getElementById('qtd_input').value = qtd;
+
+        let total = TOTAL_CARRINHO_SEM_ITEM + (qtd * TOTAL_ITEM_BASE);
+        document.getElementById('total').textContent =
+            'R$ ' + total.toFixed(2).replace('.', ',');
+    }
+
+    function abrirPopupCliente() {
+        const popup = document.getElementById('popup-cliente');
+        popup.style.visibility = 'visible';
+        popup.style.opacity = '1';
+    }
+
+    function fecharPopupCliente() {
+        const popup = document.getElementById('popup-cliente');
+        popup.style.visibility = 'hidden';
+        popup.style.opacity = '0';
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const popup = document.getElementById('popup-cliente');
+            if (popup && popup.style.visibility === 'visible') {
+                fecharPopupCliente();
+            }
+        }
+    });
+
+    function verificarCliente() {
+        fetch('verificar-cliente.php')
+            .then(res => res.json())
+            .then(data => {
+                if (data.cliente_identificado) {
+                    document.querySelector('form').submit();
+                } else {
+                    abrirPopupCliente();
+                }
+            });
+    }
+
+    function confirmarCliente() {
+        const telefone = document.getElementById('telefone-cli').value.trim();
+        const nome = document.getElementById('cliente-nome').value.trim();
 
         if (telefone === '') {
             alert('Informe o telefone');
-            telefoneInput.focus();
-            return;
-        }
-
-        if (nome === '') {
-            alert('Informe o nome');
-            nomeInput.focus();
             return;
         }
 
@@ -266,9 +289,7 @@ $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: new URLSearchParams({
-                    telefone: telefone
-                })
+                body: 'telefone=' + encodeURIComponent(telefone)
             })
             .then(res => res.json())
             .then(data => {
@@ -278,44 +299,35 @@ $totalBaseF = 'R$ ' . number_format($totalBase, 2, ',', '.');
                     return;
                 }
 
+                // CLIENTE EXISTE
                 if (data.existente) {
-                    // ✅ Cliente identificado → finaliza carrinho
                     document.querySelector('form').submit();
-                } else {
-                    // ⛔ Cliente não existe → próximo passo (cadastro)
-                    alert('Cliente não cadastrado. Vamos cadastrar agora.');
-                    // aqui depois chamamos o popup / tela de cadastro
-                    cadastrarCliente(telefone, nome);
+                    return;
                 }
 
-            })
-            .catch(err => {
-                console.error('ERRO FETCH:', err);
-                alert('Erro de comunicação com o servidor');
-            });
-    }
-
-    function cadastrarCliente(telefone, nome) {
-        fetch('cadastrar-cliente.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    telefone: telefone,
-                    nome: nome
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    document.querySelector('form').submit();
-                } else {
-                    alert('Erro ao cadastrar cliente');
+                // CLIENTE NÃO EXISTE → PRECISA DO NOME
+                if (nome === '') {
+                    alert('Informe o nome para cadastrar');
+                    return;
                 }
-            })
-            .catch(() => {
-                alert('Erro de comunicação ao cadastrar cliente');
+
+                // CADASTRAR NOVO CLIENTE
+                fetch('cadastrar-cliente.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: 'telefone=' + encodeURIComponent(telefone) +
+                            '&nome=' + encodeURIComponent(nome)
+                    })
+                    .then(res => res.json())
+                    .then(data2 => {
+                        if (data2.success) {
+                            document.querySelector('form').submit();
+                        } else {
+                            alert('Erro ao cadastrar cliente');
+                        }
+                    });
             });
     }
 </script>

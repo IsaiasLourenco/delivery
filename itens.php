@@ -1,6 +1,7 @@
 <?php require_once("header.php");
 $url = $_GET['url'];
-$query = $pdo->query("SELECT * FROM categorias WHERE url = '$url'");
+$query = $pdo->prepare("SELECT * FROM categorias WHERE url = :url");
+$query->execute([':url' => $url]);
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total_reg = count($res);
 if ($total_reg > 0) {

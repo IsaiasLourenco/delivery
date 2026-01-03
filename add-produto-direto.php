@@ -18,12 +18,10 @@ if ($produtoId <= 0) {
 /**
  * 🔹 Buscar preço do produto no banco
  */
-$stmtProduto = $pdo->prepare("
-    SELECT valor_venda
-    FROM produtos
-    WHERE id = :id
-    AND ativo = 'Sim'
-");
+$stmtProduto = $pdo->prepare("SELECT valor_venda
+                              FROM produtos
+                              WHERE id = :id
+                              AND ativo = 'Sim'");
 $stmtProduto->execute([':id' => $produtoId]);
 $produto = $stmtProduto->fetch(PDO::FETCH_ASSOC);
 
@@ -36,22 +34,31 @@ $valorUnitario = (float) $produto['valor_venda'];
 $valorTotal    = $valorUnitario * $qtd;
 
 /**
- * 🔹 Inserir no carrinho temporário
+ * 🔹 Inserir no carrinho temporário (produto direto)
  */
-$stmtInsert = $pdo->prepare("
-    INSERT INTO carrinho_temp
-    (sessao, produto_id, tipo, quantidade, valor_item, valor_total)
-    VALUES
-    (:sessao, :produto_id, 'produto', :quantidade, :valor_item, :valor_total)
-");
+$stmtInsert = $pdo->prepare("INSERT INTO carrinho_temp (sessao,
+                                                        tipo,
+                                                        id_item,
+                                                        produto_pai_id,
+                                                        quantidade,
+                                                        valor_item,
+                                                        valor_total) 
+                             VALUES (:sessao,
+                                     'produto',
+                                     :id_item, 
+                                     NULL,
+                                     :quantidade,
+                                     :valor_item,
+                                     :valor_total)");
 
 $stmtInsert->execute([
-    ':sessao'      => $sessao,
-    ':produto_id' => $produtoId,
-    ':quantidade' => $qtd,
-    ':valor_item' => $valorUnitario,
-    ':valor_total'=> $valorTotal
+    ':sessao'       => $sessao,
+    ':id_item'      => $produtoId,
+    ':quantidade'   => $qtd,
+    ':valor_item'   => $valorUnitario,
+    ':valor_total'  => $valorTotal
 ]);
 
-header('Location: observacoes.php');
+$produto_pai_id = $pdo->lastInsertId();
+header("Location: observacoes.php?pai=$produto_pai_id");
 exit;

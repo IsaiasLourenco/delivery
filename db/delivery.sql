@@ -315,7 +315,8 @@ ADD produto_id INT AFTER sessao;
 CREATE TABLE vendas_itens (
     id INT AUTO_INCREMENT PRIMARY KEY,
     venda_id INT NOT NULL,
-    produto_id INT NOT NULL,
+    item_tipo ENUM('produto','variacao') NOT NULL,
+    item_id INT NOT NULL,
     quantidade INT NOT NULL,
     valor_unitario DECIMAL(10,2) NOT NULL,
     valor_total DECIMAL(10,2) NOT NULL
@@ -324,6 +325,9 @@ CREATE TABLE vendas_itens (
 CREATE TABLE vendas_itens_opcoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     venda_item_id INT NOT NULL,
-    descricao VARCHAR(80),
-    valor DECIMAL(10,2)
+    tipo ENUM('adicional','ingrediente') NOT NULL,
+    id_item INT NOT NULL,
+    quantidade INT NOT NULL,
+    valor_unitario DECIMAL(10,2) NOT NULL,
+    valor_total DECIMAL(10,2) NOT NULL
 );

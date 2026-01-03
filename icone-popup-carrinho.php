@@ -7,23 +7,31 @@ require_once './sistema/conexao.php';
 
 $sessao = $_SESSION['sessao_usuario'] ?? session_id();
 
-/* Quantidade total (pill) */
+/* ===============================
+   QUANTIDADE DO CARRINHO (PILL)
+   Conta SOMENTE produtos
+================================ */
 $stmtQtd = $pdo->prepare("
-    SELECT COALESCE(SUM(quantidade), 0)
+    SELECT COUNT(*)
     FROM carrinho_temp
     WHERE sessao = :sessao
+      AND tipo = 'produto'
 ");
 $stmtQtd->execute([':sessao' => $sessao]);
-$qtdCarrinho = (int) $stmtQtd->fetchColumn();
+$qtdCarrinho = (int)$stmtQtd->fetchColumn();
 
-/* Itens do carrinho (MODELO NOVO) */
+/* ===============================
+   ITENS DO POPUP (MODELO NOVO)
+================================ */
 $stmtItens = $pdo->prepare("
     SELECT 
-        ct.*,
-        p.nome        AS nome_produto,
-        v.descricao   AS nome_variacao,
-        a.nome        AS nome_adicional,
-        i.nome        AS nome_ingrediente
+        ct.tipo,
+        ct.quantidade,
+        ct.valor_total,
+        p.nome  AS nome_produto,
+        v.descricao AS nome_variacao,
+        a.nome  AS nome_adicional,
+        i.nome  AS nome_ingrediente
     FROM carrinho_temp ct
     LEFT JOIN produtos p 
         ON p.id = ct.id_item AND ct.tipo = 'produto'
@@ -39,14 +47,16 @@ $stmtItens = $pdo->prepare("
 $stmtItens->execute([':sessao' => $sessao]);
 $itens = $stmtItens->fetchAll(PDO::FETCH_ASSOC);
 
-/* Total */
+/* ===============================
+   TOTAL DO CARRINHO
+================================ */
 $stmtTotal = $pdo->prepare("
     SELECT COALESCE(SUM(valor_total), 0)
     FROM carrinho_temp
     WHERE sessao = :sessao
 ");
 $stmtTotal->execute([':sessao' => $sessao]);
-$total = (float) $stmtTotal->fetchColumn();
+$total = (float)$stmtTotal->fetchColumn();
 ?>
 
 <!-- ÍCONE DO CARRINHO -->
@@ -90,29 +100,35 @@ $total = (float) $stmtTotal->fetchColumn();
                         <li class="list-group-item d-flex justify-content-between">
                             <span>
                                 <?php
-                                if ($item['tipo'] === 'produto') {
-                                    echo $item['nome_produto'];
-                                } elseif ($item['tipo'] === 'variacao') {
-                                    echo $item['nome_variacao'];
-                                } elseif ($item['tipo'] === 'adicional') {
-                                    echo $item['nome_adicional'];
-                                } elseif ($item['tipo'] === 'ingrediente') {
-                                    echo $item['nome_ingrediente'];
+                                switch ($item['tipo']) {
+                                    case 'produto':
+                                        echo $item['nome_produto'];
+                                        break;
+                                    case 'variacao':
+                                        echo '↳ ' . $item['nome_variacao'];
+                                        break;
+                                    case 'adicional':
+                                        echo '+ ' . $item['nome_adicional'];
+                                        break;
+                                    case 'ingrediente':
+                                        echo '- ' . $item['nome_ingrediente'];
+                                        break;
                                 }
                                 ?>
-                                <small class="text-muted">
-                                    x<?= $item['quantidade'] ?>
-                                </small>
                             </span>
 
-                            <span>
-                                R$ <?= number_format($item['valor_total'], 2, ',', '.') ?>
-                            </span>
+                            <?php
+                            $valorExibir = '';
+                            if ($item['tipo'] === 'produto' || $item['tipo'] === 'adicional' || $item['tipo'] === 'ingrediente') {
+                                $valorExibir = 'R$ ' . number_format($item['valor_total'], 2, ',', '.');
+                            }
+                            ?>
+                            <span><?= $valorExibir ?></span>
                         </li>
                     <?php endforeach; ?>
                 </ul>
 
-                <div class="d-flex justify-content-between bold mb-3">
+                <div class="d-flex justify-content-between fw-bold mb-3">
                     <span>Total</span>
                     <span>R$ <?= number_format($total, 2, ',', '.') ?></span>
                 </div>
@@ -128,41 +144,39 @@ $total = (float) $stmtTotal->fetchColumn();
 </div>
 
 <script>
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && window.location.hash === '#popup-1') {
-        window.location.hash = '';
-    }
-});
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && window.location.hash === '#popup-1') {
+            window.location.hash = '';
+        }
+    });
 </script>
 
 <script>
-function atualizarPillCarrinho() {
-    fetch('qtd-carrinho.php')
-        .then(res => res.text())
-        .then(qtd => {
-            qtd = parseInt(qtd);
+    function atualizarPillCarrinho() {
+        fetch('qtd-carrinho.php')
+            .then(res => res.text())
+            .then(qtd => {
+                qtd = parseInt(qtd);
 
-            const carrinho = document.querySelector('.carrinho');
-            let pill = carrinho.querySelector('.pilula');
+                const carrinho = document.querySelector('.carrinho');
+                let pill = carrinho.querySelector('.pilula');
 
-            if (qtd > 0) {
-                if (!pill) {
-                    pill = document.createElement('span');
-                    pill.className =
-                        'position-absolute top-0 start-100 translate-middle badge bg-danger pilula';
-                    carrinho.appendChild(pill);
+                if (qtd > 0) {
+                    if (!pill) {
+                        pill = document.createElement('span');
+                        pill.className =
+                            'position-absolute top-0 start-100 translate-middle badge bg-danger pilula';
+                        carrinho.appendChild(pill);
+                    }
+                    pill.textContent = qtd;
+                } else if (pill) {
+                    pill.remove();
                 }
-                pill.textContent = qtd;
-            } else if (pill) {
-                pill.remove();
-            }
 
-            // atualiza o título do popup
-            const tituloQtd = document.getElementById('popup-qtd');
-            if (tituloQtd) {
-                tituloQtd.textContent = qtd;
-            }
-        });
-}
+                const tituloQtd = document.getElementById('popup-qtd');
+                if (tituloQtd) {
+                    tituloQtd.textContent = qtd;
+                }
+            });
+    }
 </script>
-    
