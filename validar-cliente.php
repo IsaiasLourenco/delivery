@@ -9,13 +9,10 @@ if ($telefone === '') {
     exit;
 }
 
-$stmt = $pdo->prepare("
-    SELECT 
-        id, nome, bairro_id
-    FROM cliente
-    WHERE telefone = :telefone
-    LIMIT 1
-");
+$stmt = $pdo->prepare("SELECT id, nome, bairro_id
+                       FROM cliente
+                       WHERE telefone = :telefone
+                       LIMIT 1");
 $stmt->execute([':telefone' => $telefone]);
 $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
 

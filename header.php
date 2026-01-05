@@ -75,5 +75,6 @@ $telefone_url = '55'.preg_replace('/[()-]+/', '', $telefone_sistema);
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 <script type="text/javascript" src="js/mascaras.js"></script>
-
+<script type="text/javascript" src="js/buscaCepModal.js"></script>
+<script type="text/javascript" src="js/validarCPF.js"></script>
 <body>

@@ -14,12 +14,8 @@ if ($telefone === '' || $nome === '') {
 $email = $telefone . '@delivery.local';
 $cpf   = '000.000.000-' . rand(10, 99);
 
-$stmt = $pdo->prepare("
-    INSERT INTO cliente 
-        (nome, telefone, email, cpf, data_cad)
-    VALUES 
-        (:nome, :telefone, :email, :cpf, CURDATE())
-");
+$stmt = $pdo->prepare("INSERT INTO cliente (nome, telefone, email, cpf, data_cad)
+                       VALUES (:nome, :telefone, :email, :cpf, CURDATE())");
 
 $stmt->execute([
     ':nome'     => $nome,

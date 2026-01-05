@@ -946,7 +946,10 @@ $dataMesInicial = $partes_inicial[1];
 <!-- MÁSCARA -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 <script type="text/javascript" src="../../js/mascaras.js"></script>
-
+<!-- VALIDAR CPF -->
+<script type="text/javascript" src="../../js/validarCPF.js"></script>
+<!-- VALIDAR CNPJ -->
+<script type="text/javascript" src="../../js/validarCNPJ.js"></script>
 <!-- SCRIPT TROCA FOTO -->
 <script type="text/javascript">
     function carregarImgPerfil() {

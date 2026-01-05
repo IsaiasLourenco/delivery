@@ -1,6 +1,7 @@
 <?php
 require_once("header.php");
-
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -221,6 +222,73 @@ $totalCarrinhoSemItemJs = $totalCarrinho - $totalItem;
 </div>
 <!-- FIM MODAL CLIENTE COMPRAR MAIS -->
 
+<!-- MODAL CADASTRO COMPLETO -->
+<div id="modal-cadastro-completo" class="overlay-excluir" style="visibility:hidden; opacity:0;">
+    <div class="popup-excluir">
+
+        <a href="javascript:void(0)" class="close-excluir" onclick="fecharModalCadastroCompleto()">&times;</a>
+
+        <h5 class="titulo-popup mg-b-2">Complete seu Cadastro</h5>
+
+        <div class="mg-b-2">
+            <label>Nome Completo</label>
+            <input type="text" id="cad-nome" class="form-control" placeholder="Seu nome completo">
+        </div>
+
+        <div class="mg-b-2">
+            <label>E-mail</label>
+            <input type="email" id="email-cli" class="form-control" placeholder="email@email.com" require>
+        </div>
+
+        <div class="row">
+            <div class="mg-b-2">
+                <label for="cep">CEP</label>
+                <input type="text" class="form-control" id="cep-cli" name="cep" placeholder="00000-000" required>
+            </div>
+
+            <div class="mg-b-2">
+                <label for="rua">Rua</label>
+                <input type="text" class="form-control" id="rua-cli" name="rua" placeholder="Rua / Avenida" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="mg-b-2">
+                <label for="numero">Número</label>
+                <input type="text" class="form-control" id="numero-cli" name="numero" placeholder="Número" required>
+            </div>
+
+            <div class="mg-b-2">
+                <label for="bairro">Bairro</label>
+                <input type="text" class="form-control" id="bairro-cli" name="bairro" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-5">
+                <label for="cidade">Cidade</label>
+                <input type="text" class="form-control" id="cidade-cli" name="cidade" readonly>
+            </div>
+
+            <div class="col-md-2">
+                <label for="estado">Estado</label>
+                <input type="text" class="form-control" id="estado-cli" name="estado" readonly>
+            </div>
+        </div>
+
+        <div class="mg-b-2">
+            <label>CPF</label>
+            <input type="text" id="cpf-cli" class="form-control" placeholder="000.000.000-00">
+        </div>
+
+        <button class="btn bck-verde w-100 mg-t-2" onclick="salvarCadastroCompleto()">
+            Salvar e Continuar
+        </button>
+
+    </div>
+</div>
+<!-- FIM MODAL CADASTRO COMPLETO -->
+
 <script>
     const linkVoltar = sessionStorage.getItem('back_url');
     if (linkVoltar) {
@@ -329,5 +397,168 @@ $totalCarrinhoSemItemJs = $totalCarrinho - $totalItem;
                         }
                     });
             });
+    }
+
+    document.getElementById('telefone-cli').addEventListener('blur', function() {
+        const tel = this.value.trim();
+        if (tel === '') return;
+
+        // salva telefone na sessão via backend
+        fetch('salvar-telefone-temp.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'telefone=' + encodeURIComponent(tel)
+        });
+
+        fetch('buscar-cliente.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'telefone=' + encodeURIComponent(tel)
+            })
+            .then(res => res.json())
+            .then(data => {
+
+                if (!data.success) {
+                    alert('Erro ao buscar cliente');
+                    return;
+                }
+
+                if (data.existente) {
+                    document.getElementById('cliente-nome').value = data.nome;
+                    return;
+                }
+
+                document.getElementById('cliente-nome').value = '';
+                abrirModalCadastroCompleto();
+            });
+    });
+
+    function abrirModalCadastroCompleto() {
+        const modal = document.getElementById('modal-cadastro-completo');
+        modal.style.visibility = 'visible';
+        modal.style.opacity = '1';
+    }
+
+    function fecharModalCadastroCompleto() {
+        const modal = document.getElementById('modal-cadastro-completo');
+        modal.style.visibility = 'hidden';
+        modal.style.opacity = '0';
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const popup = document.getElementById('modal-cadastro-completo');
+            if (popup && popup.style.visibility === 'visible') {
+                fecharModalCadastroCompleto();
+            }
+        }
+    });
+
+    function salvarCadastroCompleto() {
+
+        const nome = document.getElementById('cad-nome').value.trim();
+        const email = document.getElementById('email-cli').value.trim();
+        const cpf = document.getElementById('cpf-cli').value.trim();
+        const cep = document.getElementById('cep-cli').value.trim();
+        const rua = document.getElementById('rua-cli').value.trim();
+        const numero = document.getElementById('numero-cli').value.trim();
+        const bairro = document.getElementById('bairro-cli').value.trim();
+        const cidade = document.getElementById('cidade-cli').value.trim();
+        const estado = document.getElementById('estado-cli').value.trim();
+
+        if (!nome || !email || !cpf || !cep || !rua || !numero || !bairro || !cidade || !estado) {
+            alert('Preencha todos os campos obrigatórios');
+            return;
+        }
+
+        fetch('cadastrar-cliente-completo.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'nome=' + encodeURIComponent(nome) +
+                    '&email=' + encodeURIComponent(email) +
+                    '&cpf=' + encodeURIComponent(cpf) +
+                    '&cep=' + encodeURIComponent(cep) +
+                    '&rua=' + encodeURIComponent(rua) +
+                    '&numero=' + encodeURIComponent(numero) +
+                    '&bairro=' + encodeURIComponent(bairro) +
+                    '&cidade=' + encodeURIComponent(cidade) +
+                    '&estado=' + encodeURIComponent(estado)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    fecharModalCadastroCompleto();
+                    document.querySelector('form').submit();
+                } else {
+                    alert(data.mensagem || 'Erro ao salvar cadastro');
+                }
+            });
+    }
+
+    // Validação de CPF
+    document.getElementById('cpf-cli').addEventListener('blur', function() {
+        const cpf = this.value;
+
+        if (cpf.trim() === '') return;
+
+        if (!validarCPF(cpf)) {
+            marcarErro(this, 'CPF inválido');
+            alert('CPF inválido!');
+            this.value = '';
+            this.focus();
+        }
+    });
+
+    function marcarErro(campo, mensagem) {
+        campo.style.border = '2px solid red';
+
+        let msg = document.createElement('div');
+        msg.className = 'erro-campo';
+        msg.style.color = 'red';
+        msg.style.fontSize = '12px';
+        msg.textContent = mensagem;
+
+        campo.parentNode.appendChild(msg);
+
+        setTimeout(() => {
+            campo.style.border = '';
+            msg.remove();
+        }, 3000);
+    }
+
+    document.getElementById('cpf-cli').addEventListener('blur', function() {
+        const cpf = this.value;
+
+        if (cpf.trim() === '') return;
+
+        if (!validarCPF(cpf)) {
+            marcarErro(this, 'CPF inválido');
+            alert('CPF inválido!');
+            this.value = '';
+            this.focus();
+        }
+    });
+
+    function marcarErro(campo, mensagem) {
+        campo.style.border = '2px solid red';
+
+        let msg = document.createElement('div');
+        msg.className = 'erro-campo';
+        msg.style.color = 'red';
+        msg.style.fontSize = '12px';
+        msg.textContent = mensagem;
+
+        campo.parentNode.appendChild(msg);
+
+        setTimeout(() => {
+            campo.style.border = '';
+            msg.remove();
+        }, 3000);
     }
 </script>

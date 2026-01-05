@@ -16,11 +16,9 @@ try {
     | TOTAL DO CARRINHO
     |--------------------------------------------------------------------------
     */
-    $stmtTotal = $pdo->prepare("
-        SELECT COALESCE(SUM(valor_total), 0)
-        FROM carrinho_temp
-        WHERE sessao = :sessao
-    ");
+    $stmtTotal = $pdo->prepare("SELECT COALESCE(SUM(valor_total), 0)
+                                FROM carrinho_temp
+                                WHERE sessao = :sessao");
     $stmtTotal->execute([':sessao' => $sessao]);
     $total = (float) $stmtTotal->fetchColumn();
 
@@ -33,12 +31,8 @@ try {
     | CRIA VENDA
     |--------------------------------------------------------------------------
     */
-    $stmtVenda = $pdo->prepare("
-        INSERT INTO vendas
-        (cliente, valor_compra, valor_pago, troco, data_pagamento, hora_pagamento, status_venda, pago)
-        VALUES
-        (:cliente, :valor_compra, 0, 0, CURDATE(), CURTIME(), 'aberta', 'Nao')
-    ");
+    $stmtVenda = $pdo->prepare("INSERT INTO vendas (cliente, valor_compra, valor_pago, troco, data_pagamento, hora_pagamento, status_venda, pago)
+                                VALUES (:cliente, :valor_compra, 0, 0, CURDATE(), CURTIME(), 'Iniciado', 'Nao')");
 
     $stmtVenda->execute([
         ':cliente'      => $clienteId,
@@ -52,12 +46,9 @@ try {
     | BUSCA ITENS DO CARRINHO
     |--------------------------------------------------------------------------
     */
-    $stmtItens = $pdo->prepare("
-        SELECT *
-        FROM carrinho_temp
-        WHERE sessao = :sessao
-        ORDER BY id ASC
-    ");
+    $stmtItens = $pdo->prepare("SELECT * FROM carrinho_temp
+                                WHERE sessao = :sessao
+                                ORDER BY id ASC");
     $stmtItens->execute([':sessao' => $sessao]);
     $itens = $stmtItens->fetchAll(PDO::FETCH_ASSOC);
 
@@ -66,19 +57,11 @@ try {
     | PREPARE STATEMENTS
     |--------------------------------------------------------------------------
     */
-    $stmtItem = $pdo->prepare("
-        INSERT INTO vendas_itens
-        (venda_id, item_tipo, item_id, quantidade, valor_unitario, valor_total)
-        VALUES
-        (:venda_id, :item_tipo, :item_id, :quantidade, :valor_unitario, :valor_total)
-    ");
+    $stmtItem = $pdo->prepare("INSERT INTO vendas_itens (venda_id, item_tipo, item_id, quantidade, valor_unitario, valor_total)
+                               VALUES (:venda_id, :item_tipo, :item_id, :quantidade, :valor_unitario, :valor_total)");
 
-    $stmtOpcao = $pdo->prepare("
-        INSERT INTO vendas_itens_opcoes
-        (venda_item_id, tipo, id_item, quantidade, valor_unitario, valor_total)
-        VALUES
-        (:venda_item_id, :tipo, :id_item, :quantidade, :valor_unitario, :valor_total)
-    ");
+    $stmtOpcao = $pdo->prepare("INSERT INTO vendas_itens_opcoes (venda_item_id, tipo, id_item, quantidade, valor_unitario, valor_total)
+                                VALUES (:venda_item_id, :tipo, :id_item, :quantidade, :valor_unitario, :valor_total)");
 
     $mapVendaItens = [];
 

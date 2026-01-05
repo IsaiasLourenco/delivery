@@ -18,14 +18,12 @@ if (!$clienteId) {
 | VENDA ABERTA
 |--------------------------------------------------------------------------
 */
-$stmtVenda = $pdo->prepare("
-    SELECT *
-    FROM vendas
-    WHERE cliente = :cliente
-      AND status_venda = 'aberta'
-    ORDER BY id DESC
-    LIMIT 1
-");
+$stmtVenda = $pdo->prepare("SELECT *
+                            FROM vendas
+                            WHERE cliente = :cliente
+                            AND status_venda = 'aberta'
+                            ORDER BY id DESC
+                            LIMIT 1");
 $stmtVenda->execute([':cliente' => $clienteId]);
 $venda = $stmtVenda->fetch(PDO::FETCH_ASSOC);
 

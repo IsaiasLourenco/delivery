@@ -139,7 +139,7 @@ $totalF = 'R$ ' . number_format($total, 2, ',', '.');
     <hr>
 
     <p class="d-flex justify-content-end">
-        SubTotal <span class="bold" id="subtotal"><?= $totalF ?></span>
+        SubTotal &nbsp <span class="bold" id="subtotal"><?= $totalF ?></span>
     </p>
 
     <form action="finalizar.php" method="post">

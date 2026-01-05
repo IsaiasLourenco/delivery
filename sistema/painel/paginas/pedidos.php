@@ -50,6 +50,10 @@ $segundos = $tempo_atualizacao * 1000;
 		</div>
 		<input type="hidden" id="buscar-contas">
 		<input type="hidden" id="id_pedido">
+		<script>
+			// Garante que o primeiro valor enviado ao listar.php não seja vazio
+			$('#id_pedido').val("0");
+		</script>
 	</div>
 	<hr>
 	<div id="listar">
